@@ -117,6 +117,86 @@ DEBUG_CONFIG = {
 }
 
 # ============================================================================
+# ESPN POSITION ID MAPPING
+# ============================================================================
+# Maps ESPN's numeric defaultPositionId to a readable position abbreviation
+
+ESPN_POSITION_MAP = {
+    1:  'SP',
+    2:  'C',
+    3:  '1B',
+    4:  '2B',
+    5:  '3B',
+    6:  'SS',
+    7:  'OF',
+    8:  'DH',
+    9:  'RP',
+    10: 'P',
+    11: 'UTIL',
+}
+
+# Position IDs that are pitchers
+PITCHER_POSITION_IDS = {1, 9, 10}   # SP, RP, P
+
+# ============================================================================
+# OUTFIELD POSITION NORMALIZATION
+# ============================================================================
+# CF, LF, RF all count as OF for fantasy purposes.
+# Any position in this set is treated as "OF" in waiver/matchup analysis.
+
+OF_POSITIONS = {'OF', 'CF', 'LF', 'RF'}
+
+# ============================================================================
+# INJURY STATUS
+# ============================================================================
+# ESPN injury status values that mean a player is unavailable or risky.
+# Players with these statuses get flagged and excluded from START recommendations.
+
+INJURED_STATUSES = {
+    'INJURY_RESERVE',
+    'FIFTEEN_DAY_IL',
+    'SIXTY_DAY_IL',
+    'SEVEN_DAY_IL',
+    'TEN_DAY_IL',
+    'OUT',
+    'SUSPENSION',
+    'BEREAVEMENT',
+}
+
+QUESTIONABLE_STATUSES = {
+    'DAY_TO_DAY',
+    'QUESTIONABLE',
+    'DOUBTFUL',
+}
+
+# ============================================================================
+# ESPN FANTASY BASEBALL STAT ID MAPPING
+# ============================================================================
+# Maps ESPN's numeric stat IDs to our internal category keys.
+# Used to parse in-week accumulated stats from the ESPN matchup API.
+# IDs marked (confirmed) validated via live API inspection.
+# IDs marked (estimated) are best guesses — may need adjustment.
+
+ESPN_STAT_IDS = {
+    # --- Batting ---
+    '1':  'runs',           # R   (confirmed)
+    '5':  'stolen_bases',   # SB  (confirmed)
+    '23': 'home_runs',      # HR  (estimated)
+    '37': 'rbis',           # RBI (estimated)
+    '20': 'obp',            # OBP (estimated — rate stat)
+    # --- Pitching ---
+    '48': 'strikeouts',     # K   (confirmed)
+    '63': 'quality_starts', # QS  (confirmed)
+    '41': 'era',            # ERA (confirmed — rate stat)
+    '17': 'whip',           # WHIP (confirmed — rate stat)
+    '83': 'sv_hd',          # SV+HD (confirmed)
+    '47': 'saves',          # SV  (confirmed)
+}
+
+# Rate stats from ESPN — stored as floats, not summed
+ESPN_RATE_STAT_IDS = {'41', '17', '20'}
+
+# ============================================================================
 # VALIDATION
 # ============================================================================
 

@@ -1,0 +1,22 @@
+#!/bin/sh
+# Git pre-commit hook — auto-updates CLAUDE.md with latest DB stats.
+#
+# INSTALL: Copy (or symlink) this file to .git/hooks/pre-commit
+#   cp scripts/pre-commit .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+#
+# Or run the install helper:
+#   python scripts/install_hooks.py
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+python "$REPO_ROOT/scripts/update_claude_md.py"
+
+# If CLAUDE.md was updated, stage the change so it's part of this commit
+if git diff --quiet CLAUDE.md; then
+  : # no changes
+else
+  git add "$REPO_ROOT/CLAUDE.md"
+  echo "[pre-commit] CLAUDE.md staged with updated stats"
+fi
+
+exit 0

@@ -26,27 +26,33 @@ from config import DATA_CONFIG
 DB_PATH = DATA_CONFIG['db_path']
 
 
+def _add_column_if_missing(cursor, table: str, column: str, col_type: str) -> None:
+    """
+    Add a column to a table if it doesn't already exist.
+    SQLite doesn't support IF NOT EXISTS on ALTER TABLE, so we catch the error.
+    """
+    try:
+        cursor.execute(f"ALTER TABLE {table} ADD COLUMN {column} {col_type}")
+    except Exception:
+        pass  # Column already exists
+
+
 def init_database() -> str:
     """
     Initialize SQLite database with all required tables.
-    
-    Creates database file and schema if it doesn't exist.
-    If database exists, verifies schema is complete.
-    
+
+    Creates the database and schema on first run.
+    On subsequent runs, migrates any missing columns added in newer versions.
+
     Returns:
         str: Path to the database file
-        
-    Raises:
-        sqlite3.Error: If database creation fails
     """
-    # Ensure data directory exists
     data_dir = Path(DB_PATH).parent
     data_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Connect to database (creates file if doesn't exist)
+
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    
+
     try:
         # ====================================================================
         # Table 1: PLAYERS (Master player data)
@@ -206,11 +212,50 @@ def init_database() -> str:
                 notes TEXT
             )
         ''')
-        
+
+        # ====================================================================
+        # Table 7: LEAGUE_TEAMS (All fantasy teams in the league)
+        # ====================================================================
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS league_teams (
+                team_id INTEGER PRIMARY KEY,
+                team_name TEXT NOT NULL,
+                last_updated DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+
+        # ====================================================================
+        # Table 8: ALL_ROSTERS (Every player on every fantasy team)
+        # ====================================================================
+        # Stores a snapshot of every roster each time we refresh.
+        # Lets us know who is owned vs. available on the waiver wire.
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS all_rosters (
+                roster_entry_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                espn_player_id INTEGER NOT NULL,
+                player_name TEXT,
+                position TEXT,
+                is_pitcher BOOLEAN DEFAULT 0,
+                fantasy_team_id INTEGER,
+                fantasy_team_name TEXT,
+                is_my_player BOOLEAN DEFAULT 0,
+                ownership_pct REAL DEFAULT 0,
+                date_snapshot DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+
+        # ====================================================================
+        # Schema migrations — safe to run on existing databases
+        # ====================================================================
+        _add_column_if_missing(cursor, 'players',          'injury_status',  'TEXT DEFAULT "ACTIVE"')
+        _add_column_if_missing(cursor, 'player_z_scores',  'z_7day',         'REAL')
+        _add_column_if_missing(cursor, 'player_z_scores',  'is_two_start',   'BOOLEAN DEFAULT 0')
+
         conn.commit()
         print(f"✓ Database initialized at: {DB_PATH}")
         return DB_PATH
-        
+
     except sqlite3.Error as e:
         print(f"✗ Database error: {e}")
         raise
@@ -241,15 +286,15 @@ def store_player_stats(players_data: List[Dict], stats_data: Dict) -> int:
     
     try:
         for player in players_data:
-            player_id = player.get('id')
+            player_id = player.get('player_id') or player.get('id')
             if not player_id:
                 continue
             
             # Insert or update player master record
             cursor.execute('''
-                INSERT OR REPLACE INTO players 
-                (player_id, mlb_id, name, position, mlb_team, is_pitcher, ownership_pct)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT OR REPLACE INTO players
+                (player_id, mlb_id, name, position, mlb_team, is_pitcher, ownership_pct, injury_status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 player_id,
                 player.get('mlb_id'),
@@ -257,7 +302,8 @@ def store_player_stats(players_data: List[Dict], stats_data: Dict) -> int:
                 player.get('position'),
                 player.get('mlb_team'),
                 1 if player.get('is_pitcher') else 0,
-                player.get('ownership_pct', 0)
+                player.get('ownership_pct', 0),
+                player.get('injury_status', 'ACTIVE'),
             ))
             
             # Insert stats as time-series record
@@ -395,8 +441,9 @@ def store_z_scores(z_score_data: List[Dict]) -> int:
                 INSERT INTO player_z_scores
                 (player_id, position, z_r, z_hr, z_rbi, z_sb, z_obp,
                  z_k, z_qs, z_era, z_whip, z_svhd,
-                 z_season, z_30day, z_14day, trend_direction, momentum)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 z_season, z_7day, z_14day, z_30day,
+                 trend_direction, momentum, is_two_start)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 z_data.get('player_id'),
                 z_data.get('position'),
@@ -411,10 +458,12 @@ def store_z_scores(z_score_data: List[Dict]) -> int:
                 z_data.get('z_whip'),
                 z_data.get('z_svhd'),
                 z_data.get('z_season'),
-                z_data.get('z_30day'),
+                z_data.get('z_7day'),
                 z_data.get('z_14day'),
+                z_data.get('z_30day'),
                 z_data.get('trend_direction'),
-                z_data.get('momentum')
+                z_data.get('momentum'),
+                1 if z_data.get('is_two_start') else 0,
             ))
             records_stored += 1
         
@@ -423,6 +472,76 @@ def store_z_scores(z_score_data: List[Dict]) -> int:
         
     except sqlite3.Error as e:
         print(f"✗ Error storing z-scores: {e}")
+        conn.rollback()
+        return 0
+    finally:
+        conn.close()
+
+
+def store_league_teams(league_teams: List[Dict]) -> int:
+    """
+    Store all fantasy team names and IDs.
+
+    Args:
+        league_teams: List of {team_id, team_name} dicts from ESPN
+
+    Returns:
+        int: Number of teams stored
+    """
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    try:
+        for team in league_teams:
+            cursor.execute('''
+                INSERT OR REPLACE INTO league_teams (team_id, team_name)
+                VALUES (?, ?)
+            ''', (team['team_id'], team['team_name']))
+        conn.commit()
+        return len(league_teams)
+    except sqlite3.Error as e:
+        print(f"Error storing league teams: {e}")
+        conn.rollback()
+        return 0
+    finally:
+        conn.close()
+
+
+def store_all_rosters(all_rosters: Dict) -> int:
+    """
+    Store a full snapshot of every team's roster.
+
+    Args:
+        all_rosters: {team_id: {team_name, players: [...]}} from ESPN
+
+    Returns:
+        int: Number of player-roster entries stored
+    """
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    try:
+        records = 0
+        for team_id, team_data in all_rosters.items():
+            for player in team_data.get('players', []):
+                cursor.execute('''
+                    INSERT INTO all_rosters
+                    (espn_player_id, player_name, position, is_pitcher,
+                     fantasy_team_id, fantasy_team_name, is_my_player, ownership_pct)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (
+                    player.get('espn_id'),
+                    player.get('name'),
+                    player.get('position'),
+                    1 if player.get('is_pitcher') else 0,
+                    team_id,
+                    team_data.get('team_name'),
+                    1 if player.get('is_my_player') else 0,
+                    player.get('ownership_pct', 0.0),
+                ))
+                records += 1
+        conn.commit()
+        return records
+    except sqlite3.Error as e:
+        print(f"Error storing all rosters: {e}")
         conn.rollback()
         return 0
     finally:
