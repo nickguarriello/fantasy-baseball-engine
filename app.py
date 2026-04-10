@@ -1,11 +1,8 @@
 """
 Fantasy Baseball H2H Decision Engine — Streamlit Dashboard
+Team: Pitch Slap
 
-Run:   streamlit run app.py
-Prereq: pip install streamlit  (already in requirements.txt)
-
-The dashboard reads CSV files from outputs/ and the SQLite DB.
-Use the "Refresh Data" button to re-run the full pipeline.
+Run:   python -m streamlit run app.py
 """
 
 import subprocess
@@ -26,22 +23,24 @@ OUTPUTS = ROOT / "outputs"
 DB_PATH = ROOT / "data" / "fantasy_baseball.db"
 WATCHLIST_PATH = ROOT / "data" / "watchlist.json"
 
+MY_TEAM = "Pitch Slap"
+FA_LABEL = "FA"
+
 # ---------------------------------------------------------------------------
-# Page config — must be the very first Streamlit call
+# Page config
 # ---------------------------------------------------------------------------
 st.set_page_config(
-    page_title="Fantasy Baseball Engine",
+    page_title="Pitch Slap — Fantasy Baseball",
     page_icon="⚾",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
 # ---------------------------------------------------------------------------
-# Watchlist persistence  (data/watchlist.json)
+# Watchlist persistence
 # ---------------------------------------------------------------------------
 
 def load_watchlist() -> list:
-    """Load player watchlist from disk. Returns list of player name strings."""
     if not WATCHLIST_PATH.exists():
         return []
     try:
@@ -49,30 +48,19 @@ def load_watchlist() -> list:
     except Exception:
         return []
 
-
 def save_watchlist(names: list) -> None:
-    """Persist watchlist to disk."""
     WATCHLIST_PATH.parent.mkdir(parents=True, exist_ok=True)
     WATCHLIST_PATH.write_text(json.dumps(sorted(set(names))), encoding="utf-8")
 
-
 # ---------------------------------------------------------------------------
-# Roster ownership lookup  (reads SQLite — always current after a pipeline run)
+# Roster ownership lookup
 # ---------------------------------------------------------------------------
 
-MY_TEAM_LABEL  = "⭐ My Team"
-FA_LABEL       = "FA"
-
-@st.cache_data(ttl=300)   # re-read DB at most once every 5 min
+@st.cache_data(ttl=300)
 def load_roster_lookup() -> dict:
     """
-    Build {player_name_lower: display_label} from the all_rosters DB table.
-    Returns empty dict if DB doesn't exist yet.
-
-    Labels:
-        "⭐ My Team"   — player is on your roster
-        "FA"           — not on any fantasy roster
-        "<Team Name>"  — on another manager's team
+    {name_lower: display_label} from the LATEST all_rosters snapshot.
+    Always reads the single most-recent date_snapshot so stale rows are ignored.
     """
     if not DB_PATH.exists():
         return {}
@@ -80,7 +68,16 @@ def load_roster_lookup() -> dict:
         conn = sqlite3.connect(str(DB_PATH))
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
-        cur.execute("SELECT player_name, fantasy_team_name, is_my_player FROM all_rosters")
+        # Only use the most-recent snapshot
+        cur.execute("SELECT MAX(date_snapshot) FROM all_rosters")
+        latest = cur.fetchone()[0]
+        if not latest:
+            conn.close()
+            return {}
+        cur.execute(
+            "SELECT player_name, fantasy_team_name, is_my_player "
+            "FROM all_rosters WHERE date_snapshot = ?", (latest,)
+        )
         rows = cur.fetchall()
         conn.close()
     except Exception:
@@ -91,99 +88,83 @@ def load_roster_lookup() -> dict:
         name = (row["player_name"] or "").lower().strip()
         if not name:
             continue
-        if row["is_my_player"]:
-            lookup[name] = MY_TEAM_LABEL
-        else:
-            lookup[name] = row["fantasy_team_name"] or "Unknown"
+        lookup[name] = MY_TEAM if row["is_my_player"] else (row["fantasy_team_name"] or "Unknown")
     return lookup
 
+def owner_of(name: str) -> str:
+    return load_roster_lookup().get(name.lower().strip(), FA_LABEL)
 
 def add_owner_col(df: pd.DataFrame, name_col: str = "name") -> pd.DataFrame:
-    """
-    Insert a 'fantasy_team' column right after the name column.
-    Shows: "⭐ My Team" | "<Team Name>" | "FA"
-    If the column already exists (trade_targets.csv has it), just standardise it.
-    """
-    lookup = load_roster_lookup()
     df = df.copy()
-
-    if "fantasy_team" in df.columns:
-        # Standardise existing column
-        def _fix(val):
-            v = str(val).strip() if pd.notna(val) else ""
-            if not v or v.lower() in ("nan", "none", "fa", ""):
-                return FA_LABEL
-            return v
-        df["fantasy_team"] = df["fantasy_team"].apply(_fix)
-    else:
-        def _lookup(row_name):
-            key = str(row_name).lower().strip()
-            return lookup.get(key, FA_LABEL)
+    if "fantasy_team" not in df.columns:
+        lookup = load_roster_lookup()
         df.insert(
             df.columns.get_loc(name_col) + 1 if name_col in df.columns else 0,
             "fantasy_team",
-            df[name_col].apply(_lookup) if name_col in df.columns else FA_LABEL,
+            df[name_col].apply(lambda n: lookup.get(str(n).lower().strip(), FA_LABEL))
+            if name_col in df.columns else FA_LABEL,
         )
+    else:
+        # Standardise existing column — replace "Team N" stale values
+        lookup = load_roster_lookup()
+        def _fix(row):
+            val = str(row.get("fantasy_team", "")).strip()
+            # Try fresh lookup first
+            key = str(row.get(name_col, "")).lower().strip()
+            fresh = lookup.get(key)
+            if fresh:
+                return fresh
+            if not val or val.lower() in ("nan", "none", ""):
+                return FA_LABEL
+            return val
+        df["fantasy_team"] = df.apply(_fix, axis=1)
     return df
 
-
-def owner_cell_color(val):
-    """Style the fantasy_team cell."""
-    if val == MY_TEAM_LABEL:
-        return "background-color: #1a4fa8; color: white; font-weight: bold"
-    if val == FA_LABEL:
-        return "color: #888888"
-    return "background-color: #5d3a8e; color: white"   # purple = other team
-
-
 # ---------------------------------------------------------------------------
-# General helpers
+# Styling helpers
 # ---------------------------------------------------------------------------
-
-def load_csv(filename: str) -> pd.DataFrame:
-    """Load a CSV from outputs/. Returns empty DataFrame on missing file."""
-    path = OUTPUTS / filename
-    if not path.exists():
-        return pd.DataFrame()
-    try:
-        return pd.read_csv(path)
-    except Exception:
-        return pd.DataFrame()
-
 
 def z_color(val):
-    """Background color for z-score cells."""
     try:
         v = float(val)
     except (TypeError, ValueError):
         return ""
-    if v >= 1.5:
-        return "background-color: #1a7a1a; color: white"
-    if v >= 0.5:
-        return "background-color: #3fa63f; color: white"
-    if v >= 0.0:
-        return "background-color: #85c985"
-    if v >= -0.5:
-        return "background-color: #e88080"
+    if v >= 1.5:  return "background-color: #1a7a1a; color: white"
+    if v >= 0.5:  return "background-color: #3fa63f; color: white"
+    if v >= 0.0:  return "background-color: #85c985"
+    if v >= -0.5: return "background-color: #e88080"
     return "background-color: #c0392b; color: white"
 
+def owner_color(val):
+    if val == MY_TEAM:   return "background-color: #1a4fa8; color: white; font-weight: bold"
+    if val == FA_LABEL:  return "color: #888888"
+    return "background-color: #5d3a8e; color: white"
 
-def style_z(df: pd.DataFrame, z_cols=None) -> "pd.io.formats.style.Styler":
-    """Return a styled DataFrame — z-score columns color-coded, owner column highlighted."""
+def style_df(df: pd.DataFrame, z_cols=None) -> "pd.io.formats.style.Styler":
     if z_cols is None:
         z_cols = [c for c in df.columns if c.startswith("z_")]
-    styler = df.style
+    s = df.style
     for col in z_cols:
         if col in df.columns:
-            styler = styler.map(z_color, subset=[col])
+            s = s.map(z_color, subset=[col])
     if "fantasy_team" in df.columns:
-        styler = styler.map(owner_cell_color, subset=["fantasy_team"])
-    return styler
+        s = s.map(owner_color, subset=["fantasy_team"])
+    return s
 
+def trend_icon(d):
+    return {"UP": "⬆", "DOWN": "⬇", "FLAT": "➡"}.get(str(d).upper(), "")
 
-def trend_icon(direction):
-    return {"UP": "⬆", "DOWN": "⬇", "FLAT": "➡"}.get(str(direction).upper(), "")
+def safe(df: pd.DataFrame, want: list) -> list:
+    return [c for c in want if c in df.columns]
 
+def load_csv(filename: str) -> pd.DataFrame:
+    p = OUTPUTS / filename
+    if not p.exists():
+        return pd.DataFrame()
+    try:
+        return pd.read_csv(p)
+    except Exception:
+        return pd.DataFrame()
 
 def last_run_time() -> str:
     p = OUTPUTS / "all_players_ranked.csv"
@@ -191,59 +172,82 @@ def last_run_time() -> str:
         return "Never"
     return datetime.fromtimestamp(p.stat().st_mtime).strftime("%Y-%m-%d %H:%M")
 
-
-def safe_cols(df: pd.DataFrame, want: list) -> list:
-    """Return only columns from want that actually exist in df."""
-    return [c for c in want if c in df.columns]
-
-
 # ---------------------------------------------------------------------------
 # Sidebar
 # ---------------------------------------------------------------------------
-
-st.sidebar.title("⚾ Fantasy Baseball")
+st.sidebar.title(f"⚾ {MY_TEAM}")
 st.sidebar.caption(f"Last run: **{last_run_time()}**")
 st.sidebar.markdown("---")
 
-if st.sidebar.button("🔄 Refresh Data (Run Engine)", use_container_width=True):
-    with st.spinner("Running full pipeline (~45 s)…"):
+if st.sidebar.button("🔄 Refresh Data", use_container_width=True):
+    with st.spinner("Running pipeline (~45 s)…"):
         result = subprocess.run(
             [sys.executable, "-X", "utf8", str(ROOT / "main.py")],
-            cwd=str(ROOT),
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
+            cwd=str(ROOT), capture_output=True, text=True,
+            encoding="utf-8", errors="replace",
         )
     if result.returncode == 0:
-        st.sidebar.success("Pipeline complete!")
-        st.cache_data.clear()   # force reload of roster lookup
+        st.sidebar.success("Done!")
+        st.cache_data.clear()
     else:
-        st.sidebar.error("Pipeline had errors — check logs below.")
-        with st.expander("Pipeline output"):
+        st.sidebar.error("Errors — see log below")
+        with st.expander("Log"):
             st.code(result.stdout[-4000:] + "\n" + result.stderr[-2000:])
     st.rerun()
 
 st.sidebar.markdown("---")
-
-# Owner legend
-st.sidebar.markdown("**Ownership colours**")
-st.sidebar.markdown(
-    "🔵 **⭐ My Team** &nbsp;|&nbsp; 🟣 **Other team** &nbsp;|&nbsp; ⬜ **FA**",
-    unsafe_allow_html=True,
-)
-
+st.sidebar.markdown("**Colours**")
+st.sidebar.markdown("🔵 My Team &nbsp;|&nbsp; 🟣 Other team &nbsp;|&nbsp; ⬜ FA", unsafe_allow_html=True)
 st.sidebar.markdown("---")
-st.sidebar.caption(
-    "Use the terminal with `--skip-phases waiver matchup trade` "
-    "for faster partial runs. The button above always runs all phases."
-)
 
 page = st.sidebar.radio(
-    "Navigate",
-    ["📊 Dashboard", "🔍 Waiver Wire", "⚔️ Matchup", "🔄 Trade", "📈 Rankings"],
+    "nav", ["📊 Dashboard", "🔍 Waiver Wire", "⚔️ Matchup", "🔄 Trade", "📊 Strategy"],
     label_visibility="collapsed",
 )
+
+# ---------------------------------------------------------------------------
+# Helper: build the unified player table with filters
+# ---------------------------------------------------------------------------
+
+def player_filter_ui(df: pd.DataFrame, key_prefix: str, show_type_filter=True):
+    """Render availability + position filters; return filtered dataframe."""
+    df = add_owner_col(df)
+
+    col1, col2, col3 = st.columns([2, 2, 2])
+
+    with col1:
+        if show_type_filter:
+            ptype = st.selectbox("Player type", ["All", "Hitters", "Pitchers"], key=f"{key_prefix}_type")
+        else:
+            ptype = "All"
+
+    with col2:
+        teams = sorted(df["fantasy_team"].dropna().unique().tolist())
+        avail_opts = ["All Players", MY_TEAM, "Free Agents (FA)"] + \
+                     sorted([t for t in teams if t not in (MY_TEAM, FA_LABEL)])
+        avail = st.selectbox("Availability", avail_opts, key=f"{key_prefix}_avail")
+
+    with col3:
+        pos_opts = ["All"] + sorted(df["position"].dropna().unique().tolist())
+        pos = st.selectbox("Position", pos_opts, key=f"{key_prefix}_pos")
+
+    filtered = df.copy()
+    if ptype == "Hitters":
+        filtered = filtered[filtered["is_pitcher"] == False]
+    elif ptype == "Pitchers":
+        filtered = filtered[filtered["is_pitcher"] == True]
+
+    if avail == MY_TEAM:
+        filtered = filtered[filtered["fantasy_team"] == MY_TEAM]
+    elif avail == "Free Agents (FA)":
+        filtered = filtered[filtered["fantasy_team"] == FA_LABEL]
+    elif avail != "All Players":
+        filtered = filtered[filtered["fantasy_team"] == avail]
+
+    if pos != "All":
+        filtered = filtered[filtered["position"] == pos]
+
+    return filtered
 
 # ---------------------------------------------------------------------------
 # 📊 DASHBOARD
@@ -254,93 +258,114 @@ if page == "📊 Dashboard":
 
     players_df   = load_csv("all_players_ranked.csv")
     waiver_df    = load_csv("waiver_wire_top.csv")
-    matchup_df   = load_csv("matchup_breakdown.csv")
+    actuals_df   = load_csv("matchup_actuals_vs_projected.csv")
     two_start_df = load_csv("waiver_two_start.csv")
 
     # --- Metrics ---
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric(
-        "Players Ranked",
-        len(players_df) if not players_df.empty else "–",
-        help="Total MLB players with season stats, ranked by z_season across your 10 H2H categories.",
-    )
-    col2.metric(
-        "Free Agents",
-        len(waiver_df) if not waiver_df.empty else "–",
-        help="Available players not on any fantasy roster — derived from MLB pool minus all 8 ESPN rosters.",
-    )
-    if not matchup_df.empty:
-        wins  = (matchup_df["projected_winner"] == "ME").sum()
-        total = len(matchup_df)
-        col3.metric(
-            "Projected Wins",
-            f"{wins} / {total}",
-            help="Categories where your roster's avg z_season beats your opponent's. z_7day trends may shift this.",
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Players Ranked", len(players_df) if not players_df.empty else "–",
+              help="Total MLB players with season stats. Source: all_players_ranked.csv")
+    c2.metric("Free Agents Available", len(waiver_df) if not waiver_df.empty else "–",
+              help="Top available FAs (not on any ESPN roster). Source: waiver_wire_top.csv")
+
+    if not actuals_df.empty and "actual_leader" in actuals_df.columns:
+        wins = (actuals_df["actual_leader"] == "ME").sum()
+        total = len(actuals_df)
+        c3.metric("Current Category Wins", f"{wins} / {total}",
+                  help="Categories currently winning based on ESPN in-week scores. Source: matchup_actuals_vs_projected.csv")
+    else:
+        c3.metric("Current Category Wins", "–")
+
+    c4.metric("Two-Start FAs", len(two_start_df) if not two_start_df.empty else "–",
+              help="Pitchers on waivers with 2 starts this week (~2× counting stats). Source: waiver_two_start.csv")
+
+    st.markdown("---")
+
+    # --- Top Players (unified filterable table) ---
+    st.subheader("🏆 Top Players")
+    st.caption("Click any column header to sort · Source: hitters_ranked.csv / pitchers_ranked.csv")
+
+    hitters_df  = load_csv("hitters_ranked.csv")
+    pitchers_df = load_csv("pitchers_ranked.csv")
+    combined    = pd.concat([hitters_df, pitchers_df], ignore_index=True) if not hitters_df.empty else pd.DataFrame()
+
+    if not combined.empty:
+        filtered = player_filter_ui(combined, "dash")
+
+        is_pitchers = (
+            "is_pitcher" in filtered.columns and
+            filtered["is_pitcher"].astype(str).str.lower().isin(["true","1"]).all()
         )
+        # Determine if filtered set is all pitchers or all hitters
+        has_pitchers = not filtered.empty and filtered.get("is_pitcher", pd.Series([False])).astype(str).str.lower().isin(["true","1"]).any()
+        has_hitters  = not filtered.empty and not (filtered.get("is_pitcher", pd.Series([False])).astype(str).str.lower().isin(["true","1"]).all())
+
+        if not filtered.empty:
+            # Column order per spec
+            hitter_z   = ["z_r", "z_hr", "z_rbi", "z_sb", "z_obp"]
+            pitcher_z  = ["z_k", "z_qs", "z_era", "z_whip", "z_svhd"]
+
+            all_pitcher = filtered["is_pitcher"].astype(str).str.lower().isin(["true","1"]).all() if "is_pitcher" in filtered.columns else False
+
+            if all_pitcher:
+                cat_cols = pitcher_z
+            else:
+                cat_cols = hitter_z
+
+            want = ["name", "mlb_team", "fantasy_team", "position"] + cat_cols + ["z_season", "trend_direction"]
+            show_df = filtered[safe(filtered, want)].head(50).copy()
+            if "trend_direction" in show_df.columns:
+                show_df["trend"] = show_df["trend_direction"].apply(trend_icon)
+                show_df = show_df.drop(columns=["trend_direction"])
+
+            st.caption(f"Showing {len(filtered)} players · z_season = composite of all 5 category z-scores")
+            st.dataframe(style_df(show_df, cat_cols + ["z_season"]),
+                         use_container_width=True, hide_index=True)
+        else:
+            st.info("No players match the selected filters.")
     else:
-        col3.metric("Projected Wins", "–")
-    col4.metric(
-        "Two-Start Pitchers (FA)",
-        len(two_start_df) if not two_start_df.empty else "–",
-        help="Pitchers available on waivers with 2 scheduled starts this week — roughly 2× counting-stat value.",
-    )
+        st.info("No player data — run the engine first.")
 
     st.markdown("---")
 
-    # --- Top Players ---
-    if not players_df.empty:
-        hitters_df  = add_owner_col(load_csv("hitters_ranked.csv"))
-        pitchers_df = add_owner_col(load_csv("pitchers_ranked.csv"))
+    # --- Matchup: real current scores ---
+    st.subheader("⚔️ This Week's Matchup — Current Scores")
+    if not actuals_df.empty:
+        # Determine opponent name
+        opp_name = "Opponent"
+        matchup_df = load_csv("matchup_breakdown.csv")
+        if not matchup_df.empty and "projected_winner" in matchup_df.columns:
+            opp_series = matchup_df[matchup_df["projected_winner"] != "ME"]["projected_winner"].mode()
+            if len(opp_series):
+                opp_name = opp_series.iloc[0]
 
-        lcol, rcol = st.columns(2)
+        wins  = (actuals_df["actual_leader"] == "ME").sum()
+        losses = (actuals_df["actual_leader"] == "OPP").sum()
+        ties  = len(actuals_df) - wins - losses
+        st.markdown(f"**{MY_TEAM} {wins} — {ties} ties — {losses} {opp_name}**")
 
-        with lcol:
-            st.subheader("🏆 Top 10 Hitters (All MLB)")
-            st.caption("Click any column header to sort")
-            if not hitters_df.empty:
-                want = ["name", "fantasy_team", "position", "mlb_team",
-                        "z_season", "z_7day", "trend_direction"]
-                top10h = hitters_df.head(10)[safe_cols(hitters_df, want)].copy()
-                if "trend_direction" in top10h.columns:
-                    top10h["trend"] = top10h["trend_direction"].apply(trend_icon)
-                    top10h = top10h.drop(columns=["trend_direction"])
-                st.dataframe(style_z(top10h, ["z_season", "z_7day"]),
-                             use_container_width=True, hide_index=True)
+        # Build display table: Pitch Slap | Category | Opponent
+        display = pd.DataFrame({
+            MY_TEAM:   actuals_df["my_actual"],
+            "Category": actuals_df["category"],
+            opp_name:  actuals_df["opp_actual"],
+        })
+        leaders = actuals_df["actual_leader"] if "actual_leader" in actuals_df.columns else pd.Series([""] * len(actuals_df))
 
-        with rcol:
-            st.subheader("🎯 Top 10 Pitchers (All MLB)")
-            st.caption("Click any column header to sort")
-            if not pitchers_df.empty:
-                want = ["name", "fantasy_team", "position", "mlb_team",
-                        "z_season", "z_7day", "trend_direction", "is_two_start"]
-                top10p = pitchers_df.head(10)[safe_cols(pitchers_df, want)].copy()
-                if "trend_direction" in top10p.columns:
-                    top10p["trend"] = top10p["trend_direction"].apply(trend_icon)
-                    top10p = top10p.drop(columns=["trend_direction"])
-                st.dataframe(style_z(top10p, ["z_season", "z_7day"]),
-                             use_container_width=True, hide_index=True)
-
-    st.markdown("---")
-
-    # --- Matchup Snapshot ---
-    st.subheader("⚔️ This Week's Matchup")
-    if not matchup_df.empty:
-        opp_series = matchup_df[matchup_df["projected_winner"] != "ME"]["projected_winner"].mode()
-        opp_display = opp_series.iloc[0] if len(opp_series) else "Opponent"
-        wins_me  = (matchup_df["projected_winner"] == "ME").sum()
-        wins_opp = (matchup_df["projected_winner"] == opp_display).sum()
-        ties     = len(matchup_df) - wins_me - wins_opp
-        st.markdown(f"**Me {wins_me} — {ties} ties — {wins_opp} {opp_display}**")
-
-        def color_winner(row):
-            if row["projected_winner"] == "ME":
+        def color_matchup_row(row):
+            idx = row.name
+            leader = leaders.iloc[idx] if idx < len(leaders) else ""
+            if leader == "ME":
                 return ["background-color: #3fa63f; color: white"] * len(row)
-            return ["background-color: #c0392b; color: white"] * len(row)
+            if leader == "OPP":
+                return ["background-color: #c0392b; color: white"] * len(row)
+            return ["background-color: #888888; color: white"] * len(row)
 
-        st.dataframe(matchup_df.style.apply(color_winner, axis=1),
+        st.dataframe(display.style.apply(color_matchup_row, axis=1),
                      use_container_width=True, hide_index=True)
+        st.caption("🟢 Winning · 🔴 Losing · ⬜ Tied · Source: matchup_actuals_vs_projected.csv")
     else:
-        st.info("No matchup data yet — run the engine first.")
+        st.info("No matchup data — run the engine or matchup may not have started yet.")
 
 # ---------------------------------------------------------------------------
 # 🔍 WAIVER WIRE
@@ -349,7 +374,6 @@ if page == "📊 Dashboard":
 elif page == "🔍 Waiver Wire":
     st.title("🔍 Waiver Wire")
 
-    # Load watchlist from disk into session state once per session
     if "watchlist" not in st.session_state:
         st.session_state.watchlist = load_watchlist()
 
@@ -357,122 +381,89 @@ elif page == "🔍 Waiver Wire":
         ["⭐ Watchlist", "Top 25 Overall", "Two-Start Pitchers", "By Position", "By Weak Category"]
     )
 
-    # ---- Watchlist tab ----
     with tab_watch:
         st.subheader("⭐ Player Watchlist")
-        st.caption("Flagged players persist across sessions (saved to data/watchlist.json).")
-
+        st.caption("Saved to data/watchlist.json — persists across sessions.")
         wl = st.session_state.watchlist
 
         if wl:
-            # Pull stats for watchlisted players from all_players_ranked
             all_df = add_owner_col(load_csv("all_players_ranked.csv"))
             if not all_df.empty:
                 wl_lower = [n.lower().strip() for n in wl]
-                wl_df = all_df[all_df["name"].str.lower().str.strip().isin(wl_lower)].copy()
+                wl_df = all_df[all_df["name"].str.lower().str.strip().isin(wl_lower)]
                 want  = ["name", "fantasy_team", "position", "mlb_team",
-                         "z_season", "z_7day", "z_14day", "z_30day",
-                         "trend_direction", "injury_status"]
+                         "z_season", "z_7day", "z_14day", "z_30day", "trend_direction"]
                 if not wl_df.empty:
-                    st.dataframe(
-                        style_z(wl_df[safe_cols(wl_df, want)]),
-                        use_container_width=True,
-                        hide_index=True,
-                    )
+                    st.dataframe(style_df(wl_df[safe(wl_df, want)]),
+                                 use_container_width=True, hide_index=True)
                 else:
-                    st.info("Watchlisted players not found in current rankings.")
+                    st.info("Watchlisted players not in current rankings.")
         else:
-            st.info("No players on your watchlist yet. Add them from the Top 25 tab.")
+            st.info("No players watchlisted yet. Add from the Top 25 tab.")
 
         st.markdown("---")
-        st.markdown("**Manage Watchlist**")
-        col_add, col_remove = st.columns(2)
-
-        with col_add:
-            new_player = st.text_input("Add player by name", key="wl_add",
-                                       placeholder="e.g. Cam Smith")
-            if st.button("➕ Add", key="wl_add_btn") and new_player.strip():
-                updated = list(set(wl + [new_player.strip()]))
-                st.session_state.watchlist = updated
-                save_watchlist(updated)
-                st.rerun()
-
-        with col_remove:
+        ca, cr = st.columns(2)
+        with ca:
+            new_p = st.text_input("Add player", placeholder="e.g. Cam Smith", key="wl_add")
+            if st.button("➕ Add", key="wl_add_btn") and new_p.strip():
+                updated = list(set(wl + [new_p.strip()]))
+                st.session_state.watchlist = updated; save_watchlist(updated); st.rerun()
+        with cr:
             if wl:
-                to_remove = st.selectbox("Remove player", ["—"] + sorted(wl), key="wl_remove")
-                if st.button("➖ Remove", key="wl_remove_btn") and to_remove != "—":
-                    updated = [p for p in wl if p != to_remove]
-                    st.session_state.watchlist = updated
-                    save_watchlist(updated)
-                    st.rerun()
+                to_rm = st.selectbox("Remove", ["—"] + sorted(wl), key="wl_rm")
+                if st.button("➖ Remove", key="wl_rm_btn") and to_rm != "—":
+                    updated = [p for p in wl if p != to_rm]
+                    st.session_state.watchlist = updated; save_watchlist(updated); st.rerun()
 
-    # ---- Top 25 tab ----
     with tab_top:
-        st.subheader("Top 25 Free Agents by z_season")
+        st.subheader("Top 25 Free Agents")
         df = add_owner_col(load_csv("waiver_wire_top.csv"))
         if not df.empty:
             want = ["name", "fantasy_team", "position", "mlb_team", "injury_status",
-                    "z_season", "z_7day", "z_14day", "z_30day",
-                    "trend_direction", "is_two_start"]
-            st.dataframe(style_z(df[safe_cols(df, want)]),
-                         use_container_width=True, hide_index=True)
-
+                    "z_season", "z_7day", "z_14day", "z_30day", "trend_direction", "is_two_start"]
+            st.dataframe(style_df(df[safe(df, want)]), use_container_width=True, hide_index=True)
             st.markdown("---")
             st.markdown("**Add to Watchlist**")
-            all_names = df["name"].dropna().tolist()
-            to_watch = st.multiselect(
-                "Select players to add to your watchlist",
-                [n for n in all_names if n not in st.session_state.watchlist],
-                key="wl_multi",
-            )
-            if st.button("⭐ Add selected to Watchlist") and to_watch:
+            all_names = [n for n in df["name"].dropna().tolist() if n not in st.session_state.watchlist]
+            to_watch = st.multiselect("Select players", all_names, key="wl_multi")
+            if st.button("⭐ Add to Watchlist") and to_watch:
                 updated = list(set(st.session_state.watchlist + to_watch))
-                st.session_state.watchlist = updated
-                save_watchlist(updated)
-                st.success(f"Added {len(to_watch)} player(s) to watchlist.")
-                st.rerun()
+                st.session_state.watchlist = updated; save_watchlist(updated)
+                st.success(f"Added {len(to_watch)} player(s)."); st.rerun()
         else:
             st.info("No waiver data — run the engine.")
 
-    # ---- Two-Start tab ----
     with tab_2start:
-        st.subheader("Two-Start Pitchers Available on Waivers")
+        st.subheader("Two-Start Pitchers on Waivers")
         df = add_owner_col(load_csv("waiver_two_start.csv"))
         if not df.empty:
-            st.dataframe(style_z(df), use_container_width=True, hide_index=True)
+            st.dataframe(style_df(df), use_container_width=True, hide_index=True)
         else:
-            st.info("No two-start data — run the engine (or no two-starters available this week).")
+            st.info("No two-start pitchers on waivers this week.")
 
-    # ---- By Position tab ----
     with tab_bypos:
         st.subheader("Free Agents by Position")
-        positions = {
-            "OF": "waiver_of.csv",
-            "1B": "waiver_1b.csv",
-            "2B": "waiver_2b.csv",
-            "3B": "waiver_3b.csv",
-            "SS": "waiver_ss.csv",
-            "C":  "waiver_c.csv",
-            "SP/RP": "waiver_p.csv",
+        pos_files = {
+            "OF":"waiver_of.csv","1B":"waiver_1b.csv","2B":"waiver_2b.csv",
+            "3B":"waiver_3b.csv","SS":"waiver_ss.csv","C":"waiver_c.csv","SP/RP":"waiver_p.csv",
         }
-        pos_sel = st.selectbox("Position", list(positions.keys()))
-        df = add_owner_col(load_csv(positions[pos_sel]))
+        pos_sel = st.selectbox("Position", list(pos_files.keys()))
+        df = add_owner_col(load_csv(pos_files[pos_sel]))
         if not df.empty:
-            st.dataframe(style_z(df), use_container_width=True, hide_index=True)
+            st.dataframe(style_df(df), use_container_width=True, hide_index=True)
         else:
             st.info(f"No data for {pos_sel}.")
 
-    # ---- By Weak Category tab ----
     with tab_cats:
-        st.subheader("Top Pickups for Your Weak Categories")
-        weak_files = list(OUTPUTS.glob("waiver_target_*.csv"))
+        st.subheader("Top Pickups for Weak Categories")
+        weak_files = sorted(OUTPUTS.glob("waiver_target_*.csv"))
         if weak_files:
-            for f in sorted(weak_files):
+            for f in weak_files:
                 cat = f.stem.replace("waiver_target_", "").upper()
-                df  = add_owner_col(load_csv(f.name))
+                df = add_owner_col(load_csv(f.name))
                 if not df.empty:
                     with st.expander(f"Category: {cat}", expanded=True):
-                        st.dataframe(style_z(df), use_container_width=True, hide_index=True)
+                        st.dataframe(style_df(df), use_container_width=True, hide_index=True)
         else:
             st.info("No weak-category data — run the engine.")
 
@@ -483,57 +474,51 @@ elif page == "🔍 Waiver Wire":
 elif page == "⚔️ Matchup":
     st.title("⚔️ Matchup Analysis")
 
-    tab_proj, tab_actual, tab_lineup = st.tabs(
-        ["Projected Categories", "Actual vs Projected", "Start / Sit"]
-    )
+    # Determine opponent name once
+    opp_name = "Opponent"
+    matchup_z_df = load_csv("matchup_breakdown.csv")
+    if not matchup_z_df.empty and "projected_winner" in matchup_z_df.columns:
+        opp_series = matchup_z_df[matchup_z_df["projected_winner"] != "ME"]["projected_winner"].mode()
+        if len(opp_series):
+            opp_name = opp_series.iloc[0]
 
-    with tab_proj:
-        st.subheader("Category-by-Category Projection")
-        df = load_csv("matchup_breakdown.csv")
-        if not df.empty:
-            def color_proj(row):
-                if row.get("projected_winner") == "ME":
+    tab_scores, tab_lineup = st.tabs(["Current Scores", "Start / Sit"])
+
+    with tab_scores:
+        st.subheader(f"Current Scores — {MY_TEAM} vs {opp_name}")
+        actuals_df = load_csv("matchup_actuals_vs_projected.csv")
+
+        if not actuals_df.empty:
+            st.caption("Source: matchup_actuals_vs_projected.csv · ESPN in-week accumulated stats")
+
+            wins  = (actuals_df["actual_leader"] == "ME").sum() if "actual_leader" in actuals_df.columns else 0
+            losses = (actuals_df["actual_leader"] == "OPP").sum() if "actual_leader" in actuals_df.columns else 0
+            ties  = len(actuals_df) - wins - losses
+            st.markdown(f"**{MY_TEAM}: {wins}W — {ties} tied — {losses}L vs {opp_name}**")
+
+            # Build: Pitch Slap | Category | Opponent
+            display = pd.DataFrame({
+                MY_TEAM:    actuals_df["my_actual"],
+                "Category": actuals_df["category"],
+                opp_name:   actuals_df["opp_actual"],
+            })
+            leaders = actuals_df["actual_leader"] if "actual_leader" in actuals_df.columns else pd.Series([""] * len(actuals_df))
+
+            def color_score_row(row):
+                idx = row.name
+                leader = leaders.iloc[idx] if idx < len(leaders) else ""
+                if leader == "ME":
                     return ["background-color: #3fa63f; color: white"] * len(row)
-                return ["background-color: #c0392b; color: white"] * len(row)
+                if leader == "OPP":
+                    return ["background-color: #c0392b; color: white"] * len(row)
+                return ["background-color: #888888; color: white"] * len(row)
 
-            st.dataframe(df.style.apply(color_proj, axis=1),
+            st.dataframe(display.style.apply(color_score_row, axis=1),
                          use_container_width=True, hide_index=True)
-            wins_me  = (df["projected_winner"] == "ME").sum()
-            wins_opp = len(df) - wins_me
-            c1, c2 = st.columns(2)
-            c1.metric("Projected Wins", wins_me)
-            c2.metric("Projected Losses + Ties", wins_opp)
+            st.markdown("🟢 Winning · 🔴 Losing · ⬜ Tied")
+            st.caption("⚠ Rate stats (ERA, WHIP, OBP) from ESPN may differ slightly from display due to rounding.")
         else:
-            st.info("No matchup data — run the engine.")
-
-    with tab_actual:
-        st.subheader("Actual In-Week Stats vs Projection (ESPN scoreByStat)")
-        df = load_csv("matchup_actuals_vs_projected.csv")
-        if not df.empty:
-            st.caption(
-                "⚠ Rate stats (ERA, WHIP, OBP) from ESPN are season-cumulative, "
-                "not week-specific. Count stats are week-to-date."
-            )
-
-            def color_actual(row):
-                match = row.get("actual_result", "")
-                proj  = row.get("projected_winner", "")
-                if match == "ME" and proj == "ME":
-                    return ["background-color: #3fa63f; color: white"] * len(row)
-                if match == "ME" and proj != "ME":
-                    return ["background-color: #2980b9; color: white"] * len(row)
-                if match != "ME" and proj == "ME":
-                    return ["background-color: #e67e22; color: white"] * len(row)
-                return ["background-color: #c0392b; color: white"] * len(row)
-
-            st.dataframe(df.style.apply(color_actual, axis=1),
-                         use_container_width=True, hide_index=True)
-            st.markdown(
-                "**Legend:** 🟢 Winning as expected · 🔵 Surprise win · "
-                "🟠 Divergence (losing despite projection) · 🔴 Losing as expected"
-            )
-        else:
-            st.info("No actuals data — run the engine.")
+            st.info("No current score data — run the engine. Data may not be available early in the week.")
 
     with tab_lineup:
         st.subheader("Start / Sit Recommendations")
@@ -549,25 +534,25 @@ elif page == "⚔️ Matchup":
                 return ["background-color: #3fa63f; color: white"] * len(row)
             return [""] * len(row)
 
-        lcol, rcol = st.columns(2)
-        with lcol:
+        lc, rc = st.columns(2)
+        with lc:
             st.markdown("**Hitters**")
             df = add_owner_col(load_csv("lineup_hitters.csv"))
             if not df.empty:
-                want = ["name", "fantasy_team", "position", "z_season", "z_7day",
-                        "trend_direction", "recommendation", "injury_status", "is_two_start", "notes"]
-                st.dataframe(df[safe_cols(df, want)].style.apply(color_lineup, axis=1),
+                want = ["name", "position", "z_season", "z_7day", "trend_direction",
+                        "recommendation", "injury_status", "is_two_start", "notes"]
+                st.dataframe(df[safe(df, want)].style.apply(color_lineup, axis=1),
                              use_container_width=True, hide_index=True)
             else:
                 st.info("No hitter lineup data.")
 
-        with rcol:
+        with rc:
             st.markdown("**Pitchers**")
             df = add_owner_col(load_csv("lineup_pitchers.csv"))
             if not df.empty:
-                want = ["name", "fantasy_team", "position", "z_season", "z_7day",
-                        "trend_direction", "recommendation", "injury_status", "is_two_start", "notes"]
-                st.dataframe(df[safe_cols(df, want)].style.apply(color_lineup, axis=1),
+                want = ["name", "position", "z_season", "z_7day", "trend_direction",
+                        "recommendation", "injury_status", "is_two_start", "notes"]
+                st.dataframe(df[safe(df, want)].style.apply(color_lineup, axis=1),
                              use_container_width=True, hide_index=True)
             else:
                 st.info("No pitcher lineup data.")
@@ -590,110 +575,131 @@ elif page == "🔄 Trade":
             teams = ["All"] + sorted(df["fantasy_team"].dropna().unique().tolist())
             team_sel = st.selectbox("Filter by Team", teams)
             filtered = df if team_sel == "All" else df[df["fantasy_team"] == team_sel]
-            st.dataframe(style_z(filtered), use_container_width=True, hide_index=True)
+            st.dataframe(style_df(filtered), use_container_width=True, hide_index=True)
         else:
             st.info("No trade target data — run the engine.")
 
     with tab_chips:
-        st.subheader("Your Positive-Z Players (Trade Assets)")
+        st.subheader(f"Your Trade Assets — {MY_TEAM}")
         df = add_owner_col(load_csv("trade_chips.csv"))
         if not df.empty:
-            st.dataframe(style_z(df), use_container_width=True, hide_index=True)
-            st.caption("These are players you could realistically offer in a trade.")
+            st.dataframe(style_df(df), use_container_width=True, hide_index=True)
+            st.caption("Positive z_season players you could offer in a trade.")
         else:
             st.info("No trade chip data — run the engine.")
 
     with tab_eval:
-        st.subheader("Evaluate a Specific Trade")
-        st.caption(
-            "Enter comma-separated player names exactly as they appear in rankings. "
-            "This calls main.py with the --trade flag."
-        )
-        give_input    = st.text_input("Players you're GIVING (comma-separated)",
-                                      placeholder="e.g. Nico Hoerner")
-        receive_input = st.text_input("Players you're RECEIVING (comma-separated)",
-                                      placeholder="e.g. Drake Baldwin")
+        st.subheader("Evaluate a Trade")
+        st.caption("Enter names exactly as they appear in rankings (comma-separated for multiple).")
+        give    = st.text_input("You GIVE", placeholder="e.g. Nico Hoerner")
+        receive = st.text_input("You RECEIVE", placeholder="e.g. Drake Baldwin")
 
-        if st.button("Evaluate Trade", disabled=not (give_input and receive_input)):
-            with st.spinner("Evaluating trade…"):
+        if st.button("Evaluate", disabled=not (give and receive)):
+            with st.spinner("Evaluating…"):
                 result = subprocess.run(
                     [sys.executable, "-X", "utf8", str(ROOT / "main.py"),
                      "--skip-phases", "waiver", "matchup",
-                     "--trade", give_input.strip(), receive_input.strip()],
-                    cwd=str(ROOT),
-                    capture_output=True, text=True,
+                     "--trade", give.strip(), receive.strip()],
+                    cwd=str(ROOT), capture_output=True, text=True,
                     encoding="utf-8", errors="replace",
                 )
             output = result.stdout + result.stderr
             marker = "Trade Evaluation"
             if marker in output:
-                trade_section = output[output.index(marker):]
-                end = trade_section.find("===", 20)
-                if end > 0:
-                    trade_section = trade_section[:end]
-                st.code(trade_section)
+                section = output[output.index(marker):]
+                end = section.find("===", 20)
+                st.code(section[:end] if end > 0 else section)
             else:
                 st.code(output[-3000:])
 
 # ---------------------------------------------------------------------------
-# 📈 RANKINGS
+# 📊 STRATEGY
 # ---------------------------------------------------------------------------
 
-elif page == "📈 Rankings":
-    st.title("📈 Player Rankings")
+elif page == "📊 Strategy":
+    st.title("📊 Strategy — Player Research")
+    st.caption("Real stats + z-score trends for every MLB player. Source: research_players.csv")
 
-    df = add_owner_col(load_csv("all_players_ranked.csv"))
+    df = load_csv("research_players.csv")
     if df.empty:
-        st.info("No ranking data — run the engine first.")
+        st.info("No research data — run the engine first.")
         st.stop()
 
+    df = add_owner_col(df)
+
     # --- Filters ---
-    col1, col2, col3, col4 = st.columns([2, 2, 2, 2])
-    with col1:
-        player_type = st.selectbox("Player Type", ["All", "Hitters", "Pitchers"])
-    with col2:
-        positions = ["All"] + sorted(df["position"].dropna().unique().tolist())
-        pos_filter = st.selectbox("Position", positions)
-    with col3:
-        owner_opts = ["All", MY_TEAM_LABEL, "FA"] + sorted(
-            [t for t in df["fantasy_team"].dropna().unique()
-             if t not in (MY_TEAM_LABEL, FA_LABEL)]
-        )
-        owner_filter = st.selectbox("Ownership", owner_opts)
-    with col4:
+    c1, c2, c3, c4 = st.columns([2, 2, 2, 2])
+    with c1:
+        ptype = st.selectbox("Type", ["All", "Hitters", "Pitchers"])
+    with c2:
+        # Position groupings matching roster construction
+        pos_groups = {
+            "All":          None,
+            "C":            ["C"],
+            "1B / 3B":      ["1B", "3B"],
+            "2B / SS":      ["2B", "SS"],
+            "OF":           ["OF", "CF", "LF", "RF"],
+            "SP":           ["SP"],
+            "RP":           ["RP"],
+            "DH / UTIL":    ["DH", "UTIL"],
+        }
+        pos_sel = st.selectbox("Position", list(pos_groups.keys()))
+    with c3:
+        owner_sel = st.selectbox("Ownership", ["All", "My Team", "FA", "Opponents"])
+    with c4:
         search = st.text_input("Search Name", "")
 
-    # --- Apply filters ---
+    # Apply filters
     filtered = df.copy()
-    if player_type == "Hitters":
-        filtered = filtered[filtered["is_pitcher"] == False]
-    elif player_type == "Pitchers":
-        filtered = filtered[filtered["is_pitcher"] == True]
-    if pos_filter != "All":
-        filtered = filtered[filtered["position"] == pos_filter]
-    if owner_filter != "All":
-        filtered = filtered[filtered["fantasy_team"] == owner_filter]
+    if ptype == "Hitters":
+        filtered = filtered[filtered["is_pitcher"].astype(str).str.lower().isin(["false","0"])]
+    elif ptype == "Pitchers":
+        filtered = filtered[filtered["is_pitcher"].astype(str).str.lower().isin(["true","1"])]
+
+    if pos_groups[pos_sel]:
+        filtered = filtered[filtered["position"].isin(pos_groups[pos_sel])]
+
+    if owner_sel == "My Team":
+        filtered = filtered[filtered["fantasy_team"] == MY_TEAM]
+    elif owner_sel == "FA":
+        filtered = filtered[filtered["fantasy_team"] == FA_LABEL]
+    elif owner_sel == "Opponents":
+        filtered = filtered[~filtered["fantasy_team"].isin([MY_TEAM, FA_LABEL])]
+
     if search:
         filtered = filtered[filtered["name"].str.contains(search, case=False, na=False)]
 
-    st.caption(
-        f"Showing {len(filtered):,} of {len(df):,} players · "
-        "Sorted by z_season (season is primary ranking) · "
-        "Click any column header to sort"
+    st.caption(f"Showing {len(filtered):,} of {len(df):,} players · Click column to sort")
+
+    # Show hitter or pitcher real stats based on filter
+    all_pitcher = (ptype == "Pitchers") or (
+        "is_pitcher" in filtered.columns and
+        filtered["is_pitcher"].astype(str).str.lower().isin(["true","1"]).all() and
+        len(filtered) > 0
     )
 
-    want = ["name", "fantasy_team", "position", "mlb_team",
-            "z_season", "z_7day", "z_14day", "z_30day",
-            "trend_direction", "injury_status"]
-    display_df = filtered[safe_cols(filtered, want)].head(300)
+    if all_pitcher:
+        stat_cols = ["innings_pitched", "era", "whip", "strikeouts_pitch", "quality_starts", "saves", "holds"]
+    else:
+        stat_cols = ["games_played", "at_bats", "hits", "avg", "obp", "runs", "home_runs", "rbis", "stolen_bases", "walks"]
 
-    st.dataframe(style_z(display_df), use_container_width=True, hide_index=True, height=600)
+    want = (
+        ["name", "mlb_team", "fantasy_team", "position"] +
+        stat_cols +
+        ["z_season", "z_7day", "z_14day", "z_30day", "trend_direction"]
+    )
+    # Add ESPN rating if available
+    if "espn_rating" in filtered.columns and filtered["espn_rating"].notna().any():
+        want.append("espn_rating")
+
+    show = filtered[safe(filtered, want)].head(300).copy()
+
+    st.dataframe(
+        style_df(show, ["z_season", "z_7day", "z_14day", "z_30day"]),
+        use_container_width=True,
+        hide_index=True,
+        height=600,
+    )
 
     if len(filtered) > 300:
-        st.caption("⚠ Showing first 300 results. Use the Ownership or Position filter to narrow down.")
-
-    st.markdown("---")
-    st.subheader("Z-Score Distribution")
-    if "z_season" in filtered.columns and not filtered["z_season"].dropna().empty:
-        chart_df = pd.DataFrame({"z_season": filtered["z_season"].dropna().tolist()})
-        st.bar_chart(chart_df["z_season"].value_counts(bins=20).sort_index())
+        st.caption("⚠ Showing first 300. Use filters to narrow down.")

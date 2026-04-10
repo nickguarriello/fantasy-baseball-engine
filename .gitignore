@@ -22,3 +22,5 @@ Thumbs.db
 *.tmp
 test_*.py
 diagnostic.py
+espn_credentials.py
+.env

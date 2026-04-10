@@ -25,7 +25,7 @@ from config import LEAGUE_CONFIG
 
 from src.database import (
     init_database, store_player_stats, store_z_scores,
-    store_league_teams, store_all_rosters,
+    store_league_teams, store_all_rosters, get_players_with_stats,
 )
 from src.fetchers import (
     test_api_connectivity,
@@ -34,6 +34,7 @@ from src.fetchers import (
     fetch_mlb_player_stats,
     fetch_mlb_stats_range,
     fetch_two_start_pitchers,
+    fetch_espn_player_ratings,
     _n_days_ago, _today_str,
 )
 from src.processors import calculate_multi_period_zscores, calculate_trends
@@ -43,6 +44,7 @@ from src.trades import find_trade_targets, evaluate_trade
 from src.outputs import (
     export_all_rankings, export_waiver_report,
     export_matchup_report, export_trade_targets,
+    export_research_players,
     print_summary, print_waiver_summary,
     print_matchup_summary, print_trade_summary,
 )
@@ -166,10 +168,19 @@ def main():
         print()
 
         # ============================================================ #
-        # STEP 6: Two-start pitchers this week
+        # STEP 6: ESPN Player Rater (optional — requires auth cookies)
         # ============================================================ #
-        print("[6/9] Identifying two-start pitchers this week...")
-        two_start_pitchers = fetch_two_start_pitchers()
+        print("[6/9] Fetching ESPN Player Rater ratings...")
+        espn_ratings = fetch_espn_player_ratings()
+        if not espn_ratings:
+            print("  (Skipped — credentials not configured or expired)")
+        print()
+
+        # ============================================================ #
+        # STEP 6b: Two-start pitchers this week
+        # ============================================================ #
+        print("[6b/9] Identifying two-start pitchers this week...")
+        two_start_pitchers = fetch_two_start_pitchers()  # noqa: kept inline
         if two_start_pitchers:
             print(f"  Two-starters: {', '.join(k.title() for k in list(two_start_pitchers.keys())[:6])}"
                   + (f" + {len(two_start_pitchers)-6} more" if len(two_start_pitchers) > 6 else ""))
@@ -212,6 +223,9 @@ def main():
         # ============================================================ #
         print("[9/9] Running decision phases...")
         all_csv_files = list(export_all_rankings(z_scored_players))
+        # Research/Strategy export — real stats + z-scores + ESPN ratings
+        db_stats = get_players_with_stats()
+        all_csv_files.append(export_research_players(z_scored_players, db_stats, espn_ratings))
         print_summary(z_scored_players, my_roster)
 
         # ------------------------------------------------------------ #

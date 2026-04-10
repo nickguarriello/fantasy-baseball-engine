@@ -509,6 +509,7 @@ def store_league_teams(league_teams: List[Dict]) -> int:
 def store_all_rosters(all_rosters: Dict) -> int:
     """
     Store a full snapshot of every team's roster.
+    Clears the table first so each run is a clean snapshot (no duplicates).
 
     Args:
         all_rosters: {team_id: {team_name, players: [...]}} from ESPN
@@ -519,6 +520,9 @@ def store_all_rosters(all_rosters: Dict) -> int:
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     try:
+        # Clear previous snapshot — ownership changes each run
+        cursor.execute("DELETE FROM all_rosters")
+
         records = 0
         for team_id, team_data in all_rosters.items():
             for player in team_data.get('players', []):
@@ -544,6 +548,40 @@ def store_all_rosters(all_rosters: Dict) -> int:
         print(f"Error storing all rosters: {e}")
         conn.rollback()
         return 0
+    finally:
+        conn.close()
+
+
+def get_players_with_stats() -> List[Dict]:
+    """
+    Return all players joined with their latest real stats from player_stats.
+    Used by the Strategy tab for research (real numbers, not just z-scores).
+    """
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    try:
+        cursor.execute('''
+            SELECT
+                p.player_id, p.name, p.position, p.mlb_team, p.is_pitcher,
+                p.injury_status,
+                ps.games_played, ps.at_bats, ps.hits, ps.avg, ps.obp,
+                ps.runs, ps.home_runs, ps.rbis, ps.stolen_bases, ps.walks,
+                ps.innings_pitched, ps.era, ps.whip, ps.strikeouts_pitch,
+                ps.quality_starts, ps.saves, ps.holds, ps.earned_runs,
+                ar.fantasy_team_name, ar.is_my_player
+            FROM players p
+            LEFT JOIN player_stats ps ON p.player_id = ps.player_id
+                AND ps.date_fetched = (
+                    SELECT MAX(date_fetched) FROM player_stats WHERE player_id = p.player_id
+                )
+            LEFT JOIN all_rosters ar ON LOWER(TRIM(p.name)) = LOWER(TRIM(ar.player_name))
+            ORDER BY p.name
+        ''')
+        return [dict(row) for row in cursor.fetchall()]
+    except sqlite3.Error as e:
+        print(f"Error retrieving players with stats: {e}")
+        return []
     finally:
         conn.close()
 

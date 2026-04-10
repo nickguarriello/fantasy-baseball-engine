@@ -22,6 +22,7 @@ from config import (
     ESPN_POSITION_MAP, PITCHER_POSITION_IDS,
     OF_POSITIONS, ESPN_STAT_IDS, ESPN_RATE_STAT_IDS,
     INJURED_STATUSES, QUESTIONABLE_STATUSES,
+    ESPN_S2, ESPN_SWID,
 )
 
 
@@ -642,6 +643,68 @@ def fetch_two_start_pitchers() -> Dict[str, int]:
 # ---------------------------------------------------------------------------
 # Connectivity check
 # ---------------------------------------------------------------------------
+
+def fetch_espn_player_ratings() -> Dict[str, Dict]:
+    """
+    Fetch ESPN player ownership % and draft ranks via kona_player_info (requires auth).
+    Returns {player_name_lower: {percent_owned, percent_started, espn_draft_rank}}
+    or empty dict if credentials not configured or request fails.
+
+    Note: ESPN's composite Player Rater score is not available in this endpoint.
+    We use ownership % and raw stats as supplemental data.
+    The endpoint returns ~50 players per call (ESPN pagination).
+    """
+    if not ESPN_S2 or not ESPN_SWID:
+        return {}
+
+    league_id = LEAGUE_CONFIG['league_id']
+    season    = LEAGUE_CONFIG['season']
+    url       = f"{API_CONFIG['espn_base_url']}/seasons/{season}/segments/0/leagues/{league_id}"
+    headers   = {'Cookie': f'espn_s2={ESPN_S2}; SWID={ESPN_SWID}'}
+
+    ratings: Dict[str, Dict] = {}
+
+    # Fetch multiple pages (50 players per page)
+    for offset in range(0, 1000, 50):
+        params = {
+            'view': 'kona_player_info',
+            'scoringPeriodId': 0,
+            'offset': offset,
+        }
+        data = _make_request(url, params=params, headers=headers)
+        if not data:
+            break
+
+        players_raw = data.get('players', [])
+        if not players_raw:
+            break
+
+        for entry in players_raw:
+            player_info = entry.get('player', {})
+            name = player_info.get('fullName', '').lower().strip()
+            if not name:
+                continue
+
+            ownership = player_info.get('ownership', {})
+            draft_ranks = entry.get('draftRanksByRankType', {})
+            roto_rank = draft_ranks.get('ROTO', {}).get('rank')
+
+            ratings[name] = {
+                'percent_owned':   ownership.get('percentOwned', 0.0),
+                'percent_started': ownership.get('percentStarted', 0.0),
+                'espn_draft_rank': roto_rank,
+            }
+
+        # If fewer than 50 returned, we've hit the end
+        if len(players_raw) < 50:
+            break
+
+    if ratings:
+        print(f"  [ESPN] Loaded ownership data for {len(ratings)} players")
+    else:
+        print("  [ESPN] No player data returned — credentials may be expired")
+    return ratings
+
 
 def test_api_connectivity() -> bool:
     """Returns True if both ESPN and MLB Stats APIs respond successfully."""

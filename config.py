@@ -178,23 +178,35 @@ QUESTIONABLE_STATUSES = {
 # IDs marked (estimated) are best guesses — may need adjustment.
 
 ESPN_STAT_IDS = {
-    # --- Batting ---
-    '1':  'runs',           # R   (confirmed)
-    '5':  'stolen_bases',   # SB  (confirmed)
-    '23': 'home_runs',      # HR  (estimated)
-    '37': 'rbis',           # RBI (estimated)
-    '20': 'obp',            # OBP (estimated — rate stat)
+    # --- Batting (all confirmed via live API scoreByStat result flags) ---
+    '21': 'runs',           # R    (confirmed — result flag matched 26 runs)
+    '23': 'home_runs',      # HR   (confirmed)
+    '20': 'rbis',           # RBI  (confirmed — result flag matched)
+    '5':  'stolen_bases',   # SB   (confirmed)
+    '17': 'obp',            # OBP  (confirmed — rate stat, result flag matched)
     # --- Pitching ---
-    '48': 'strikeouts',     # K   (confirmed)
-    '63': 'quality_starts', # QS  (confirmed)
-    '41': 'era',            # ERA (confirmed — rate stat)
-    '17': 'whip',           # WHIP (confirmed — rate stat)
+    '48': 'strikeouts',     # K    (confirmed)
+    '63': 'quality_starts', # QS   (confirmed)
+    '47': 'era',            # ERA  (confirmed — result flag + value 3.62 matched)
+    '41': 'whip',           # WHIP (confirmed — result flag + value 1.24 matched)
     '83': 'sv_hd',          # SV+HD (confirmed)
-    '47': 'saves',          # SV  (confirmed)
 }
 
 # Rate stats from ESPN — stored as floats, not summed
-ESPN_RATE_STAT_IDS = {'41', '17', '20'}
+ESPN_RATE_STAT_IDS = {'47', '41', '17'}   # ERA, WHIP, OBP
+
+
+# ============================================================================
+# ESPN AUTH (optional — unlocks Player Rater data and ownership %)
+# ============================================================================
+# Credentials are loaded from espn_credentials.py (gitignored).
+# Without them, the engine falls back to derived free agents and MLB z-scores.
+
+try:
+    from espn_credentials import ESPN_S2, ESPN_SWID  # type: ignore
+except ImportError:
+    ESPN_S2   = None
+    ESPN_SWID = None
 
 # ============================================================================
 # VALIDATION

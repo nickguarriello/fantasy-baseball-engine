@@ -335,6 +335,91 @@ def print_trade_summary(trade_data: Dict) -> None:
     print("=" * 70 + "\n")
 
 
+RESEARCH_COLS = [
+    # Identity
+    'name', 'mlb_team', 'position', 'is_pitcher', 'fantasy_team',
+    # Real stats — hitters
+    'games_played', 'at_bats', 'hits', 'avg', 'obp',
+    'runs', 'home_runs', 'rbis', 'stolen_bases', 'walks',
+    # Real stats — pitchers
+    'innings_pitched', 'era', 'whip', 'strikeouts_pitch',
+    'quality_starts', 'saves', 'holds',
+    # Z-scores (key only)
+    'z_season', 'z_7day', 'z_14day', 'z_30day', 'trend_direction',
+    'espn_rating', 'percent_owned',
+]
+
+
+def export_research_players(z_scored_players: List[Dict], db_stats: List[Dict], espn_ratings: Dict = None) -> str:
+    """
+    Export combined real-stats + z-scores for the Strategy/Research tab.
+    Joins z_scored_players with DB stats by name, adds ESPN ratings if available.
+    """
+    espn_ratings = espn_ratings or {}
+
+    # Build lookup: name_lower → real stats row
+    stats_lookup: Dict[str, Dict] = {}
+    for row in db_stats:
+        key = (row.get('name') or '').lower().strip()
+        if key:
+            stats_lookup[key] = row
+
+    rows = []
+    for player in z_scored_players:
+        name = player.get('name', '')
+        key  = name.lower().strip()
+        stat_row = stats_lookup.get(key, {})
+        espn     = espn_ratings.get(key, {})
+
+        # fantasy_team from DB stats row (joined via all_rosters)
+        fantasy_team = stat_row.get('fantasy_team_name') or ''
+        if stat_row.get('is_my_player'):
+            fantasy_team = 'Pitch Slap'
+        elif not fantasy_team:
+            fantasy_team = 'FA'
+
+        row = {
+            'name':         name,
+            'mlb_team':     player.get('mlb_team', ''),
+            'position':     player.get('position', ''),
+            'is_pitcher':   player.get('is_pitcher', False),
+            'fantasy_team': fantasy_team,
+            # Hitting real stats
+            'games_played':    stat_row.get('games_played'),
+            'at_bats':         stat_row.get('at_bats'),
+            'hits':            stat_row.get('hits'),
+            'avg':             stat_row.get('avg'),
+            'obp':             stat_row.get('obp'),
+            'runs':            stat_row.get('runs'),
+            'home_runs':       stat_row.get('home_runs'),
+            'rbis':            stat_row.get('rbis'),
+            'stolen_bases':    stat_row.get('stolen_bases'),
+            'walks':           stat_row.get('walks'),
+            # Pitching real stats
+            'innings_pitched': stat_row.get('innings_pitched'),
+            'era':             stat_row.get('era'),
+            'whip':            stat_row.get('whip'),
+            'strikeouts_pitch': stat_row.get('strikeouts_pitch'),
+            'quality_starts':  stat_row.get('quality_starts'),
+            'saves':           stat_row.get('saves'),
+            'holds':           stat_row.get('holds'),
+            # Z-scores
+            'z_season':        player.get('z_season'),
+            'z_7day':          player.get('z_7day'),
+            'z_14day':         player.get('z_14day'),
+            'z_30day':         player.get('z_30day'),
+            'trend_direction': player.get('trend_direction'),
+            # ESPN
+            'espn_rating':     espn.get('espn_rating'),
+            'percent_owned':   espn.get('percent_owned'),
+        }
+        rows.append(row)
+
+    rows.sort(key=lambda r: r.get('z_season') or -99, reverse=True)
+    print("\n  Exporting research CSV...")
+    return export_csv('research_players.csv', rows, RESEARCH_COLS)
+
+
 def print_status() -> None:
     """Quick DB record count check."""
     import sqlite3
