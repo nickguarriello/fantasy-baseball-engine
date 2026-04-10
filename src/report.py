@@ -60,6 +60,23 @@ def _fmt(val, decimals=2, fallback="—") -> str:
         return str(val) if val else fallback
 
 
+def _fmt_stat(val, cat: str, fallback="—") -> str:
+    """Category-aware stat formatting: whole numbers, OBP as .400, ERA/WHIP as 1.25."""
+    if val in (None, "", "None", "nan"):
+        return fallback
+    try:
+        v = float(val)
+    except (TypeError, ValueError):
+        return str(val) if val else fallback
+    if cat == "OBP":
+        s = f"{v:.3f}"
+        return s[1:] if s.startswith("0") else s   # .400 not 0.400
+    elif cat in ("ERA", "WHIP"):
+        return f"{v:.2f}"
+    else:
+        return str(int(round(v)))
+
+
 def _pct(val, fallback="—") -> str:
     if val in (None, "", "None", "nan"):
         return fallback
@@ -87,7 +104,7 @@ def _build_matchup(actuals: List[Dict], breakdown: List[Dict]) -> Dict:
 
     opp_name = "Opponent"
     if breakdown:
-        winners = [r.get("projected_winner", "") for r in breakdown if r.get("projected_winner") != "ME"]
+        winners = [r.get("projected_winner", "") for r in breakdown if r.get("projected_winner") not in ("ME", "TOSS-UP", "UNKNOWN", "")]
         if winners:
             opp_name = max(set(winners), key=winners.count)
 
@@ -97,13 +114,22 @@ def _build_matchup(actuals: List[Dict], breakdown: List[Dict]) -> Dict:
 
     rows = []
     for r in actuals:
+        cat    = r.get("category", "")
         leader = r.get("actual_leader", "")
+        proj   = r.get("projected_winner", "—")
+        proj_display = MY_TEAM if proj == "ME" else ("Toss-Up" if proj in ("TOSS-UP", "UNKNOWN") else proj)
+        live_display = MY_TEAM if leader == "ME" else (opp_name if leader == "OPP" else "Tied")
+        diverges = str(r.get("diverges_from_projection", "")).lower() in ("true", "1")
         rows.append({
-            "my_score":  _fmt(r.get("my_actual"), 3),
-            "category":  r.get("category", ""),
-            "opp_score": _fmt(r.get("opp_actual"), 3),
-            "leader":    leader,
-            "_cls":      "win" if leader == "ME" else ("loss" if leader == "OPP" else "tie"),
+            "my_score":     _fmt_stat(r.get("my_actual"),  cat),
+            "category":     cat,
+            "opp_score":    _fmt_stat(r.get("opp_actual"), cat),
+            "leader":       leader,
+            "proj_display": proj_display,
+            "live_display": live_display,
+            "diverges":     diverges,
+            "_cls":         "win" if leader == "ME" else ("loss" if leader == "OPP" else "tie"),
+            "_proj_cls":    "win" if leader == "ME" else ("loss" if leader == "OPP" else "tie"),
         })
 
     return {

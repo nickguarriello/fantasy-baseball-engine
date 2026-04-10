@@ -9,7 +9,7 @@ It gives Claude full project context without needing re-explanation.
 
 - **Name:** Fantasy Baseball H2H Category Decision Engine
 - **Owner:** Nick G
-- **Stack:** Python 3, SQLite, MLB Stats API, ESPN Fantasy API (public, no auth)
+- **Stack:** Python 3, SQLite, MLB Stats API, ESPN Fantasy API, Jinja2 HTML report
 - **League:** ESPN public league `1985887220`, Team ID `1`, Season `2026`
 - **Format:** H2H Categories (10 cats: R, HR, RBI, SB, OBP / K, QS, ERA, WHIP, SVHD)
 
@@ -19,17 +19,22 @@ It gives Claude full project context without needing re-explanation.
 
 ```
 fantasy-baseball-engine/
-├── app.py                   # Streamlit UI — run with: streamlit run app.py
-├── main.py                  # Pipeline entry point — run this
+├── main.py                  # Pipeline entry point — python -X utf8 main.py
 ├── config.py                # All constants: league IDs, API URLs, stat maps
-├── requirements.txt         # requests, pandas, numpy, streamlit
+├── requirements.txt         # requests, pandas, numpy, jinja2
+├── run_daily.bat            # Windows Task Scheduler script (runs pipeline + git push)
 ├── data/
 │   └── fantasy_baseball.db  # SQLite (gitignored — regenerated each run)
 ├── outputs/                 # CSV exports (gitignored)
+├── docs/
+│   └── index.html           # HTML report — served via GitHub Pages (phone access)
+├── templates/
+│   └── report.html          # Jinja2 template — edit this to change layout/styling
 └── src/
     ├── fetchers.py          # ESPN + MLB API calls
     ├── processors.py        # Z-score math (single + multi-period)
     ├── database.py          # SQLite schema + CRUD
+    ├── report.py            # Loads CSVs, renders template → docs/index.html
     ├── waiver_wire.py       # Phase 2: free agent ranking
     ├── matchup.py           # Phase 3: matchup + lineup
     ├── trades.py            # Phase 4: trade targets + evaluation
@@ -41,7 +46,7 @@ fantasy-baseball-engine/
 ## How to Run
 
 ```bash
-# Full pipeline (all 4 phases)
+# Full pipeline (all 4 phases) — also generates docs/index.html
 python -X utf8 main.py
 
 # Skip phases you don't need
@@ -49,13 +54,12 @@ python -X utf8 main.py --skip-phases waiver trade
 
 # Evaluate a specific trade
 python -X utf8 main.py --trade "Nico Hoerner,Mason Miller" "Drake Baldwin"
-
-# Launch the Streamlit UI (reads from outputs/ CSVs)
-streamlit run app.py
 ```
 
 > `-X utf8` required on Windows (emoji/unicode in print statements)
-> Streamlit UI has a built-in "Refresh Data" button that re-runs the full pipeline
+> HTML report auto-generated at docs/index.html after every run
+> GitHub Pages serves it at: https://nickguarriello.github.io/fantasy-baseball-engine
+> Daily automation: run_daily.bat via Windows Task Scheduler (7 AM)
 
 ---
 
@@ -114,12 +118,16 @@ ESPN_STAT_IDS = { '1': 'runs', '48': 'strikeouts', ... }  # partially confirmed
 
 | Item | Status |
 |------|--------|
-| Streamlit UI (app.py) | ✅ Done — 5 tabs: Dashboard, Waiver, Matchup, Trade, Rankings |
-| Tier 3: Daily auto-run via Windows Task Scheduler | Planned |
+| HTML report via Jinja2 (docs/index.html → GitHub Pages) | ✅ Done |
+| Daily auto-run via Windows Task Scheduler (run_daily.bat) | ✅ Done |
+| ESPN projections + ownership % fetch | ✅ Done |
+| Projection z-scores (our math on ESPN proj data) | ✅ Done |
+| master_players.csv + data_dictionary.csv | ✅ Done |
+| Matchup section: score formatting + projected vs live table | 🔲 In progress |
+| Start/Sit: next-week focus, active/bench badges, SP/RP labels | 🔲 In progress |
+| My Roster: current-week view, z-scores + stats all splits | 🔲 In progress |
 | Tier 3: In-week cumulative stat tracking across matchups | Planned |
 | Tier 3: Trade negotiation — suggest what to offer | Planned |
-| ESPN `kona_player_info` free agent fetch | Requires auth — currently derived |
-| ESPN stat ID map validation | Partially confirmed; rate stats (OBP, ERA, WHIP) IDs estimated |
 | Phase 5: Historical learning (trend model) | Placeholder — needs 2-3 weeks data |
 
 ---
@@ -159,9 +167,9 @@ Schema migrations run automatically via `_add_column_if_missing()` in `init_data
 
 ## Last Run Stats (auto-updated by pre-commit hook)
 
-- **Updated:** 2026-04-10 12:42:09
-- **Last data run:** 2026-04-10 16:30:24
+- **Updated:** 2026-04-10 13:31:40
+- **Last data run:** 2026-04-09 23:16:29
 - **Players in DB:** 842
-- **Z-score records:** 20199
-- **Roster entries:** 249
+- **Z-score records:** 12621
+- **Roster entries:** 2988
 - **League teams:** 8
