@@ -618,7 +618,7 @@ elif page == "🔄 Trade":
 
 elif page == "📊 Strategy":
     st.title("📊 Strategy — Player Research")
-    st.caption("Real stats + z-score trends for every MLB player. Source: research_players.csv")
+    st.caption("4-layer view: Actual Stats · Actual Z-Scores · ESPN Projections · Projection Z-Scores · Source: research_players.csv")
 
     df = load_csv("research_players.csv")
     if df.empty:
@@ -632,16 +632,15 @@ elif page == "📊 Strategy":
     with c1:
         ptype = st.selectbox("Type", ["All", "Hitters", "Pitchers"])
     with c2:
-        # Position groupings matching roster construction
         pos_groups = {
-            "All":          None,
-            "C":            ["C"],
-            "1B / 3B":      ["1B", "3B"],
-            "2B / SS":      ["2B", "SS"],
-            "OF":           ["OF", "CF", "LF", "RF"],
-            "SP":           ["SP"],
-            "RP":           ["RP"],
-            "DH / UTIL":    ["DH", "UTIL"],
+            "All":       None,
+            "C":         ["C"],
+            "1B / 3B":   ["1B", "3B"],
+            "2B / SS":   ["2B", "SS"],
+            "OF":        ["OF", "CF", "LF", "RF"],
+            "SP":        ["SP"],
+            "RP":        ["RP"],
+            "DH / UTIL": ["DH", "UTIL"],
         }
         pos_sel = st.selectbox("Position", list(pos_groups.keys()))
     with c3:
@@ -671,35 +670,78 @@ elif page == "📊 Strategy":
 
     st.caption(f"Showing {len(filtered):,} of {len(df):,} players · Click column to sort")
 
-    # Show hitter or pitcher real stats based on filter
     all_pitcher = (ptype == "Pitchers") or (
         "is_pitcher" in filtered.columns and
         filtered["is_pitcher"].astype(str).str.lower().isin(["true","1"]).all() and
         len(filtered) > 0
     )
 
+    # Column sets per player type
     if all_pitcher:
-        stat_cols = ["innings_pitched", "era", "whip", "strikeouts_pitch", "quality_starts", "saves", "holds"]
+        actual_stat_cols   = ["innings_pitched", "era", "whip", "strikeouts_pitch", "quality_starts", "saves", "holds"]
+        actual_z_cols      = ["z_k", "z_qs", "z_era", "z_whip", "z_svhd", "z_season", "z_7day", "z_14day", "z_30day"]
+        proj_stat_cols     = ["proj_strikeouts", "proj_quality_starts", "proj_era", "proj_whip", "proj_sv_hd"]
+        proj_z_cols        = ["proj_z_k", "proj_z_qs", "proj_z_era", "proj_z_whip", "proj_z_svhd", "proj_z_season"]
     else:
-        stat_cols = ["games_played", "at_bats", "hits", "avg", "obp", "runs", "home_runs", "rbis", "stolen_bases", "walks"]
+        actual_stat_cols   = ["games_played", "at_bats", "hits", "avg", "obp", "runs", "home_runs", "rbis", "stolen_bases", "walks"]
+        actual_z_cols      = ["z_r", "z_hr", "z_rbi", "z_sb", "z_obp", "z_season", "z_7day", "z_14day", "z_30day"]
+        proj_stat_cols     = ["proj_runs", "proj_home_runs", "proj_rbis", "proj_stolen_bases", "proj_obp"]
+        proj_z_cols        = ["proj_z_r", "proj_z_hr", "proj_z_rbi", "proj_z_sb", "proj_z_obp", "proj_z_season"]
 
-    want = (
-        ["name", "mlb_team", "fantasy_team", "position"] +
-        stat_cols +
-        ["z_season", "z_7day", "z_14day", "z_30day", "trend_direction"]
-    )
-    # Add ESPN rating if available
-    if "espn_rating" in filtered.columns and filtered["espn_rating"].notna().any():
-        want.append("espn_rating")
+    id_cols = ["name", "mlb_team", "fantasy_team", "position", "percent_owned", "percent_started"]
 
-    show = filtered[safe(filtered, want)].head(300).copy()
+    layer_tab1, layer_tab2, layer_tab3, layer_tab4 = st.tabs([
+        "📈 Actual Stats",
+        "🎯 Actual Z-Scores",
+        "🔮 ESPN Projections",
+        "⭐ Projection Z-Scores",
+    ])
 
-    st.dataframe(
-        style_df(show, ["z_season", "z_7day", "z_14day", "z_30day"]),
-        use_container_width=True,
-        hide_index=True,
-        height=600,
-    )
+    show_n = min(300, len(filtered))
+
+    with layer_tab1:
+        st.caption("Real MLB season stats to date")
+        want = id_cols + actual_stat_cols + ["trend_direction"]
+        show = filtered[safe(filtered, want)].head(show_n).copy()
+        if "trend_direction" in show.columns:
+            show["trend"] = show["trend_direction"].apply(trend_icon)
+            show = show.drop(columns=["trend_direction"])
+        st.dataframe(style_df(show, []), use_container_width=True, hide_index=True, height=600)
+
+    with layer_tab2:
+        st.caption("Z-scores computed from actual MLB stats · z_season = composite · 7/14/30d = recent form")
+        want = id_cols + actual_z_cols + ["trend_direction"]
+        show = filtered[safe(filtered, want)].head(show_n).copy()
+        if "trend_direction" in show.columns:
+            show["trend"] = show["trend_direction"].apply(trend_icon)
+            show = show.drop(columns=["trend_direction"])
+        st.dataframe(
+            style_df(show, [c for c in actual_z_cols if c in show.columns]),
+            use_container_width=True, hide_index=True, height=600,
+        )
+
+    with layer_tab3:
+        has_proj = any(c in filtered.columns and filtered[c].notna().any() for c in proj_stat_cols)
+        if has_proj:
+            st.caption("ESPN rest-of-season projected counting stats (raw, not z-scored)")
+            want = id_cols + proj_stat_cols
+            show = filtered[safe(filtered, want)].head(show_n).copy()
+            st.dataframe(style_df(show, []), use_container_width=True, hide_index=True, height=600)
+        else:
+            st.info("No projection data available. Projections require ESPN auth (espn_credentials.py) and a fresh pipeline run.")
+
+    with layer_tab4:
+        has_proj_z = any(c in filtered.columns and filtered[c].notna().any() for c in proj_z_cols)
+        if has_proj_z:
+            st.caption("Our z-score math applied to ESPN rest-of-season projections · proj_z_season = composite")
+            want = id_cols + proj_z_cols
+            show = filtered[safe(filtered, want)].head(show_n).copy()
+            st.dataframe(
+                style_df(show, [c for c in proj_z_cols if c in show.columns]),
+                use_container_width=True, hide_index=True, height=600,
+            )
+        else:
+            st.info("No projection z-score data available. Run the engine with ESPN credentials configured.")
 
     if len(filtered) > 300:
         st.caption("⚠ Showing first 300. Use filters to narrow down.")

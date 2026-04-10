@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚾ {{ my_team }} — Fantasy Baseball</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f1117;
+    color: #e0e0e0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  a { color: #4da6ff; text-decoration: none; }
+
+  /* ── Nav ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #1a1d27;
+    border-bottom: 1px solid #2a2d3a;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  nav .brand { font-weight: 700; font-size: 15px; margin-right: 10px; color: #fff; }
+  nav a {
+    color: #aaa;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: #252838;
+    white-space: nowrap;
+  }
+  nav a:hover { background: #333750; color: #fff; }
+  .generated { margin-left: auto; font-size: 11px; color: #666; }
+
+  /* ── Sections ── */
+  section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 16px 8px;
+  }
+  h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #2a2d3a;
+  }
+  h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ccc;
+    margin: 14px 0 6px;
+  }
+  .section-divider {
+    border: none;
+    border-top: 1px solid #1e2130;
+    margin: 0;
+  }
+
+  /* ── Record badge ── */
+  .record {
+    display: inline-flex;
+    gap: 12px;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 10px 0;
+  }
+  .record .wins   { color: #3fa63f; }
+  .record .ties   { color: #888; }
+  .record .losses { color: #c0392b; }
+  .record .vs     { color: #555; font-size: 14px; }
+
+  /* ── Tables ── */
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 8px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 400px;
+  }
+  th {
+    background: #1e2130;
+    color: #aaa;
+    font-weight: 600;
+    text-align: left;
+    padding: 7px 10px;
+    white-space: nowrap;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #1e2130;
+    white-space: nowrap;
+  }
+  tr:hover td { background: rgba(255,255,255,0.03); }
+
+  /* ── Matchup table ── */
+  .win   td { background: #1a3a1a; }
+  .loss  td { background: #3a1a1a; }
+  .tie   td { background: #2a2a2a; }
+  .win   td:nth-child(1) { color: #3fa63f; font-weight: 700; }
+  .loss  td:nth-child(3) { color: #e74c3c; font-weight: 700; }
+  .matchup-cat { text-align: center; color: #888; font-size: 12px; }
+
+  /* ── Lineup ── */
+  .start   td { border-left: 3px solid #3fa63f; }
+  .sit     td { border-left: 3px solid #c0392b; }
+  .injured td { border-left: 3px solid #888; opacity: 0.6; }
+  .two-start-badge {
+    background: #1a4fa8;
+    color: #fff;
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 4px;
+  }
+
+  /* ── Z-score colors ── */
+  .z-great   { background: #1a4a1a; color: #7fff7f; font-weight: 600; }
+  .z-good    { background: #1e3a1e; color: #5cd65c; }
+  .z-ok      { background: #1e2e1e; color: #a0d0a0; }
+  .z-bad     { background: #3a1e1e; color: #d08080; }
+  .z-terrible{ background: #4a1a1a; color: #ff6b6b; font-weight: 600; }
+  .z-na      { color: #555; }
+
+  /* ── Team badges ── */
+  .my-team    { color: #4da6ff; font-weight: 600; }
+  .fa         { color: #888; }
+  .other-team { color: #b07fff; }
+
+  /* ── Trend ── */
+  .trend-UP   { color: #3fa63f; }
+  .trend-DOWN { color: #e74c3c; }
+  .trend-FLAT { color: #888; }
+
+  /* ── Two-col layout for lineup / my roster ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 700px) {
+    .two-col { grid-template-columns: 1fr; }
+    nav .generated { display: none; }
+  }
+
+  /* ── Empty state ── */
+  .empty { color: #555; font-style: italic; padding: 12px 0; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ NAV ═══════════════════════ -->
+<nav>
+  <span class="brand">⚾ {{ my_team }}</span>
+  <a href="#matchup">Matchup</a>
+  <a href="#lineup">Start/Sit</a>
+  <a href="#roster">My Roster</a>
+  <a href="#waiver">Waiver</a>
+  <a href="#trade">Trade</a>
+  <a href="#rankings">Rankings</a>
+  <span class="generated">Updated {{ generated_at }}</span>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════ MATCHUP ══════════════════ -->
+<section id="matchup">
+  <h2>⚔️ This Week's Matchup</h2>
+  {% if matchup.available %}
+    <div class="record">
+      <span class="wins">{{ matchup.wins }}W</span>
+      <span class="vs">vs</span>
+      <span class="ties">{{ matchup.ties }}T</span>
+      <span class="vs">vs</span>
+      <span class="losses">{{ matchup.losses }}L</span>
+      <span style="font-size:14px; color:#888;">vs {{ matchup.opp_name }}</span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>{{ matchup.my_team }}</th>
+            <th class="matchup-cat">Category</th>
+            <th>{{ matchup.opp_name }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in matchup.rows %}
+          <tr class="{{ row._cls }}">
+            <td>{{ row.my_score }}</td>
+            <td class="matchup-cat">{{ row.category }}</td>
+            <td>{{ row.opp_score }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="empty">No matchup data — run the pipeline or matchup may not have started.</p>
+  {% endif %}
+</section>
+<hr class="section-divider">
+
+
+<!-- ═══════════════════════════════════════════ LINEUP ══════════════════ -->
+<section id="lineup">
+  <h2>📋 Start / Sit</h2>
+  <div class="two-col">
+    <div>
+      <h3>Hitters</h3>
+      {% if lineup.hitters %}
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Pos</th><th>Z-Ssn</th><th>Z-7d</th><th>Rec</th></tr>
+          </thead>
+          <tbody>
+            {% for p in lineup.hitters %}
+            <tr class="{{ p._cls }}">
+              <td>{{ p.name }}</td>
+              <td>{{ p.position }}</td>
+              <td class="{{ p._cls_z_season }}">{{ p.z_season }}</td>
+              <td class="{{ p._cls_z_7day }}">{{ p.z_7day }}</td>
+              <td>{{ p.rec }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <p class="empty">No hitter lineup data.</p>
+      {% endif %}
+    </div>
+    <div>
+      <h3>Pitchers</h3>
+      {% if lineup.pitchers %}
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Pos</th><th>Z-Ssn</th><th>Z-7d</th><th>Rec</th></tr>
+          </thead>
+          <tbody>
+            {% for p in lineup.pitchers %}
+            <tr class="{{ p._cls }}">
+              <td>
+                {{ p.name }}
+                {% if p.two_start %}<span class="two-start-badge">2-start</span>{% endif %}
+              </td>
+              <td>{{ p.position }}</td>
+              <td class="{{ p._cls_z_season }}">{{ p.z_season }}</td>
+              <td class="{{ p._cls_z_7day }}">{{ p.z_7day }}</td>
+              <td>{{ p.rec }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <p class="empty">No pitcher lineup data.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+<hr class="section-divider">
+
+
+<!-- ═══════════════════════════════════════════ MY ROSTER ════════════════ -->
+<section id="roster">
+  <h2>🔵 My Roster — {{ my_team }}</h2>
+  <div class="two-col">
+    <div>
+      <h3>Hitters</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Pos</th><th>Z-Ssn</th><th>Z-7d</th><th>Z-14d</th><th>Z-30d</th><th>Trend</th></tr>
+          </thead>
+          <tbody>
+            {% for p in my_roster if not p.is_pitcher %}
+            <tr>
+              <td>{{ p.name }}</td>
+              <td>{{ p.position }}</td>
+              <td class="{{ p._cls_z_season }}">{{ p.z_season }}</td>
+              <td class="{{ p._cls_z_7day }}">{{ p.z_7day }}</td>
+              <td class="{{ p._cls_z_14day }}">{{ p.z_14day }}</td>
+              <td class="{{ p._cls_z_30day }}">{{ p.z_30day }}</td>
+              <td class="trend-{{ p.trend }}">{{ p.trend }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="empty">No hitters found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <h3>Pitchers</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Pos</th><th>Z-Ssn</th><th>Z-7d</th><th>Z-14d</th><th>Z-30d</th><th>Trend</th></tr>
+          </thead>
+          <tbody>
+            {% for p in my_roster if p.is_pitcher %}
+            <tr>
+              <td>{{ p.name }}</td>
+              <td>{{ p.position }}</td>
+              <td class="{{ p._cls_z_season }}">{{ p.z_season }}</td>
+              <td class="{{ p._cls_z_7day }}">{{ p.z_7day }}</td>
+              <td class="{{ p._cls_z_14day }}">{{ p.z_14day }}</td>
+              <td class="{{ p._cls_z_30day }}">{{ p.z_30day }}</td>
+              <td class="trend-{{ p.trend }}">{{ p.trend }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="empty">No pitchers found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="section-divider">
+
+
+<!-- ═══════════════════════════════════════════ WAIVER ══════════════════ -->
+<section id="waiver">
+  <h2>🔍 Waiver Wire</h2>
+
+  {% if waiver.two_start %}
+  <h3>⭐ Two-Start Pitchers Available</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Name</th><th>Pos</th><th>Team</th><th>Owned%</th><th>Z-Ssn</th><th>Z-7d</th></tr>
+      </thead>
+      <tbody>
+        {% for p in waiver.two_start %}
+        <tr>
+          <td>{{ p.name }} <span class="two-start-badge">2-start</span></td>
+          <td>{{ p.position }}</td>
+          <td>{{ p.mlb_team }}</td>
+          <td>{{ p.owned }}</td>
+          <td class="{{ p._cls_z_season }}">{{ p.z_season }}</td>
+          <td class="{{ p._cls_z_7day }}">{{ p.z_7day }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <h3>Top 25 Free Agents</h3>
+  {% if waiver.top %}
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Name</th><th>Pos</th><th>Team</th><th>Owned%</th><th>Z-Ssn</th><th>Z-7d</th><th>Z-14d</th><th>Z-30d</th></tr>
+      </thead>
+      <tbody>
+        {% for p in waiver.top %}
+        <tr>
+          <td>
+            {{ p.name }}
+            {% if p.two_start %}<span class="two-start-badge">2-start</span>{% endif %}
+            {% if p.injury %}<span style="color:#888;font-size:11px;"> ({{ p.injury }})</span>{% endif %}
+          </td>
+          <td>{{ p.position }}</td>
+          <td>{{ p.mlb_team }}</td>
+          <td>{{ p.owned }}</td>
+          <td class="{{ p._cls_z_season }}">{{ p.z_season }}</td>
+          <td class="{{ p._cls_z_7day }}">{{ p.z_7day }}</td>
+          <td>{{ p.z_14day }}</td>
+          <td>{{ p.z_30day }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p class="empty">No waiver data — run the pipeline.</p>
+  {% endif %}
+</section>
+<hr class="section-divider">
+
+
+<!-- ═══════════════════════════════════════════ TRADE ══════════════════ -->
+<section id="trade">
+  <h2>🔄 Trade</h2>
+  <div class="two-col">
+    <div>
+      <h3>Top Targets (on other rosters)</h3>
+      {% if trade.targets %}
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Pos</th><th>Team</th><th>Z-Ssn</th><th>Z-7d</th></tr>
+          </thead>
+          <tbody>
+            {% for p in trade.targets %}
+            <tr>
+              <td>{{ p.name }}</td>
+              <td>{{ p.position }}</td>
+              <td class="other-team">{{ p.fantasy_team }}</td>
+              <td class="{{ p._cls_z_season }}">{{ p.z_season }}</td>
+              <td>{{ p.z_7day }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <p class="empty">No trade target data — run the pipeline.</p>
+      {% endif %}
+    </div>
+    <div>
+      <h3>Your Trade Chips</h3>
+      {% if trade.chips %}
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Pos</th><th>Z-Ssn</th><th>Z-7d</th></tr>
+          </thead>
+          <tbody>
+            {% for p in trade.chips %}
+            <tr>
+              <td>{{ p.name }}</td>
+              <td>{{ p.position }}</td>
+              <td class="{{ p._cls_z_season }}">{{ p.z_season }}</td>
+              <td>{{ p.z_7day }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <p class="empty">No chip data — run the pipeline.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+<hr class="section-divider">
+
+
+<!-- ═══════════════════════════════════════════ RANKINGS ════════════════ -->
+<section id="rankings">
+  <h2>📊 Rankings — Top 40</h2>
+  <div class="two-col">
+    <div>
+      <h3>Hitters</h3>
+      {% if rankings.hitters %}
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Pos</th><th>Owner</th><th>Z-Ssn</th><th>Z-7d</th><th>Proj-Z</th><th>Owned%</th></tr>
+          </thead>
+          <tbody>
+            {% for p in rankings.hitters %}
+            <tr>
+              <td>{{ p.name }}</td>
+              <td>{{ p.position }}</td>
+              <td class="{{ p._team_cls }}">{{ p.fantasy_team }}</td>
+              <td class="{{ p._cls_z_season }}">{{ p.z_season }}</td>
+              <td class="{{ p._cls_z_7day }}">{{ p.z_7day }}</td>
+              <td class="{{ p._cls_proj_z }}">{{ p.proj_z }}</td>
+              <td>{{ p.owned }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <p class="empty">No rankings data — run the pipeline.</p>
+      {% endif %}
+    </div>
+    <div>
+      <h3>Pitchers</h3>
+      {% if rankings.pitchers %}
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Pos</th><th>Owner</th><th>Z-Ssn</th><th>Z-7d</th><th>Proj-Z</th><th>Owned%</th></tr>
+          </thead>
+          <tbody>
+            {% for p in rankings.pitchers %}
+            <tr>
+              <td>{{ p.name }}</td>
+              <td>{{ p.position }}</td>
+              <td class="{{ p._team_cls }}">{{ p.fantasy_team }}</td>
+              <td class="{{ p._cls_z_season }}">{{ p.z_season }}</td>
+              <td class="{{ p._cls_z_7day }}">{{ p.z_7day }}</td>
+              <td class="{{ p._cls_proj_z }}">{{ p.proj_z }}</td>
+              <td>{{ p.owned }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <p class="empty">No rankings data — run the pipeline.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<footer style="text-align:center;padding:24px;color:#444;font-size:11px;">
+  {{ my_team }} Fantasy Baseball Engine · Generated {{ generated_at }}
+</footer>
+
+</body>
+</html>

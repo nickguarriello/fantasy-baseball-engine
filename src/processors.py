@@ -216,6 +216,122 @@ def calculate_multi_period_zscores(
 
 
 # ---------------------------------------------------------------------------
+# Projection z-scores (ESPN rest-of-season projections)
+# ---------------------------------------------------------------------------
+
+def calculate_projection_zscores(
+    espn_projections: Dict,
+    season_z_players: List[Dict],
+) -> Dict[str, Dict]:
+    """
+    Calculate z-scores for ESPN's rest-of-season projected stats.
+
+    Uses the same position-grouped z-score math as calculate_z_scores(),
+    but applied to ESPN projection data instead of actual MLB stats.
+
+    Args:
+        espn_projections: {name_lower: {proj_runs, proj_home_runs, ...}}
+                          from fetch_espn_projections_and_ownership()
+        season_z_players: The already-calculated season z-score list —
+                          used to get consistent position groupings.
+
+    Returns:
+        {name_lower: {
+            proj_z_r, proj_z_hr, proj_z_rbi, proj_z_sb, proj_z_obp,
+            proj_z_k, proj_z_qs, proj_z_era, proj_z_whip, proj_z_svhd,
+            proj_z_season
+        }}
+    """
+    if not espn_projections:
+        return {}
+
+    # Map our H2H category stat_keys → projection field names
+    HITTER_PROJ_MAP = {
+        'runs':          'proj_runs',
+        'home_runs':     'proj_home_runs',
+        'rbis':          'proj_rbis',
+        'stolen_bases':  'proj_stolen_bases',
+        'obp':           'proj_obp',
+    }
+    PITCHER_PROJ_MAP = {
+        'strikeouts':      'proj_strikeouts',
+        'quality_starts':  'proj_quality_starts',
+        'era':             'proj_era',
+        'whip':            'proj_whip',
+        'sv_hd':           'proj_sv_hd',
+    }
+
+    # Build position groups from existing season z-score players
+    # (keeps groupings consistent with how we rank actual stats)
+    pos_groups: Dict[str, List[str]] = {}
+    name_to_pos: Dict[str, str] = {}
+    for p in season_z_players:
+        name = p.get('name', '').lower().strip()
+        pos  = p.get('position', 'UTIL')
+        name_to_pos[name] = pos
+        pos_groups.setdefault(pos, []).append(name)
+
+    # For each position group, compute mean/std of projected stats
+    proj_z_results: Dict[str, Dict] = {}
+
+    for pos, names in pos_groups.items():
+        is_pitcher = pos.upper() in ('P', 'SP', 'RP')
+        stat_map   = PITCHER_PROJ_MAP if is_pitcher else HITTER_PROJ_MAP
+        categories = H2H_CATEGORIES['pitchers'] if is_pitcher else H2H_CATEGORIES['hitters']
+
+        # Gather projection values for this position group
+        pos_proj_data = []
+        for name in names:
+            proj = espn_projections.get(name)
+            if proj:
+                pos_proj_data.append((name, proj))
+
+        if not pos_proj_data:
+            continue
+
+        # Compute means and stds per projected stat
+        pos_means: Dict[str, float] = {}
+        pos_stds:  Dict[str, float] = {}
+        for cat in categories:
+            proj_key = stat_map.get(cat['stat_key'])
+            if not proj_key:
+                continue
+            values = [
+                float(proj.get(proj_key, 0))
+                for _, proj in pos_proj_data
+                if proj.get(proj_key) is not None and float(proj.get(proj_key, 0)) > 0
+            ]
+            pos_means[proj_key] = float(np.mean(values)) if values else 0.0
+            pos_stds[proj_key]  = float(np.std(values))  if values else 1.0
+
+        # Score each player
+        for name, proj in pos_proj_data:
+            z_vals: List[float] = []
+            z_entry: Dict = {}
+
+            for cat in categories:
+                proj_key = stat_map.get(cat['stat_key'])
+                if not proj_key:
+                    continue
+                z_col = f"proj_z_{cat['name'].lower()}"
+                val   = proj.get(proj_key)
+                z = _calculate_z_score(
+                    val,
+                    pos_means.get(proj_key, 0.0),
+                    pos_stds.get(proj_key, 1.0),
+                    invert=not cat['higher_is_better'],
+                )
+                z_entry[z_col] = z
+                z_vals.append(z)
+
+            z_entry['proj_z_season'] = round(float(np.mean(z_vals)), 2) if z_vals else 0.0
+            proj_z_results[name] = z_entry
+
+    print(f"  Projection z-scores calculated for {len(proj_z_results)} players")
+    return proj_z_results
+
+
+# ---------------------------------------------------------------------------
 # Trend detection (placeholder — meaningful after Phase 5 data accumulates)
 # ---------------------------------------------------------------------------
 

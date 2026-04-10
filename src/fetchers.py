@@ -644,15 +644,23 @@ def fetch_two_start_pitchers() -> Dict[str, int]:
 # Connectivity check
 # ---------------------------------------------------------------------------
 
-def fetch_espn_player_ratings() -> Dict[str, Dict]:
+def fetch_espn_projections_and_ownership() -> Dict[str, Dict]:
     """
-    Fetch ESPN player ownership % and draft ranks via kona_player_info (requires auth).
-    Returns {player_name_lower: {percent_owned, percent_started, espn_draft_rank}}
-    or empty dict if credentials not configured or request fails.
+    Fetch ESPN rest-of-season projections + ownership % for all players.
+    Requires espn_s2 / SWID cookies (espn_credentials.py).
 
-    Note: ESPN's composite Player Rater score is not available in this endpoint.
-    We use ownership % and raw stats as supplemental data.
-    The endpoint returns ~50 players per call (ESPN pagination).
+    ESPN allows up to 500 players per call, so 2 calls covers all ~850 players.
+
+    Projection stat IDs (confirmed against live API):
+      Hitters:  R=20, HR=23, RBI=21, SB=5,  OBP=17
+      Pitchers: K=48, QS=63, ERA=47, WHIP=41, SVHD=83
+
+    Returns {name_lower: {
+        percent_owned, percent_started,
+        proj_runs, proj_home_runs, proj_rbis, proj_stolen_bases, proj_obp,
+        proj_strikeouts, proj_quality_starts, proj_era, proj_whip, proj_sv_hd,
+        is_pitcher (bool), position (str)
+    }}
     """
     if not ESPN_S2 or not ESPN_SWID:
         return {}
@@ -660,22 +668,62 @@ def fetch_espn_player_ratings() -> Dict[str, Dict]:
     league_id = LEAGUE_CONFIG['league_id']
     season    = LEAGUE_CONFIG['season']
     url       = f"{API_CONFIG['espn_base_url']}/seasons/{season}/segments/0/leagues/{league_id}"
-    headers   = {'Cookie': f'espn_s2={ESPN_S2}; SWID={ESPN_SWID}'}
+    headers   = {
+        'Cookie':          f'espn_s2={ESPN_S2}; SWID={ESPN_SWID}',
+        'User-Agent':      'Mozilla/5.0 (Fantasy Baseball Engine)',
+        'Accept':          'application/json',
+        'X-Fantasy-Source': 'kona',
+    }
 
-    ratings: Dict[str, Dict] = {}
+    # Stat ID → our internal key mapping (confirmed via live API)
+    PROJ_STAT_MAP = {
+        '20': 'proj_runs',
+        '23': 'proj_home_runs',
+        '21': 'proj_rbis',
+        '5':  'proj_stolen_bases',
+        '17': 'proj_obp',
+        '48': 'proj_strikeouts',
+        '63': 'proj_quality_starts',
+        '47': 'proj_era',
+        '41': 'proj_whip',
+        '83': 'proj_sv_hd',
+    }
 
-    # Fetch multiple pages (50 players per page)
-    for offset in range(0, 1000, 50):
-        params = {
-            'view': 'kona_player_info',
-            'scoringPeriodId': 0,
-            'offset': offset,
-        }
-        data = _make_request(url, params=params, headers=headers)
-        if not data:
+    results: Dict[str, Dict] = {}
+
+    for offset in range(0, 1500, 500):
+        import json as _json
+        fantasy_filter = _json.dumps({
+            'players': {
+                'filterStatus':  {'value': ['FREEAGENT', 'WAIVERS', 'ONTEAM']},
+                'filterStatsForTopScoringPeriodIds': {
+                    'value': 2,
+                    'additionalValue': ['002026', '102026'],   # actual + projected
+                },
+                'sortAppliedStatTotal': {
+                    'sortAsc': False, 'sortPriority': 1, 'value': '102026',
+                },
+                'limit':  500,
+                'offset': offset,
+            }
+        })
+
+        r = None
+        try:
+            import requests as _req
+            resp = _req.get(
+                url,
+                params={'view': 'kona_player_info'},
+                headers={**headers, 'X-Fantasy-Filter': fantasy_filter},
+                timeout=API_CONFIG['request_timeout'],
+            )
+            resp.raise_for_status()
+            r = resp.json()
+        except Exception as e:
+            print(f"  [ESPN Projections] Request failed at offset {offset}: {e}")
             break
 
-        players_raw = data.get('players', [])
+        players_raw = r.get('players', []) if r else []
         if not players_raw:
             break
 
@@ -685,25 +733,41 @@ def fetch_espn_player_ratings() -> Dict[str, Dict]:
             if not name:
                 continue
 
-            ownership = player_info.get('ownership', {})
-            draft_ranks = entry.get('draftRanksByRankType', {})
-            roto_rank = draft_ranks.get('ROTO', {}).get('rank')
+            default_pos_id  = player_info.get('defaultPositionId', 0)
+            pos_str         = ESPN_POSITION_MAP.get(default_pos_id, 'UTIL')
+            is_pitcher      = default_pos_id in PITCHER_POSITION_IDS
 
-            ratings[name] = {
-                'percent_owned':   ownership.get('percentOwned', 0.0),
-                'percent_started': ownership.get('percentStarted', 0.0),
-                'espn_draft_rank': roto_rank,
+            ownership       = player_info.get('ownership', {})
+            pct_owned       = ownership.get('percentOwned', 0.0)
+            pct_started     = ownership.get('percentStarted', 0.0)
+
+            # Find the projection stats entry (id='102026', statSourceId=1)
+            proj_stats: Dict[str, float] = {}
+            for stat_entry in player_info.get('stats', []):
+                if stat_entry.get('id') == '102026':
+                    raw = stat_entry.get('stats', {})
+                    for sid, key in PROJ_STAT_MAP.items():
+                        val = raw.get(sid)
+                        if val is not None:
+                            proj_stats[key] = round(float(val), 4)
+                    break
+
+            results[name] = {
+                'percent_owned':   pct_owned,
+                'percent_started': pct_started,
+                'position':        pos_str,
+                'is_pitcher':      is_pitcher,
+                **proj_stats,
             }
 
-        # If fewer than 50 returned, we've hit the end
-        if len(players_raw) < 50:
+        if len(players_raw) < 500:
             break
 
-    if ratings:
-        print(f"  [ESPN] Loaded ownership data for {len(ratings)} players")
+    if results:
+        print(f"  [ESPN] Projections + ownership loaded for {len(results)} players")
     else:
-        print("  [ESPN] No player data returned — credentials may be expired")
-    return ratings
+        print("  [ESPN] No projection data — credentials may be expired")
+    return results
 
 
 def test_api_connectivity() -> bool:

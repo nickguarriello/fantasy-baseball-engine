@@ -34,20 +34,21 @@ from src.fetchers import (
     fetch_mlb_player_stats,
     fetch_mlb_stats_range,
     fetch_two_start_pitchers,
-    fetch_espn_player_ratings,
+    fetch_espn_projections_and_ownership,
     _n_days_ago, _today_str,
 )
-from src.processors import calculate_multi_period_zscores, calculate_trends
+from src.processors import calculate_multi_period_zscores, calculate_trends, calculate_projection_zscores
 from src.waiver_wire import analyze_my_team, generate_waiver_report
 from src.matchup import analyze_matchup, recommend_lineup, analyze_actuals_vs_projected
 from src.trades import find_trade_targets, evaluate_trade
 from src.outputs import (
     export_all_rankings, export_waiver_report,
     export_matchup_report, export_trade_targets,
-    export_research_players,
+    export_research_players, export_master_players, export_data_dictionary,
     print_summary, print_waiver_summary,
     print_matchup_summary, print_trade_summary,
 )
+from src.report import generate_report
 
 
 # ---------------------------------------------------------------------------
@@ -168,12 +169,14 @@ def main():
         print()
 
         # ============================================================ #
-        # STEP 6: ESPN Player Rater (optional — requires auth cookies)
+        # STEP 6: ESPN projections + ownership (optional — auth recommended)
         # ============================================================ #
-        print("[6/9] Fetching ESPN Player Rater ratings...")
-        espn_ratings = fetch_espn_player_ratings()
-        if not espn_ratings:
-            print("  (Skipped — credentials not configured or expired)")
+        print("[6/9] Fetching ESPN projections + ownership %...")
+        espn_projections = fetch_espn_projections_and_ownership()
+        if not espn_projections:
+            print("  (Skipped — credentials not configured or ESPN unavailable)")
+        else:
+            print(f"  {len(espn_projections)} players with ESPN projection data")
         print()
 
         # ============================================================ #
@@ -205,7 +208,14 @@ def main():
         if not z_scored_players:
             print("Failed to calculate z-scores.")
             return False
-        print(f"  {len(z_scored_players)} players z-scored across all windows\n")
+        print(f"  {len(z_scored_players)} players z-scored across all windows")
+
+        # Projection z-scores (ESPN rest-of-season projections → our z-score math)
+        proj_zscores = {}
+        if espn_projections:
+            proj_zscores = calculate_projection_zscores(espn_projections, z_scored_players)
+            print(f"  {len(proj_zscores)} players with projection z-scores")
+        print()
 
         # ============================================================ #
         # STEP 8: Store in database
@@ -223,9 +233,17 @@ def main():
         # ============================================================ #
         print("[9/9] Running decision phases...")
         all_csv_files = list(export_all_rankings(z_scored_players))
-        # Research/Strategy export — real stats + z-scores + ESPN ratings
+        # Research/Strategy export — real stats + z-scores + ESPN projections + proj z-scores
         db_stats = get_players_with_stats()
-        all_csv_files.append(export_research_players(z_scored_players, db_stats, espn_ratings))
+        all_csv_files.append(export_research_players(z_scored_players, db_stats, espn_projections, proj_zscores))
+        # Master export — every field, no column whitelist (data lake)
+        master_path = export_master_players(z_scored_players, db_stats, espn_projections, proj_zscores)
+        all_csv_files.append(master_path)
+        # Data dictionary — field reference auto-generated from master
+        all_csv_files.append(export_data_dictionary(master_path))
+        # HTML report — single scrollable page → docs/index.html (GitHub Pages)
+        print("  Generating HTML report...")
+        generate_report()
         print_summary(z_scored_players, my_roster)
 
         # ------------------------------------------------------------ #

@@ -7,8 +7,11 @@ __pycache__/
 data/
 *.db
 
-# Outputs
+# Outputs (CSVs — regenerated each run, not tracked)
 outputs/
+
+# docs/ is tracked — GitHub Pages serves docs/index.html
+# docs/ is NOT ignored
 
 # IDE
 .vscode/
