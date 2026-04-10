@@ -159,9 +159,9 @@ Schema migrations run automatically via `_add_column_if_missing()` in `init_data
 
 ## Last Run Stats (auto-updated by pre-commit hook)
 
-- **Updated:** 2026-04-09 21:36:33
-- **Last data run:** 2026-04-10 01:35:45
+- **Updated:** 2026-04-10 12:31:19
+- **Last data run:** 2026-04-10 16:30:24
 - **Players in DB:** 842
-- **Z-score records:** 15147
+- **Z-score records:** 20199
 - **Roster entries:** 249
 - **League teams:** 8
