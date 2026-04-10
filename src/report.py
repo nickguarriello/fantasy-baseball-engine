@@ -21,6 +21,24 @@ DOCS      = ROOT / "docs"
 MY_TEAM  = "Pitch Slap"
 FA_LABEL = "FA"
 
+# ESPN lineup slot sort order — active slots first, bench last
+_SLOT_ORDER = {
+    'C': 0, '1B': 1, '2B': 2, 'SS': 3, '3B': 4,
+    'OF': 5, 'CF': 5, 'LF': 5, 'RF': 5,
+    'DH': 6, 'UTIL': 7,
+    'SP': 8, 'RP': 9, 'P': 10,
+    'BE': 11, 'BN': 11,
+    'IL': 12, 'IR': 12,
+}
+
+# ESPN roster position display order (for My Roster table)
+_POS_ORDER = {
+    'C': 0, '1B': 1, '2B': 2, 'SS': 3, '3B': 4,
+    'OF': 5, 'CF': 5, 'LF': 5, 'RF': 5,
+    'DH': 6, 'UTIL': 7,
+    'SP': 8, 'RP': 9, 'P': 10,
+}
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -86,16 +104,70 @@ def _pct(val, fallback="—") -> str:
         return fallback
 
 
-def _enrich_z(rows: List[Dict], z_cols: List[str]) -> List[Dict]:
-    """Add _cls_{col} CSS class field for each z-score column."""
-    for row in rows:
-        for col in z_cols:
-            row[f"_cls_{col}"] = _z_class(row.get(col))
-    return rows
+def _slot_sort(slot: str) -> int:
+    return _SLOT_ORDER.get(str(slot).upper(), 99)
+
+
+def _pos_sort(pos: str) -> int:
+    return _POS_ORDER.get(str(pos).upper(), 50)
+
+
+def _slot_badge(slot: str, is_active: bool) -> str:
+    """Badge label for a lineup slot."""
+    s = str(slot).upper()
+    if s in ('BE', 'BN'):
+        return 'BENCH'
+    if s in ('IL', 'IR'):
+        return 'IL'
+    return slot.upper() if slot else ('ACTIVE' if is_active else 'BENCH')
+
+
+def _slot_badge_cls(slot: str, is_active: bool) -> str:
+    """CSS class for the slot badge."""
+    s = str(slot).upper()
+    if s in ('IL', 'IR'):
+        return 'badge-il'
+    if s in ('BE', 'BN') or not is_active:
+        return 'badge-bench'
+    return 'badge-active'
+
+
+def _pitcher_pos(pos: str) -> str:
+    """Normalize pitcher position to SP/RP — never show generic P."""
+    p = str(pos).upper()
+    if p == 'SP':  return 'SP'
+    if p == 'RP':  return 'RP'
+    if p == 'P':   return 'P'
+    return pos
 
 
 # ---------------------------------------------------------------------------
-# Data builders — one function per section
+# Build lineup lookup from lineup CSVs
+# ---------------------------------------------------------------------------
+
+def _build_lineup_lookup() -> Dict[str, Dict]:
+    """
+    Returns {name_lower: {lineup_slot, is_active, rec, is_two_start, injury}}
+    from both lineup_hitters.csv and lineup_pitchers.csv.
+    """
+    lookup = {}
+    for fname in ('lineup_hitters.csv', 'lineup_pitchers.csv'):
+        for row in _load(fname):
+            key = row.get('name', '').lower().strip()
+            if not key:
+                continue
+            lookup[key] = {
+                'lineup_slot':  row.get('lineup_slot', 'BE'),
+                'is_active':    str(row.get('is_active_lineup', '')).lower() in ('true', '1'),
+                'rec':          row.get('recommendation', ''),
+                'is_two_start': str(row.get('is_two_start', '')).lower() in ('true', '1'),
+                'injury':       row.get('injury_status', ''),
+            }
+    return lookup
+
+
+# ---------------------------------------------------------------------------
+# Data builders
 # ---------------------------------------------------------------------------
 
 def _build_matchup(actuals: List[Dict], breakdown: List[Dict]) -> Dict:
@@ -104,7 +176,8 @@ def _build_matchup(actuals: List[Dict], breakdown: List[Dict]) -> Dict:
 
     opp_name = "Opponent"
     if breakdown:
-        winners = [r.get("projected_winner", "") for r in breakdown if r.get("projected_winner") not in ("ME", "TOSS-UP", "UNKNOWN", "")]
+        winners = [r.get("projected_winner", "") for r in breakdown
+                   if r.get("projected_winner") not in ("ME", "TOSS-UP", "UNKNOWN", "")]
         if winners:
             opp_name = max(set(winners), key=winners.count)
 
@@ -112,93 +185,218 @@ def _build_matchup(actuals: List[Dict], breakdown: List[Dict]) -> Dict:
     losses = sum(1 for r in actuals if r.get("actual_leader") == "OPP")
     ties   = len(actuals) - wins - losses
 
-    rows = []
+    # Build a lookup of breakdown data keyed by category
+    breakdown_map = {r.get('category', ''): r for r in breakdown}
+
+    live_rows = []
+    proj_rows = []
     for r in actuals:
         cat    = r.get("category", "")
         leader = r.get("actual_leader", "")
         proj   = r.get("projected_winner", "—")
-        proj_display = MY_TEAM if proj == "ME" else ("Toss-Up" if proj in ("TOSS-UP", "UNKNOWN") else proj)
-        live_display = MY_TEAM if leader == "ME" else (opp_name if leader == "OPP" else "Tied")
+
+        # Pre-matchup projection
+        bd = breakdown_map.get(cat, {})
+        my_z   = _fmt(bd.get('my_z'), 2)
+        opp_z  = _fmt(bd.get('opp_z'), 2)
+        proj_winner = bd.get('projected_winner', '—')
+        if proj_winner == 'ME':
+            proj_display = MY_TEAM
+            proj_cls = 'win'
+        elif proj_winner in ('TOSS-UP', 'UNKNOWN', ''):
+            proj_display = 'Toss-Up'
+            proj_cls = 'tie'
+        else:
+            proj_display = proj_winner
+            proj_cls = 'loss'
+
+        # Live leader
+        if leader == 'ME':
+            live_display = MY_TEAM
+            live_cls = 'win'
+        elif leader == 'OPP':
+            live_display = opp_name
+            live_cls = 'loss'
+        else:
+            live_display = 'Tied'
+            live_cls = 'tie'
+
         diverges = str(r.get("diverges_from_projection", "")).lower() in ("true", "1")
-        rows.append({
-            "my_score":     _fmt_stat(r.get("my_actual"),  cat),
+
+        live_rows.append({
+            "my_score":  _fmt_stat(r.get("my_actual"),  cat),
+            "category":  cat,
+            "opp_score": _fmt_stat(r.get("opp_actual"), cat),
+            "_cls":      "win" if leader == "ME" else ("loss" if leader == "OPP" else "tie"),
+        })
+        proj_rows.append({
             "category":     cat,
-            "opp_score":    _fmt_stat(r.get("opp_actual"), cat),
-            "leader":       leader,
+            "my_z":         my_z,
+            "opp_z":        opp_z,
             "proj_display": proj_display,
             "live_display": live_display,
             "diverges":     diverges,
-            "_cls":         "win" if leader == "ME" else ("loss" if leader == "OPP" else "tie"),
-            "_proj_cls":    "win" if leader == "ME" else ("loss" if leader == "OPP" else "tie"),
+            "_proj_cls":    proj_cls,
+            "_live_cls":    live_cls,
         })
 
     return {
-        "available": True,
-        "my_team":   MY_TEAM,
-        "opp_name":  opp_name,
-        "wins":      wins,
-        "losses":    losses,
-        "ties":      ties,
-        "rows":      rows,
+        "available":  True,
+        "my_team":    MY_TEAM,
+        "opp_name":   opp_name,
+        "wins":       wins,
+        "losses":     losses,
+        "ties":       ties,
+        "live_rows":  live_rows,
+        "proj_rows":  proj_rows,
     }
 
 
-def _build_lineup(hitters: List[Dict], pitchers: List[Dict]) -> Dict:
-    def _proc(rows):
-        out = []
-        for r in rows:
-            rec = str(r.get("recommendation", "")).upper()
-            inj = str(r.get("injury_status", "")).upper()
-            if inj not in ("ACTIVE", "", "NAN", "NONE"):
-                cls = "injured"
-            elif "DO NOT START" in rec:
-                cls = "sit"
-            elif "START" in rec:
-                cls = "start"
-            else:
-                cls = ""
-            out.append({
-                "name":           r.get("name", ""),
-                "position":       r.get("position", ""),
-                "z_season":       _fmt(r.get("z_season")),
-                "z_7day":         _fmt(r.get("z_7day")),
-                "two_start":      str(r.get("is_two_start", "")).lower() in ("true", "1"),
-                "injury":         r.get("injury_status", ""),
-                "rec":            r.get("recommendation", ""),
-                "_cls":           cls,
-                "_cls_z_season":  _z_class(r.get("z_season")),
-                "_cls_z_7day":    _z_class(r.get("z_7day")),
-            })
-        return out
-    return {"hitters": _proc(hitters), "pitchers": _proc(pitchers)}
+def _build_my_roster(research: List[Dict], lineup_lookup: Dict) -> Dict:
+    """
+    Current-week roster view. Uses research_players for real position/stats,
+    lineup lookup for active/bench slot. Sorted by ESPN slot order.
+    """
+    my_players = [r for r in research if r.get("fantasy_team") == MY_TEAM]
+
+    def _proc(player):
+        name = player.get('name', '')
+        key  = name.lower().strip()
+        lu   = lineup_lookup.get(key, {})
+        slot = lu.get('lineup_slot', 'BE')
+        is_active = lu.get('is_active', False)
+        is_pitcher = str(player.get('is_pitcher', '')).lower() in ('true', '1')
+        pos = _pitcher_pos(player.get('position', '')) if is_pitcher else player.get('position', '')
+
+        return {
+            'name':        name,
+            'position':    pos,
+            'slot':        slot,
+            'slot_badge':  _slot_badge(slot, is_active),
+            'slot_cls':    _slot_badge_cls(slot, is_active),
+            'is_active':   is_active,
+            'is_pitcher':  is_pitcher,
+            'is_two_start': lu.get('is_two_start', False),
+            'injury':      lu.get('injury', ''),
+            # Hitter stats
+            'games_played':   _fmt(player.get('games_played'), 0),
+            'avg':            _fmt(player.get('avg'), 3),
+            'obp':            _fmt_stat(player.get('obp'), 'OBP'),
+            'runs':           _fmt(player.get('runs'), 0),
+            'home_runs':      _fmt(player.get('home_runs'), 0),
+            'rbis':           _fmt(player.get('rbis'), 0),
+            'stolen_bases':   _fmt(player.get('stolen_bases'), 0),
+            # Pitcher stats
+            'innings_pitched': _fmt(player.get('innings_pitched'), 1),
+            'era':             _fmt_stat(player.get('era'), 'ERA'),
+            'whip':            _fmt_stat(player.get('whip'), 'WHIP'),
+            'strikeouts_p':    _fmt(player.get('strikeouts_pitch'), 0),
+            'quality_starts':  _fmt(player.get('quality_starts'), 0),
+            'saves':           _fmt(player.get('saves'), 0),
+            'holds':           _fmt(player.get('holds'), 0),
+            # Z-scores all windows
+            'z_season': _fmt(player.get('z_season')),
+            'z_7day':   _fmt(player.get('z_7day')),
+            'z_14day':  _fmt(player.get('z_14day')),
+            'z_30day':  _fmt(player.get('z_30day')),
+            'trend':    player.get('trend_direction', ''),
+            # CSS classes
+            '_cls_z_season': _z_class(player.get('z_season')),
+            '_cls_z_7day':   _z_class(player.get('z_7day')),
+            '_cls_z_14day':  _z_class(player.get('z_14day')),
+            '_cls_z_30day':  _z_class(player.get('z_30day')),
+            '_slot_sort':    _slot_sort(slot),
+            '_pos_sort':     _pos_sort(pos),
+        }
+
+    all_players = [_proc(p) for p in my_players]
+    all_players.sort(key=lambda p: p['_slot_sort'])
+
+    hitters  = [p for p in all_players if not p['is_pitcher']]
+    pitchers = [p for p in all_players if p['is_pitcher']]
+    return {'hitters': hitters, 'pitchers': pitchers}
 
 
-def _build_my_roster(research: List[Dict]) -> List[Dict]:
-    rows = [r for r in research if r.get("fantasy_team") == MY_TEAM]
-    rows.sort(key=lambda r: float(r.get("z_season") or -99), reverse=True)
-    out = []
-    for r in rows:
-        is_p = str(r.get("is_pitcher", "")).lower() in ("true", "1")
-        out.append({
-            "name":     r.get("name", ""),
-            "position": r.get("position", ""),
-            "z_season": _fmt(r.get("z_season")),
-            "z_7day":   _fmt(r.get("z_7day")),
-            "z_14day":  _fmt(r.get("z_14day")),
-            "z_30day":  _fmt(r.get("z_30day")),
-            "trend":    r.get("trend_direction", ""),
-            "is_pitcher": is_p,
-            "_cls_z_season": _z_class(r.get("z_season")),
-            "_cls_z_7day":   _z_class(r.get("z_7day")),
-            "_cls_z_14day":  _z_class(r.get("z_14day")),
-            "_cls_z_30day":  _z_class(r.get("z_30day")),
-        })
-    return out
+def _build_startsit(research: List[Dict], lineup_lookup: Dict) -> Dict:
+    """
+    Next-week lineup decisions. Pitchers first (SP/RP labels), then hitters.
+    Shows active/bench badge, all z-scores + season stats.
+    """
+    my_players = [r for r in research if r.get("fantasy_team") == MY_TEAM]
+
+    def _rec_cls(rec: str) -> str:
+        r = rec.upper()
+        if 'DO NOT START' in r: return 'sit'
+        if 'START' in r:        return 'start'
+        if 'CONSIDER' in r:     return 'consider'
+        return 'borderline'
+
+    def _proc(player):
+        name = player.get('name', '')
+        key  = name.lower().strip()
+        lu   = lineup_lookup.get(key, {})
+        slot = lu.get('lineup_slot', 'BE')
+        is_active  = lu.get('is_active', False)
+        is_pitcher = str(player.get('is_pitcher', '')).lower() in ('true', '1')
+        pos = _pitcher_pos(player.get('position', '')) if is_pitcher else player.get('position', '')
+        rec = lu.get('rec', '')
+        inj = lu.get('injury', '')
+        if inj and inj.upper() not in ('ACTIVE', '', 'NONE', 'NAN'):
+            row_cls = 'injured'
+        else:
+            row_cls = _rec_cls(rec)
+
+        return {
+            'name':        name,
+            'position':    pos,
+            'slot':        slot,
+            'slot_badge':  _slot_badge(slot, is_active),
+            'slot_cls':    _slot_badge_cls(slot, is_active),
+            'is_active':   is_active,
+            'is_pitcher':  is_pitcher,
+            'is_two_start': lu.get('is_two_start', False),
+            'injury':      inj,
+            'rec':         rec,
+            'row_cls':     row_cls,
+            # Hitter stats (season)
+            'games_played':   _fmt(player.get('games_played'), 0),
+            'avg':            _fmt(player.get('avg'), 3),
+            'obp':            _fmt_stat(player.get('obp'), 'OBP'),
+            'runs':           _fmt(player.get('runs'), 0),
+            'home_runs':      _fmt(player.get('home_runs'), 0),
+            'rbis':           _fmt(player.get('rbis'), 0),
+            'stolen_bases':   _fmt(player.get('stolen_bases'), 0),
+            # Pitcher stats (season)
+            'innings_pitched': _fmt(player.get('innings_pitched'), 1),
+            'era':             _fmt_stat(player.get('era'), 'ERA'),
+            'whip':            _fmt_stat(player.get('whip'), 'WHIP'),
+            'strikeouts_p':    _fmt(player.get('strikeouts_pitch'), 0),
+            'quality_starts':  _fmt(player.get('quality_starts'), 0),
+            'saves':           _fmt(player.get('saves'), 0),
+            'holds':           _fmt(player.get('holds'), 0),
+            # Z-scores
+            'z_season': _fmt(player.get('z_season')),
+            'z_7day':   _fmt(player.get('z_7day')),
+            'z_14day':  _fmt(player.get('z_14day')),
+            'z_30day':  _fmt(player.get('z_30day')),
+            'trend':    player.get('trend_direction', ''),
+            '_cls_z_season': _z_class(player.get('z_season')),
+            '_cls_z_7day':   _z_class(player.get('z_7day')),
+            '_cls_z_14day':  _z_class(player.get('z_14day')),
+            '_cls_z_30day':  _z_class(player.get('z_30day')),
+            '_slot_sort':    _slot_sort(slot),
+        }
+
+    all_players = [_proc(p) for p in my_players]
+    # Pitchers first (sorted by slot order then z_season), then hitters
+    pitchers = sorted([p for p in all_players if p['is_pitcher']],
+                      key=lambda p: (p['_slot_sort'], -float(p['z_season']) if p['z_season'] != '—' else 99))
+    hitters  = sorted([p for p in all_players if not p['is_pitcher']],
+                      key=lambda p: (p['_slot_sort'], -float(p['z_season']) if p['z_season'] != '—' else 99))
+    return {'pitchers': pitchers, 'hitters': hitters}
 
 
 def _build_waiver(top: List[Dict], two_start: List[Dict]) -> Dict:
-    z_cols = ["z_season", "z_7day", "z_14day", "z_30day"]
-
     def _proc(rows, limit=25):
         out = []
         for r in rows[:limit]:
@@ -217,7 +415,6 @@ def _build_waiver(top: List[Dict], two_start: List[Dict]) -> Dict:
                 "_cls_z_7day":   _z_class(r.get("z_7day")),
             })
         return out
-
     return {"top": _proc(top), "two_start": _proc(two_start, 15)}
 
 
@@ -226,12 +423,13 @@ def _build_trade(targets: List[Dict], chips: List[Dict]) -> Dict:
         out = []
         for r in rows[:limit]:
             out.append({
-                "name":        r.get("name", ""),
-                "position":    r.get("position", ""),
+                "name":         r.get("name", ""),
+                "position":     r.get("position", ""),
                 "fantasy_team": r.get("fantasy_team", ""),
-                "z_season":    _fmt(r.get("z_season")),
-                "z_7day":      _fmt(r.get("z_7day")),
+                "z_season":     _fmt(r.get("z_season")),
+                "z_7day":       _fmt(r.get("z_7day")),
                 "_cls_z_season": _z_class(r.get("z_season")),
+                "_cls_z_7day":   _z_class(r.get("z_7day")),
             })
         return out
     return {"targets": _proc(targets), "chips": _proc(chips)}
@@ -245,15 +443,15 @@ def _build_rankings(research: List[Dict]) -> Dict:
         out = []
         for r in rows[:limit]:
             out.append({
-                "name":        r.get("name", ""),
-                "position":    r.get("position", ""),
-                "mlb_team":    r.get("mlb_team", ""),
+                "name":         r.get("name", ""),
+                "position":     r.get("position", ""),
+                "mlb_team":     r.get("mlb_team", ""),
                 "fantasy_team": r.get("fantasy_team", FA_LABEL),
-                "owned":       _pct(r.get("percent_owned")),
-                "z_season":    _fmt(r.get("z_season")),
-                "z_7day":      _fmt(r.get("z_7day")),
-                "proj_z":      _fmt(r.get("proj_z_season")),
-                "trend":       r.get("trend_direction", ""),
+                "owned":        _pct(r.get("percent_owned")),
+                "z_season":     _fmt(r.get("z_season")),
+                "z_7day":       _fmt(r.get("z_7day")),
+                "proj_z":       _fmt(r.get("proj_z_season")),
+                "trend":        r.get("trend_direction", ""),
                 "_cls_z_season":  _z_class(r.get("z_season")),
                 "_cls_z_7day":    _z_class(r.get("z_7day")),
                 "_cls_proj_z":    _z_class(r.get("proj_z_season")),
@@ -261,7 +459,6 @@ def _build_rankings(research: List[Dict]) -> Dict:
                              "fa" if r.get("fantasy_team") in (FA_LABEL, "", None) else "other-team"),
             })
         return out
-
     return {"hitters": _proc(hitters), "pitchers": _proc(pitchers)}
 
 
@@ -270,33 +467,28 @@ def _build_rankings(research: List[Dict]) -> Dict:
 # ---------------------------------------------------------------------------
 
 def generate_report() -> str:
-    """
-    Load all CSVs, render templates/report.html, write docs/index.html.
-    Returns path to generated file.
-    """
     try:
         from jinja2 import Environment, FileSystemLoader, select_autoescape
     except ImportError:
         print("  jinja2 not installed — pip install jinja2")
         return ""
 
-    # Load CSVs
-    research  = _load("research_players.csv")
-    actuals   = _load("matchup_actuals_vs_projected.csv")
-    breakdown = _load("matchup_breakdown.csv")
-    hitters_l = _load("lineup_hitters.csv")
-    pitchers_l = _load("lineup_pitchers.csv")
+    research   = _load("research_players.csv")
+    actuals    = _load("matchup_actuals_vs_projected.csv")
+    breakdown  = _load("matchup_breakdown.csv")
     waiver_top = _load("waiver_wire_top.csv")
     two_start  = _load("waiver_two_start.csv")
     targets    = _load("trade_targets.csv")
     chips      = _load("trade_chips.csv")
 
+    lineup_lookup = _build_lineup_lookup()
+
     context = {
         "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "my_team":      MY_TEAM,
         "matchup":      _build_matchup(actuals, breakdown),
-        "lineup":       _build_lineup(hitters_l, pitchers_l),
-        "my_roster":    _build_my_roster(research),
+        "my_roster":    _build_my_roster(research, lineup_lookup),
+        "startsit":     _build_startsit(research, lineup_lookup),
         "waiver":       _build_waiver(waiver_top, two_start),
         "trade":        _build_trade(targets, chips),
         "rankings":     _build_rankings(research),

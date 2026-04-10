@@ -18,651 +18,425 @@
 
   /* ── Nav ── */
   nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    position: sticky; top: 0; z-index: 100;
     background: #1a1d27;
     border-bottom: 1px solid #2a2d3a;
     padding: 10px 16px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
   nav .brand { font-weight: 700; font-size: 15px; margin-right: 10px; color: #fff; }
   nav a {
-    color: #aaa;
-    font-size: 12px;
-    padding: 4px 10px;
-    border-radius: 4px;
-    background: #252838;
-    white-space: nowrap;
+    color: #aaa; font-size: 12px; padding: 4px 10px;
+    border-radius: 4px; background: #252838; white-space: nowrap;
   }
   nav a:hover { background: #333750; color: #fff; }
   .generated { margin-left: auto; font-size: 11px; color: #666; }
 
   /* ── Sections ── */
-  section {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 28px 16px 8px;
-  }
+  section { max-width: 1200px; margin: 0 auto; padding: 28px 16px 8px; }
   h2 {
-    font-size: 18px;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 6px;
-    padding-bottom: 6px;
+    font-size: 18px; font-weight: 700; color: #fff;
+    margin-bottom: 10px; padding-bottom: 6px;
     border-bottom: 2px solid #2a2d3a;
   }
-  h3 {
-    font-size: 14px;
-    font-weight: 600;
-    color: #ccc;
-    margin: 14px 0 6px;
-  }
-  .section-divider {
-    border: none;
-    border-top: 1px solid #1e2130;
-    margin: 0;
-  }
+  h3 { font-size: 13px; font-weight: 600; color: #aaa; margin: 14px 0 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .section-divider { border: none; border-top: 1px solid #1e2130; margin: 0; }
 
-  /* ── Record badge ── */
+  /* ── Record ── */
   .record {
-    display: inline-flex;
-    gap: 12px;
-    align-items: center;
-    font-size: 20px;
-    font-weight: 700;
-    margin: 10px 0;
+    display: inline-flex; gap: 10px; align-items: center;
+    font-size: 22px; font-weight: 700; margin: 8px 0 14px;
   }
   .record .wins   { color: #3fa63f; }
   .record .ties   { color: #888; }
   .record .losses { color: #c0392b; }
-  .record .vs     { color: #555; font-size: 14px; }
+  .record .sep    { color: #444; font-weight: 300; }
+  .record .opp    { font-size: 14px; color: #777; font-weight: 400; }
 
   /* ── Tables ── */
-  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 8px; }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    min-width: 400px;
-  }
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 340px; }
   th {
-    background: #1e2130;
-    color: #aaa;
-    font-weight: 600;
-    text-align: left;
-    padding: 7px 10px;
-    white-space: nowrap;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    background: #1a1d2a; color: #888; font-weight: 600;
+    text-align: right; padding: 6px 10px;
+    white-space: nowrap; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    border-bottom: 1px solid #2a2d3a;
   }
-  td {
-    padding: 6px 10px;
-    border-bottom: 1px solid #1e2130;
-    white-space: nowrap;
-  }
-  tr:hover td { background: rgba(255,255,255,0.03); }
+  th:first-child, th.left { text-align: left; }
+  td { padding: 6px 10px; border-bottom: 1px solid #181b28; white-space: nowrap; text-align: right; }
+  td:first-child, td.left { text-align: left; }
+  tr:hover td { background: rgba(255,255,255,0.025); }
 
-  /* ── Matchup table ── */
-  .win   td { background: #1a3a1a; }
-  .loss  td { background: #3a1a1a; }
-  .tie   td { background: #2a2a2a; }
-  .win   td:nth-child(1) { color: #3fa63f; font-weight: 700; }
-  .loss  td:nth-child(3) { color: #e74c3c; font-weight: 700; }
-  .matchup-cat { text-align: center; color: #888; font-size: 12px; }
-
-  /* ── Lineup ── */
-  .start   td { border-left: 3px solid #3fa63f; }
-  .sit     td { border-left: 3px solid #c0392b; }
-  .injured td { border-left: 3px solid #888; opacity: 0.6; }
-  .two-start-badge {
-    background: #1a4fa8;
-    color: #fff;
-    font-size: 10px;
-    padding: 1px 5px;
-    border-radius: 3px;
-    margin-left: 4px;
+  /* ── Matchup tables side-by-side ── */
+  .matchup-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 20px;
+    align-items: start;
+    margin-top: 10px;
   }
+  .matchup-live th, .matchup-live td { text-align: center; }
+  .matchup-live th:first-child, .matchup-live td:first-child { text-align: right; min-width: 60px; }
+  .matchup-live th:last-child,  .matchup-live td:last-child  { text-align: left;  min-width: 60px; }
+  .matchup-live td.cat-col { color: #666; font-size: 11px; text-transform: uppercase; }
+  .win  td { background: #152515; }
+  .loss td { background: #251515; }
+  .tie  td { background: #1e1e1e; }
+  .win  td:first-child { color: #3fa63f; font-weight: 700; }
+  .loss td:last-child  { color: #e74c3c; font-weight: 700; }
+
+  /* Projection table */
+  .proj-win  td { background: #152515; }
+  .proj-loss td { background: #251515; }
+  .proj-tie  td { background: #1e1e1e; }
+  .proj-win  td.proj-winner { color: #3fa63f; font-weight: 600; }
+  .proj-loss td.proj-winner { color: #e74c3c; }
+  .diverge-badge {
+    background: #8b5a00; color: #ffc; font-size: 10px;
+    padding: 1px 5px; border-radius: 3px; margin-left: 4px;
+  }
+
+  /* ── Slot / status badges ── */
+  .badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 1px 6px; border-radius: 3px; margin-left: 4px;
+    vertical-align: middle; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .badge-active { background: #1a4a1a; color: #7fff7f; }
+  .badge-bench  { background: #2a2a2a; color: #888; }
+  .badge-il     { background: #4a1a1a; color: #ff9999; }
+  .two-start-badge { background: #1a4fa8; color: #fff; font-size: 10px; padding: 1px 5px; border-radius: 3px; margin-left: 4px; }
+
+  /* ── Start/Sit row coloring ── */
+  .start      td:first-child { border-left: 3px solid #3fa63f; }
+  .sit        td:first-child { border-left: 3px solid #c0392b; }
+  .consider   td:first-child { border-left: 3px solid #f39c12; }
+  .borderline td:first-child { border-left: 3px solid #555; }
+  .injured    { opacity: 0.55; }
+  .injured    td:first-child { border-left: 3px solid #888; }
+
+  /* Rec badge */
+  .rec-start      { color: #3fa63f; font-weight: 600; font-size: 11px; }
+  .rec-sit        { color: #e74c3c; font-weight: 600; font-size: 11px; }
+  .rec-consider   { color: #f39c12; font-size: 11px; }
+  .rec-borderline { color: #888; font-size: 11px; }
 
   /* ── Z-score colors ── */
-  .z-great   { background: #1a4a1a; color: #7fff7f; font-weight: 600; }
-  .z-good    { background: #1e3a1e; color: #5cd65c; }
-  .z-ok      { background: #1e2e1e; color: #a0d0a0; }
-  .z-bad     { background: #3a1e1e; color: #d08080; }
-  .z-terrible{ background: #4a1a1a; color: #ff6b6b; font-weight: 600; }
-  .z-na      { color: #555; }
+  .z-great    { background: #1a4a1a; color: #7fff7f; font-weight: 600; }
+  .z-good     { background: #1e3a1e; color: #5cd65c; }
+  .z-ok       { background: #1e2e1e; color: #9dd09d; }
+  .z-bad      { background: #3a1e1e; color: #d08080; }
+  .z-terrible { background: #4a1a1a; color: #ff6b6b; font-weight: 600; }
+  .z-na       { color: #444; }
 
-  /* ── Team badges ── */
+  /* ── Team colors ── */
   .my-team    { color: #4da6ff; font-weight: 600; }
-  .fa         { color: #888; }
+  .fa         { color: #666; }
   .other-team { color: #b07fff; }
 
   /* ── Trend ── */
   .trend-UP   { color: #3fa63f; }
   .trend-DOWN { color: #e74c3c; }
-  .trend-FLAT { color: #888; }
+  .trend-FLAT { color: #666; }
 
-  /* ── Two-col layout for lineup / my roster ── */
-  .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  @media (max-width: 700px) {
-    .two-col { grid-template-columns: 1fr; }
-    nav .generated { display: none; }
+  /* ── Two-col layout ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  /* ── Responsive ── */
+  @media (max-width: 750px) {
+    .two-col        { grid-template-columns: 1fr; }
+    .matchup-grid   { grid-template-columns: 1fr; }
+    nav .generated  { display: none; }
   }
 
   /* ── Empty state ── */
-  .empty { color: #555; font-style: italic; padding: 12px 0; }
+  .empty { color: #444; font-style: italic; padding: 12px 0; font-size: 13px; }
+
+  /* ── Section label ── */
+  .section-note { font-size: 11px; color: #555; margin-bottom: 10px; }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════ NAV ═══════════════════════ -->
+<!-- ══════════════════════════════════════════════ NAV ══════════════════ -->
 <nav>
   <span class="brand">⚾ Pitch Slap</span>
   <a href="#matchup">Matchup</a>
-  <a href="#lineup">Start/Sit</a>
   <a href="#roster">My Roster</a>
+  <a href="#startsit">Start/Sit</a>
   <a href="#waiver">Waiver</a>
   <a href="#trade">Trade</a>
   <a href="#rankings">Rankings</a>
-  <span class="generated">Updated 2026-04-10 12:30</span>
+  <span class="generated">Updated 2026-04-10 13:38</span>
 </nav>
 
 
-<!-- ═══════════════════════════════════════════ MATCHUP ══════════════════ -->
+<!-- ══════════════════════════════════════════════ MATCHUP ══════════════ -->
 <section id="matchup">
   <h2>⚔️ This Week's Matchup</h2>
   
     <div class="record">
       <span class="wins">6W</span>
-      <span class="vs">vs</span>
+      <span class="sep">·</span>
       <span class="ties">0T</span>
-      <span class="vs">vs</span>
+      <span class="sep">·</span>
       <span class="losses">4L</span>
-      <span style="font-size:14px; color:#888;">vs ChicksDigTheLongBall</span>
+      <span class="opp">vs ChicksDigTheLongBall</span>
     </div>
-    <div class="tbl-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Pitch Slap</th>
-            <th class="matchup-cat">Category</th>
-            <th>ChicksDigTheLongBall</th>
-          </tr>
-        </thead>
-        <tbody>
-          
-          <tr class="win">
-            <td>26.000</td>
-            <td class="matchup-cat">R</td>
-            <td>16.000</td>
-          </tr>
-          
-          <tr class="win">
-            <td>4.000</td>
-            <td class="matchup-cat">HR</td>
-            <td>2.000</td>
-          </tr>
-          
-          <tr class="loss">
-            <td>26.000</td>
-            <td class="matchup-cat">RBI</td>
-            <td>28.000</td>
-          </tr>
-          
-          <tr class="loss">
-            <td>4.000</td>
-            <td class="matchup-cat">SB</td>
-            <td>6.000</td>
-          </tr>
-          
-          <tr class="loss">
-            <td>0.411</td>
-            <td class="matchup-cat">OBP</td>
-            <td>0.420</td>
-          </tr>
-          
-          <tr class="win">
-            <td>28.000</td>
-            <td class="matchup-cat">K</td>
-            <td>23.000</td>
-          </tr>
-          
-          <tr class="win">
-            <td>4.000</td>
-            <td class="matchup-cat">QS</td>
-            <td>0.000</td>
-          </tr>
-          
-          <tr class="win">
-            <td>3.510</td>
-            <td class="matchup-cat">ERA</td>
-            <td>6.894</td>
-          </tr>
-          
-          <tr class="win">
-            <td>1.200</td>
-            <td class="matchup-cat">WHIP</td>
-            <td>1.915</td>
-          </tr>
-          
-          <tr class="loss">
-            <td>1.000</td>
-            <td class="matchup-cat">SVHD</td>
-            <td>3.000</td>
-          </tr>
-          
-        </tbody>
-      </table>
+
+    <div class="matchup-grid">
+      <!-- Live Scores -->
+      <div>
+        <h3>Live Scores</h3>
+        <div class="tbl-wrap">
+          <table class="matchup-live">
+            <thead>
+              <tr>
+                <th>Pitch Slap</th>
+                <th>Cat</th>
+                <th>ChicksDigTheLongBall</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              <tr class="win">
+                <td>26</td>
+                <td class="cat-col">R</td>
+                <td>16</td>
+              </tr>
+              
+              <tr class="win">
+                <td>4</td>
+                <td class="cat-col">HR</td>
+                <td>2</td>
+              </tr>
+              
+              <tr class="loss">
+                <td>26</td>
+                <td class="cat-col">RBI</td>
+                <td>28</td>
+              </tr>
+              
+              <tr class="loss">
+                <td>4</td>
+                <td class="cat-col">SB</td>
+                <td>6</td>
+              </tr>
+              
+              <tr class="loss">
+                <td>.411</td>
+                <td class="cat-col">OBP</td>
+                <td>.420</td>
+              </tr>
+              
+              <tr class="win">
+                <td>28</td>
+                <td class="cat-col">K</td>
+                <td>23</td>
+              </tr>
+              
+              <tr class="win">
+                <td>4</td>
+                <td class="cat-col">QS</td>
+                <td>0</td>
+              </tr>
+              
+              <tr class="win">
+                <td>3.51</td>
+                <td class="cat-col">ERA</td>
+                <td>6.89</td>
+              </tr>
+              
+              <tr class="win">
+                <td>1.20</td>
+                <td class="cat-col">WHIP</td>
+                <td>1.91</td>
+              </tr>
+              
+              <tr class="loss">
+                <td>1</td>
+                <td class="cat-col">SVHD</td>
+                <td>3</td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Projected vs Live Leader -->
+      <div>
+        <h3>Pre-Matchup Projection vs Live Leader</h3>
+        <p class="section-note">Pre-proj = z-score projection at matchup start · Live = current leader · ⚡ = diverged</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="left">Cat</th>
+                <th>My Z</th>
+                <th>Opp Z</th>
+                <th class="left">Pre-Proj</th>
+                <th class="left">Live Leader</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              <tr class="proj-win">
+                <td class="left">R</td>
+                <td>0.82</td>
+                <td>0.97</td>
+                <td class="left proj-winner proj-loss">ChicksDigTheLongBall</td>
+                <td class="left">
+                  Pitch Slap
+                  <span class="diverge-badge">⚡</span>
+                </td>
+              </tr>
+              
+              <tr class="proj-win">
+                <td class="left">HR</td>
+                <td>-0.66</td>
+                <td>0.59</td>
+                <td class="left proj-winner proj-loss">ChicksDigTheLongBall</td>
+                <td class="left">
+                  Pitch Slap
+                  <span class="diverge-badge">⚡</span>
+                </td>
+              </tr>
+              
+              <tr class="proj-loss">
+                <td class="left">RBI</td>
+                <td>0.42</td>
+                <td>0.68</td>
+                <td class="left proj-winner proj-loss">ChicksDigTheLongBall</td>
+                <td class="left">
+                  ChicksDigTheLongBall
+                  
+                </td>
+              </tr>
+              
+              <tr class="proj-loss">
+                <td class="left">SB</td>
+                <td>-0.19</td>
+                <td>-1.00</td>
+                <td class="left proj-winner proj-win">Pitch Slap</td>
+                <td class="left">
+                  ChicksDigTheLongBall
+                  <span class="diverge-badge">⚡</span>
+                </td>
+              </tr>
+              
+              <tr class="proj-loss">
+                <td class="left">OBP</td>
+                <td>0.33</td>
+                <td>0.32</td>
+                <td class="left proj-winner proj-tie">Toss-Up</td>
+                <td class="left">
+                  ChicksDigTheLongBall
+                  
+                </td>
+              </tr>
+              
+              <tr class="proj-win">
+                <td class="left">K</td>
+                <td>0.85</td>
+                <td>0.67</td>
+                <td class="left proj-winner proj-win">Pitch Slap</td>
+                <td class="left">
+                  Pitch Slap
+                  
+                </td>
+              </tr>
+              
+              <tr class="proj-win">
+                <td class="left">QS</td>
+                <td>0.00</td>
+                <td>0.00</td>
+                <td class="left proj-winner proj-tie">Toss-Up</td>
+                <td class="left">
+                  Pitch Slap
+                  
+                </td>
+              </tr>
+              
+              <tr class="proj-win">
+                <td class="left">ERA</td>
+                <td>0.25</td>
+                <td>0.23</td>
+                <td class="left proj-winner proj-tie">Toss-Up</td>
+                <td class="left">
+                  Pitch Slap
+                  
+                </td>
+              </tr>
+              
+              <tr class="proj-win">
+                <td class="left">WHIP</td>
+                <td>0.34</td>
+                <td>0.18</td>
+                <td class="left proj-winner proj-win">Pitch Slap</td>
+                <td class="left">
+                  Pitch Slap
+                  
+                </td>
+              </tr>
+              
+              <tr class="proj-loss">
+                <td class="left">SVHD</td>
+                <td>-0.81</td>
+                <td>-0.47</td>
+                <td class="left proj-winner proj-loss">ChicksDigTheLongBall</td>
+                <td class="left">
+                  ChicksDigTheLongBall
+                  
+                </td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   
 </section>
 <hr class="section-divider">
 
 
-<!-- ═══════════════════════════════════════════ LINEUP ══════════════════ -->
-<section id="lineup">
-  <h2>📋 Start / Sit</h2>
-  <div class="two-col">
-    <div>
-      <h3>Hitters</h3>
-      
-      <div class="tbl-wrap">
-        <table>
-          <thead>
-            <tr><th>Name</th><th>Pos</th><th>Z-Ssn</th><th>Z-7d</th><th>Rec</th></tr>
-          </thead>
-          <tbody>
-            
-            <tr class="start">
-              <td>Christian Yelich</td>
-              <td>DH</td>
-              <td class="z-good">1.20</td>
-              <td class="z-ok">0.22</td>
-              <td>START</td>
-            </tr>
-            
-            <tr class="start">
-              <td>Nico Hoerner</td>
-              <td>2B</td>
-              <td class="z-good">1.19</td>
-              <td class="z-good">0.72</td>
-              <td>START</td>
-            </tr>
-            
-            <tr class="start">
-              <td>Corbin Carroll</td>
-              <td>OF</td>
-              <td class="z-good">0.96</td>
-              <td class="z-bad">-0.07</td>
-              <td>START (matchup need)</td>
-            </tr>
-            
-            <tr class="start">
-              <td>Xavier Edwards</td>
-              <td>2B</td>
-              <td class="z-good">0.75</td>
-              <td class="z-good">0.63</td>
-              <td>START (matchup need)</td>
-            </tr>
-            
-            <tr class="start">
-              <td>Jakob Marsee</td>
-              <td>OF</td>
-              <td class="z-good">0.63</td>
-              <td class="z-good">0.89</td>
-              <td>START (matchup need)</td>
-            </tr>
-            
-            <tr class="start">
-              <td>Mike Trout</td>
-              <td>OF</td>
-              <td class="z-good">0.52</td>
-              <td class="z-terrible">-1.19</td>
-              <td>START (matchup need)</td>
-            </tr>
-            
-            <tr class="start">
-              <td>Will Smith</td>
-              <td>C</td>
-              <td class="z-ok">0.48</td>
-              <td class="z-bad">-0.15</td>
-              <td>START (matchup need)</td>
-            </tr>
-            
-            <tr class="start">
-              <td>Pete Crow-Armstrong</td>
-              <td>OF</td>
-              <td class="z-ok">0.44</td>
-              <td class="z-bad">-0.10</td>
-              <td>START (matchup need)</td>
-            </tr>
-            
-            <tr class="start">
-              <td>Willson Contreras</td>
-              <td>1B</td>
-              <td class="z-ok">0.02</td>
-              <td class="z-good">0.97</td>
-              <td>START (matchup need)</td>
-            </tr>
-            
-            <tr class="start">
-              <td>Mookie Betts</td>
-              <td>SS</td>
-              <td class="z-ok">0.01</td>
-              <td class="z-bad">-0.28</td>
-              <td>START (matchup need)</td>
-            </tr>
-            
-            <tr class="start">
-              <td>Matt Chapman</td>
-              <td>3B</td>
-              <td class="z-bad">-0.02</td>
-              <td class="z-terrible">-0.54</td>
-              <td>START (matchup need)</td>
-            </tr>
-            
-            <tr class="start">
-              <td>Steven Kwan</td>
-              <td>OF</td>
-              <td class="z-bad">-0.05</td>
-              <td class="z-bad">-0.29</td>
-              <td>START (matchup need)</td>
-            </tr>
-            
-            <tr class="start">
-              <td>Carter Jensen</td>
-              <td>DH</td>
-              <td class="z-bad">-0.13</td>
-              <td class="z-good">0.86</td>
-              <td>START (matchup need)</td>
-            </tr>
-            
-            <tr class="start">
-              <td>Nick Kurtz</td>
-              <td>1B</td>
-              <td class="z-bad">-0.32</td>
-              <td class="z-bad">-0.37</td>
-              <td>START (matchup need)</td>
-            </tr>
-            
-            <tr class="start">
-              <td>Alec Bohm</td>
-              <td>3B</td>
-              <td class="z-bad">-0.48</td>
-              <td class="z-terrible">-1.06</td>
-              <td>START (matchup need)</td>
-            </tr>
-            
-            <tr class="">
-              <td>Juan Soto</td>
-              <td>OF</td>
-              <td class="z-bad">-0.29</td>
-              <td class="z-bad">-0.38</td>
-              <td>BORDERLINE</td>
-            </tr>
-            
-            <tr class="">
-              <td>Samuel Basallo</td>
-              <td>C</td>
-              <td class="z-bad">-0.37</td>
-              <td class="z-terrible">-1.24</td>
-              <td>BORDERLINE</td>
-            </tr>
-            
-            <tr class="">
-              <td>Jeff McNeil</td>
-              <td>2B</td>
-              <td class="z-terrible">-0.82</td>
-              <td class="z-terrible">-1.18</td>
-              <td>BENCH</td>
-            </tr>
-            
-            <tr class="">
-              <td>Heliot Ramos</td>
-              <td>OF</td>
-              <td class="z-terrible">-0.95</td>
-              <td class="z-terrible">-1.38</td>
-              <td>BENCH</td>
-            </tr>
-            
-            <tr class="">
-              <td>Emilio Pagan</td>
-              <td>UTIL</td>
-              <td class="z-na">—</td>
-              <td class="z-na">—</td>
-              <td>NO DATA</td>
-            </tr>
-            
-          </tbody>
-        </table>
-      </div>
-      
-    </div>
-    <div>
-      <h3>Pitchers</h3>
-      
-      <div class="tbl-wrap">
-        <table>
-          <thead>
-            <tr><th>Name</th><th>Pos</th><th>Z-Ssn</th><th>Z-7d</th><th>Rec</th></tr>
-          </thead>
-          <tbody>
-            
-            <tr class="start">
-              <td>
-                Mason Miller
-                
-              </td>
-              <td>P</td>
-              <td class="z-good">1.06</td>
-              <td class="z-good">1.28</td>
-              <td>START</td>
-            </tr>
-            
-            <tr class="start">
-              <td>
-                Jordan Romano
-                
-              </td>
-              <td>P</td>
-              <td class="z-good">0.68</td>
-              <td class="z-good">0.70</td>
-              <td>START (matchup need)</td>
-            </tr>
-            
-            <tr class="start">
-              <td>
-                Abner Uribe
-                
-              </td>
-              <td>P</td>
-              <td class="z-ok">0.19</td>
-              <td class="z-ok">0.18</td>
-              <td>START (matchup need)</td>
-            </tr>
-            
-            <tr class="">
-              <td>
-                Yoshinobu Yamamoto
-                
-              </td>
-              <td>P</td>
-              <td class="z-ok">0.05</td>
-              <td class="z-bad">-0.07</td>
-              <td>CONSIDER</td>
-            </tr>
-            
-            <tr class="">
-              <td>
-                Michael King
-                
-              </td>
-              <td>P</td>
-              <td class="z-ok">0.01</td>
-              <td class="z-bad">-0.02</td>
-              <td>CONSIDER</td>
-            </tr>
-            
-            <tr class="">
-              <td>
-                Nathan Eovaldi
-                
-              </td>
-              <td>P</td>
-              <td class="z-bad">-0.06</td>
-              <td class="z-bad">-0.12</td>
-              <td>BORDERLINE</td>
-            </tr>
-            
-            <tr class="">
-              <td>
-                Logan Webb
-                
-              </td>
-              <td>P</td>
-              <td class="z-bad">-0.07</td>
-              <td class="z-bad">-0.30</td>
-              <td>BORDERLINE</td>
-            </tr>
-            
-            <tr class="">
-              <td>
-                Sonny Gray
-                
-              </td>
-              <td>P</td>
-              <td class="z-bad">-0.14</td>
-              <td class="z-bad">-0.08</td>
-              <td>BORDERLINE</td>
-            </tr>
-            
-            <tr class="">
-              <td>
-                Framber Valdez
-                
-              </td>
-              <td>P</td>
-              <td class="z-bad">-0.20</td>
-              <td class="z-bad">-0.29</td>
-              <td>BORDERLINE</td>
-            </tr>
-            
-            <tr class="">
-              <td>
-                Shane Baz
-                
-              </td>
-              <td>P</td>
-              <td class="z-bad">-0.26</td>
-              <td class="z-bad">-0.19</td>
-              <td>BORDERLINE</td>
-            </tr>
-            
-            <tr class="">
-              <td>
-                Dylan Crews
-                
-              </td>
-              <td>RP</td>
-              <td class="z-na">—</td>
-              <td class="z-na">—</td>
-              <td>NO DATA</td>
-            </tr>
-            
-          </tbody>
-        </table>
-      </div>
-      
-    </div>
-  </div>
-</section>
-<hr class="section-divider">
-
-
-<!-- ═══════════════════════════════════════════ MY ROSTER ════════════════ -->
+<!-- ══════════════════════════════════════════════ MY ROSTER ════════════ -->
 <section id="roster">
   <h2>🔵 My Roster — Pitch Slap</h2>
+  <p class="section-note">Current week · Sorted by ESPN lineup slot · Stats are season-to-date</p>
+
   <div class="two-col">
+    <!-- Hitters -->
     <div>
       <h3>Hitters</h3>
+      
       <div class="tbl-wrap">
         <table>
           <thead>
-            <tr><th>Name</th><th>Pos</th><th>Z-Ssn</th><th>Z-7d</th><th>Z-14d</th><th>Z-30d</th><th>Trend</th></tr>
+            <tr>
+              <th class="left">Name</th>
+              <th class="left">Pos</th>
+              <th>G</th><th>AVG</th><th>OBP</th><th>R</th><th>HR</th><th>RBI</th><th>SB</th>
+              <th>Z-Ssn</th><th>Z-7d</th><th>Z-14d</th><th>Z-30d</th><th>Trend</th>
+            </tr>
           </thead>
           <tbody>
             
             <tr>
-              <td>Christian Yelich</td>
-              <td>DH</td>
-              <td class="z-good">1.20</td>
-              <td class="z-ok">0.22</td>
-              <td class="z-good">0.90</td>
-              <td class="z-good">1.09</td>
-              <td class="trend-DOWN">DOWN</td>
-            </tr>
-            
-            <tr>
-              <td>Nico Hoerner</td>
-              <td>2B</td>
-              <td class="z-good">1.19</td>
-              <td class="z-good">0.72</td>
-              <td class="z-good">1.26</td>
-              <td class="z-good">1.13</td>
-              <td class="trend-DOWN">DOWN</td>
-            </tr>
-            
-            <tr>
-              <td>Corbin Carroll</td>
-              <td>OF</td>
-              <td class="z-good">0.96</td>
-              <td class="z-bad">-0.07</td>
-              <td class="z-good">0.93</td>
-              <td class="z-good">0.89</td>
-              <td class="trend-DOWN">DOWN</td>
-            </tr>
-            
-            <tr>
-              <td>Xavier Edwards</td>
-              <td>2B</td>
-              <td class="z-good">0.75</td>
-              <td class="z-good">0.63</td>
-              <td class="z-good">0.85</td>
-              <td class="z-good">0.78</td>
-              <td class="trend-FLAT">FLAT</td>
-            </tr>
-            
-            <tr>
-              <td>Jakob Marsee</td>
-              <td>OF</td>
-              <td class="z-good">0.63</td>
-              <td class="z-good">0.89</td>
-              <td class="z-good">0.68</td>
-              <td class="z-good">0.62</td>
-              <td class="trend-FLAT">FLAT</td>
-            </tr>
-            
-            <tr>
-              <td>Mike Trout</td>
-              <td>OF</td>
-              <td class="z-good">0.52</td>
-              <td class="z-terrible">-1.19</td>
-              <td class="z-bad">-0.09</td>
-              <td class="z-ok">0.47</td>
-              <td class="trend-DOWN">DOWN</td>
-            </tr>
-            
-            <tr>
-              <td>Will Smith</td>
-              <td>C</td>
+              <td class="left">
+                Will Smith
+                <span class="badge badge-active">C</span>
+              </td>
+              <td class="left">C</td>
+              <td>11</td>
+              <td>0.270</td>
+              <td>.341</td>
+              <td>6</td>
+              <td>2</td>
+              <td>7</td>
+              <td>0</td>
               <td class="z-ok">0.48</td>
               <td class="z-bad">-0.15</td>
               <td class="z-ok">0.07</td>
@@ -671,88 +445,18 @@
             </tr>
             
             <tr>
-              <td>Pete Crow-Armstrong</td>
-              <td>OF</td>
-              <td class="z-ok">0.44</td>
-              <td class="z-bad">-0.10</td>
-              <td class="z-ok">0.31</td>
-              <td class="z-ok">0.41</td>
-              <td class="trend-DOWN">DOWN</td>
-            </tr>
-            
-            <tr>
-              <td>Willson Contreras</td>
-              <td>1B</td>
-              <td class="z-ok">0.02</td>
-              <td class="z-good">0.97</td>
-              <td class="z-ok">0.02</td>
-              <td class="z-bad">-0.14</td>
-              <td class="trend-UP">UP</td>
-            </tr>
-            
-            <tr>
-              <td>Mookie Betts</td>
-              <td>SS</td>
-              <td class="z-ok">0.01</td>
-              <td class="z-bad">-0.28</td>
-              <td class="z-bad">-0.04</td>
-              <td class="z-ok">0.11</td>
-              <td class="trend-FLAT">FLAT</td>
-            </tr>
-            
-            <tr>
-              <td>Matt Chapman</td>
-              <td>3B</td>
-              <td class="z-bad">-0.02</td>
-              <td class="z-terrible">-0.54</td>
-              <td class="z-ok">0.10</td>
-              <td class="z-bad">-0.01</td>
-              <td class="trend-DOWN">DOWN</td>
-            </tr>
-            
-            <tr>
-              <td>Steven Kwan</td>
-              <td>OF</td>
-              <td class="z-bad">-0.05</td>
-              <td class="z-bad">-0.29</td>
-              <td class="z-ok">0.02</td>
-              <td class="z-bad">-0.10</td>
-              <td class="trend-FLAT">FLAT</td>
-            </tr>
-            
-            <tr>
-              <td>Carter Jensen</td>
-              <td>DH</td>
-              <td class="z-bad">-0.13</td>
-              <td class="z-good">0.86</td>
-              <td class="z-ok">0.49</td>
-              <td class="z-ok">0.42</td>
-              <td class="trend-UP">UP</td>
-            </tr>
-            
-            <tr>
-              <td>Juan Soto</td>
-              <td>OF</td>
-              <td class="z-bad">-0.29</td>
-              <td class="z-bad">-0.38</td>
-              <td class="z-terrible">-0.52</td>
-              <td class="z-bad">-0.34</td>
-              <td class="trend-FLAT">FLAT</td>
-            </tr>
-            
-            <tr>
-              <td>Nick Kurtz</td>
-              <td>1B</td>
-              <td class="z-bad">-0.32</td>
-              <td class="z-bad">-0.37</td>
-              <td class="z-bad">-0.11</td>
-              <td class="z-bad">-0.16</td>
-              <td class="trend-FLAT">FLAT</td>
-            </tr>
-            
-            <tr>
-              <td>Samuel Basallo</td>
-              <td>C</td>
+              <td class="left">
+                Samuel Basallo
+                <span class="badge badge-active">C</span>
+              </td>
+              <td class="left">C</td>
+              <td>8</td>
+              <td>0.167</td>
+              <td>.265</td>
+              <td>4</td>
+              <td>1</td>
+              <td>1</td>
+              <td>0</td>
               <td class="z-bad">-0.37</td>
               <td class="z-terrible">-1.24</td>
               <td class="z-bad">-0.42</td>
@@ -761,18 +465,58 @@
             </tr>
             
             <tr>
-              <td>Alec Bohm</td>
-              <td>3B</td>
-              <td class="z-bad">-0.48</td>
-              <td class="z-terrible">-1.06</td>
-              <td class="z-terrible">-0.95</td>
-              <td class="z-bad">-0.36</td>
+              <td class="left">
+                Nico Hoerner
+                <span class="badge badge-active">1B</span>
+              </td>
+              <td class="left">2B</td>
+              <td>12</td>
+              <td>0.333</td>
+              <td>.453</td>
+              <td>8</td>
+              <td>1</td>
+              <td>9</td>
+              <td>5</td>
+              <td class="z-good">1.19</td>
+              <td class="z-good">0.72</td>
+              <td class="z-good">1.26</td>
+              <td class="z-good">1.13</td>
               <td class="trend-DOWN">DOWN</td>
             </tr>
             
             <tr>
-              <td>Jeff McNeil</td>
-              <td>2B</td>
+              <td class="left">
+                Xavier Edwards
+                <span class="badge badge-active">2B</span>
+              </td>
+              <td class="left">2B</td>
+              <td>13</td>
+              <td>0.396</td>
+              <td>.453</td>
+              <td>11</td>
+              <td>1</td>
+              <td>6</td>
+              <td>2</td>
+              <td class="z-good">0.75</td>
+              <td class="z-good">0.63</td>
+              <td class="z-good">0.85</td>
+              <td class="z-good">0.78</td>
+              <td class="trend-FLAT">FLAT</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Jeff McNeil
+                <span class="badge badge-active">SS</span>
+              </td>
+              <td class="left">2B</td>
+              <td>11</td>
+              <td>0.258</td>
+              <td>.343</td>
+              <td>3</td>
+              <td>0</td>
+              <td>2</td>
+              <td>1</td>
               <td class="z-terrible">-0.82</td>
               <td class="z-terrible">-1.18</td>
               <td class="z-terrible">-0.91</td>
@@ -781,8 +525,178 @@
             </tr>
             
             <tr>
-              <td>Heliot Ramos</td>
-              <td>OF</td>
+              <td class="left">
+                Corbin Carroll
+                <span class="badge badge-active">3B</span>
+              </td>
+              <td class="left">OF</td>
+              <td>12</td>
+              <td>0.333</td>
+              <td>.408</td>
+              <td>9</td>
+              <td>2</td>
+              <td>11</td>
+              <td>1</td>
+              <td class="z-good">0.96</td>
+              <td class="z-bad">-0.07</td>
+              <td class="z-good">0.93</td>
+              <td class="z-good">0.89</td>
+              <td class="trend-DOWN">DOWN</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Mike Trout
+                <span class="badge badge-active">3B</span>
+              </td>
+              <td class="left">OF</td>
+              <td>12</td>
+              <td>0.190</td>
+              <td>.382</td>
+              <td>9</td>
+              <td>2</td>
+              <td>3</td>
+              <td>2</td>
+              <td class="z-good">0.52</td>
+              <td class="z-terrible">-1.19</td>
+              <td class="z-bad">-0.09</td>
+              <td class="z-ok">0.47</td>
+              <td class="trend-DOWN">DOWN</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Pete Crow-Armstrong
+                <span class="badge badge-active">3B</span>
+              </td>
+              <td class="left">OF</td>
+              <td>12</td>
+              <td>0.234</td>
+              <td>.265</td>
+              <td>8</td>
+              <td>1</td>
+              <td>4</td>
+              <td>4</td>
+              <td class="z-ok">0.44</td>
+              <td class="z-bad">-0.10</td>
+              <td class="z-ok">0.31</td>
+              <td class="z-ok">0.41</td>
+              <td class="trend-DOWN">DOWN</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Steven Kwan
+                <span class="badge badge-active">3B</span>
+              </td>
+              <td class="left">OF</td>
+              <td>13</td>
+              <td>0.245</td>
+              <td>.327</td>
+              <td>7</td>
+              <td>1</td>
+              <td>4</td>
+              <td>1</td>
+              <td class="z-bad">-0.05</td>
+              <td class="z-bad">-0.29</td>
+              <td class="z-ok">0.02</td>
+              <td class="z-bad">-0.10</td>
+              <td class="trend-FLAT">FLAT</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Juan Soto
+                <span class="badge badge-active">3B</span>
+              </td>
+              <td class="left">OF</td>
+              <td>8</td>
+              <td>0.355</td>
+              <td>.412</td>
+              <td>3</td>
+              <td>1</td>
+              <td>5</td>
+              <td>0</td>
+              <td class="z-bad">-0.29</td>
+              <td class="z-bad">-0.38</td>
+              <td class="z-terrible">-0.52</td>
+              <td class="z-bad">-0.34</td>
+              <td class="trend-FLAT">FLAT</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Willson Contreras
+                <span class="badge badge-active">OF</span>
+              </td>
+              <td class="left">1B</td>
+              <td>12</td>
+              <td>0.250</td>
+              <td>.434</td>
+              <td>7</td>
+              <td>2</td>
+              <td>5</td>
+              <td>0</td>
+              <td class="z-ok">0.02</td>
+              <td class="z-good">0.97</td>
+              <td class="z-ok">0.02</td>
+              <td class="z-bad">-0.14</td>
+              <td class="trend-UP">UP</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Mookie Betts
+                <span class="badge badge-active">UTIL</span>
+              </td>
+              <td class="left">SS</td>
+              <td>8</td>
+              <td>0.179</td>
+              <td>.281</td>
+              <td>7</td>
+              <td>2</td>
+              <td>7</td>
+              <td>0</td>
+              <td class="z-ok">0.01</td>
+              <td class="z-bad">-0.28</td>
+              <td class="z-bad">-0.04</td>
+              <td class="z-ok">0.11</td>
+              <td class="trend-FLAT">FLAT</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Christian Yelich
+                <span class="badge badge-active">RP</span>
+              </td>
+              <td class="left">DH</td>
+              <td>12</td>
+              <td>0.372</td>
+              <td>.413</td>
+              <td>10</td>
+              <td>1</td>
+              <td>10</td>
+              <td>3</td>
+              <td class="z-good">1.20</td>
+              <td class="z-ok">0.22</td>
+              <td class="z-good">0.90</td>
+              <td class="z-good">1.09</td>
+              <td class="trend-DOWN">DOWN</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Heliot Ramos
+                <span class="badge badge-active">RP</span>
+              </td>
+              <td class="left">OF</td>
+              <td>12</td>
+              <td>0.191</td>
+              <td>.224</td>
+              <td>4</td>
+              <td>0</td>
+              <td>3</td>
+              <td>0</td>
               <td class="z-terrible">-0.95</td>
               <td class="z-terrible">-1.38</td>
               <td class="z-terrible">-0.96</td>
@@ -790,22 +704,142 @@
               <td class="trend-DOWN">DOWN</td>
             </tr>
             
+            <tr>
+              <td class="left">
+                Jakob Marsee
+                <span class="badge badge-bench">BENCH</span>
+              </td>
+              <td class="left">OF</td>
+              <td>13</td>
+              <td>0.160</td>
+              <td>.271</td>
+              <td>9</td>
+              <td>0</td>
+              <td>3</td>
+              <td>6</td>
+              <td class="z-good">0.63</td>
+              <td class="z-good">0.89</td>
+              <td class="z-good">0.68</td>
+              <td class="z-good">0.62</td>
+              <td class="trend-FLAT">FLAT</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Carter Jensen
+                <span class="badge badge-bench">BENCH</span>
+              </td>
+              <td class="left">DH</td>
+              <td>12</td>
+              <td>0.219</td>
+              <td>.278</td>
+              <td>5</td>
+              <td>3</td>
+              <td>6</td>
+              <td>0</td>
+              <td class="z-bad">-0.13</td>
+              <td class="z-good">0.86</td>
+              <td class="z-ok">0.49</td>
+              <td class="z-ok">0.42</td>
+              <td class="trend-UP">UP</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Alec Bohm
+                <span class="badge badge-bench">BENCH</span>
+              </td>
+              <td class="left">3B</td>
+              <td>11</td>
+              <td>0.186</td>
+              <td>.271</td>
+              <td>3</td>
+              <td>1</td>
+              <td>8</td>
+              <td>0</td>
+              <td class="z-bad">-0.48</td>
+              <td class="z-terrible">-1.06</td>
+              <td class="z-terrible">-0.95</td>
+              <td class="z-bad">-0.36</td>
+              <td class="trend-DOWN">DOWN</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Matt Chapman
+                <span class="badge badge-active">SLOT3</span>
+              </td>
+              <td class="left">3B</td>
+              <td>13</td>
+              <td>0.300</td>
+              <td>.352</td>
+              <td>7</td>
+              <td>1</td>
+              <td>7</td>
+              <td>0</td>
+              <td class="z-bad">-0.02</td>
+              <td class="z-terrible">-0.54</td>
+              <td class="z-ok">0.10</td>
+              <td class="z-bad">-0.01</td>
+              <td class="trend-DOWN">DOWN</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Nick Kurtz
+                <span class="badge badge-active">SLOT1</span>
+              </td>
+              <td class="left">1B</td>
+              <td>11</td>
+              <td>0.220</td>
+              <td>.360</td>
+              <td>6</td>
+              <td>0</td>
+              <td>2</td>
+              <td>2</td>
+              <td class="z-bad">-0.32</td>
+              <td class="z-bad">-0.37</td>
+              <td class="z-bad">-0.11</td>
+              <td class="z-bad">-0.16</td>
+              <td class="trend-FLAT">FLAT</td>
+            </tr>
+            
           </tbody>
         </table>
       </div>
+      
     </div>
+
+    <!-- Pitchers -->
     <div>
       <h3>Pitchers</h3>
+      
       <div class="tbl-wrap">
         <table>
           <thead>
-            <tr><th>Name</th><th>Pos</th><th>Z-Ssn</th><th>Z-7d</th><th>Z-14d</th><th>Z-30d</th><th>Trend</th></tr>
+            <tr>
+              <th class="left">Name</th>
+              <th class="left">Pos</th>
+              <th>IP</th><th>ERA</th><th>WHIP</th><th>K</th><th>QS</th><th>SV</th><th>HLD</th>
+              <th>Z-Ssn</th><th>Z-7d</th><th>Z-14d</th><th>Z-30d</th><th>Trend</th>
+            </tr>
           </thead>
           <tbody>
             
             <tr>
-              <td>Mason Miller</td>
-              <td>P</td>
+              <td class="left">
+                Mason Miller
+                <span class="badge badge-active">P</span>
+                
+              </td>
+              <td class="left">P</td>
+              <td>6.1</td>
+              <td>0.00</td>
+              <td>0.32</td>
+              <td>16</td>
+              <td>0</td>
+              <td>4</td>
+              <td>0</td>
               <td class="z-good">1.06</td>
               <td class="z-good">1.28</td>
               <td class="z-good">1.14</td>
@@ -814,18 +848,19 @@
             </tr>
             
             <tr>
-              <td>Jordan Romano</td>
-              <td>P</td>
-              <td class="z-good">0.68</td>
-              <td class="z-good">0.70</td>
-              <td class="z-good">0.52</td>
-              <td class="z-good">0.68</td>
-              <td class="trend-FLAT">FLAT</td>
-            </tr>
-            
-            <tr>
-              <td>Abner Uribe</td>
-              <td>P</td>
+              <td class="left">
+                Abner Uribe
+                <span class="badge badge-active">P</span>
+                
+              </td>
+              <td class="left">P</td>
+              <td>3.2</td>
+              <td>2.45</td>
+              <td>1.09</td>
+              <td>4</td>
+              <td>0</td>
+              <td>0</td>
+              <td>3</td>
               <td class="z-ok">0.19</td>
               <td class="z-ok">0.18</td>
               <td class="z-ok">0.22</td>
@@ -834,8 +869,19 @@
             </tr>
             
             <tr>
-              <td>Yoshinobu Yamamoto</td>
-              <td>P</td>
+              <td class="left">
+                Yoshinobu Yamamoto
+                <span class="badge badge-active">P</span>
+                
+              </td>
+              <td class="left">P</td>
+              <td>18.0</td>
+              <td>2.50</td>
+              <td>0.89</td>
+              <td>14</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
               <td class="z-ok">0.05</td>
               <td class="z-bad">-0.07</td>
               <td class="z-bad">-0.18</td>
@@ -844,8 +890,19 @@
             </tr>
             
             <tr>
-              <td>Michael King</td>
-              <td>P</td>
+              <td class="left">
+                Michael King
+                <span class="badge badge-active">P</span>
+                
+              </td>
+              <td class="left">P</td>
+              <td>16.2</td>
+              <td>3.24</td>
+              <td>1.20</td>
+              <td>15</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
               <td class="z-ok">0.01</td>
               <td class="z-bad">-0.02</td>
               <td class="z-ok">0.05</td>
@@ -854,8 +911,19 @@
             </tr>
             
             <tr>
-              <td>Nathan Eovaldi</td>
-              <td>P</td>
+              <td class="left">
+                Nathan Eovaldi
+                <span class="badge badge-active">P</span>
+                
+              </td>
+              <td class="left">P</td>
+              <td>14.2</td>
+              <td>7.98</td>
+              <td>1.84</td>
+              <td>19</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
               <td class="z-bad">-0.06</td>
               <td class="z-bad">-0.12</td>
               <td class="z-bad">-0.30</td>
@@ -864,8 +932,19 @@
             </tr>
             
             <tr>
-              <td>Logan Webb</td>
-              <td>P</td>
+              <td class="left">
+                Logan Webb
+                <span class="badge badge-active">P</span>
+                
+              </td>
+              <td class="left">P</td>
+              <td>18.0</td>
+              <td>5.00</td>
+              <td>1.39</td>
+              <td>15</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
               <td class="z-bad">-0.07</td>
               <td class="z-bad">-0.30</td>
               <td class="z-bad">-0.23</td>
@@ -874,8 +953,19 @@
             </tr>
             
             <tr>
-              <td>Sonny Gray</td>
-              <td>P</td>
+              <td class="left">
+                Sonny Gray
+                <span class="badge badge-active">P</span>
+                
+              </td>
+              <td class="left">P</td>
+              <td>16.1</td>
+              <td>2.76</td>
+              <td>0.98</td>
+              <td>10</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
               <td class="z-bad">-0.14</td>
               <td class="z-bad">-0.08</td>
               <td class="z-bad">-0.12</td>
@@ -884,8 +974,19 @@
             </tr>
             
             <tr>
-              <td>Framber Valdez</td>
-              <td>P</td>
+              <td class="left">
+                Framber Valdez
+                <span class="badge badge-active">P</span>
+                
+              </td>
+              <td class="left">P</td>
+              <td>17.0</td>
+              <td>4.76</td>
+              <td>1.47</td>
+              <td>12</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
               <td class="z-bad">-0.20</td>
               <td class="z-bad">-0.29</td>
               <td class="z-bad">-0.17</td>
@@ -894,8 +995,19 @@
             </tr>
             
             <tr>
-              <td>Shane Baz</td>
-              <td>P</td>
+              <td class="left">
+                Shane Baz
+                <span class="badge badge-active">P</span>
+                
+              </td>
+              <td class="left">P</td>
+              <td>11.0</td>
+              <td>4.09</td>
+              <td>1.27</td>
+              <td>9</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
               <td class="z-bad">-0.26</td>
               <td class="z-bad">-0.19</td>
               <td class="z-bad">-0.24</td>
@@ -903,16 +1015,709 @@
               <td class="trend-FLAT">FLAT</td>
             </tr>
             
+            <tr>
+              <td class="left">
+                Jordan Romano
+                <span class="badge badge-bench">BENCH</span>
+                
+              </td>
+              <td class="left">P</td>
+              <td>5.0</td>
+              <td>0.00</td>
+              <td>0.40</td>
+              <td>7</td>
+              <td>0</td>
+              <td>4</td>
+              <td>0</td>
+              <td class="z-good">0.68</td>
+              <td class="z-good">0.70</td>
+              <td class="z-good">0.52</td>
+              <td class="z-good">0.68</td>
+              <td class="trend-FLAT">FLAT</td>
+            </tr>
+            
           </tbody>
         </table>
       </div>
+      
     </div>
   </div>
 </section>
 <hr class="section-divider">
 
 
-<!-- ═══════════════════════════════════════════ WAIVER ══════════════════ -->
+<!-- ══════════════════════════════════════════════ START/SIT ════════════ -->
+<section id="startsit">
+  <h2>📋 Start / Sit — Next Week</h2>
+  <p class="section-note">Next-week lineup decisions · Pitchers first · Left bar = recommendation · Badge = current slot</p>
+
+  <!-- Pitchers -->
+  
+  <h3>Pitchers (SP / RP)</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="left">Name</th>
+          <th class="left">Pos</th>
+          <th class="left">Slot</th>
+          <th>IP</th><th>ERA</th><th>WHIP</th><th>K</th><th>QS</th><th>SV</th><th>HLD</th>
+          <th>Z-Ssn</th><th>Z-7d</th><th>Z-14d</th><th>Z-30d</th>
+          <th class="left">Rec</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr class="start">
+          <td class="left">
+            Mason Miller
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left"><span class="badge badge-active">P</span></td>
+          <td>6.1</td>
+          <td>0.00</td>
+          <td>0.32</td>
+          <td>16</td>
+          <td>0</td>
+          <td>4</td>
+          <td>0</td>
+          <td class="z-good">1.06</td>
+          <td class="z-good">1.28</td>
+          <td class="z-good">1.14</td>
+          <td class="z-good">1.06</td>
+          <td class="left rec-start">START</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Abner Uribe
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left"><span class="badge badge-active">P</span></td>
+          <td>3.2</td>
+          <td>2.45</td>
+          <td>1.09</td>
+          <td>4</td>
+          <td>0</td>
+          <td>0</td>
+          <td>3</td>
+          <td class="z-ok">0.19</td>
+          <td class="z-ok">0.18</td>
+          <td class="z-ok">0.22</td>
+          <td class="z-ok">0.19</td>
+          <td class="left rec-start">START (matchup need)</td>
+        </tr>
+        
+        <tr class="consider">
+          <td class="left">
+            Yoshinobu Yamamoto
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left"><span class="badge badge-active">P</span></td>
+          <td>18.0</td>
+          <td>2.50</td>
+          <td>0.89</td>
+          <td>14</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td class="z-ok">0.05</td>
+          <td class="z-bad">-0.07</td>
+          <td class="z-bad">-0.18</td>
+          <td class="z-ok">0.05</td>
+          <td class="left rec-consider">CONSIDER</td>
+        </tr>
+        
+        <tr class="consider">
+          <td class="left">
+            Michael King
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left"><span class="badge badge-active">P</span></td>
+          <td>16.2</td>
+          <td>3.24</td>
+          <td>1.20</td>
+          <td>15</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td class="z-ok">0.01</td>
+          <td class="z-bad">-0.02</td>
+          <td class="z-ok">0.05</td>
+          <td class="z-ok">0.01</td>
+          <td class="left rec-consider">CONSIDER</td>
+        </tr>
+        
+        <tr class="borderline">
+          <td class="left">
+            Nathan Eovaldi
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left"><span class="badge badge-active">P</span></td>
+          <td>14.2</td>
+          <td>7.98</td>
+          <td>1.84</td>
+          <td>19</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td class="z-bad">-0.06</td>
+          <td class="z-bad">-0.12</td>
+          <td class="z-bad">-0.30</td>
+          <td class="z-bad">-0.06</td>
+          <td class="left rec-borderline">BORDERLINE</td>
+        </tr>
+        
+        <tr class="borderline">
+          <td class="left">
+            Logan Webb
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left"><span class="badge badge-active">P</span></td>
+          <td>18.0</td>
+          <td>5.00</td>
+          <td>1.39</td>
+          <td>15</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td class="z-bad">-0.07</td>
+          <td class="z-bad">-0.30</td>
+          <td class="z-bad">-0.23</td>
+          <td class="z-bad">-0.07</td>
+          <td class="left rec-borderline">BORDERLINE</td>
+        </tr>
+        
+        <tr class="borderline">
+          <td class="left">
+            Sonny Gray
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left"><span class="badge badge-active">P</span></td>
+          <td>16.1</td>
+          <td>2.76</td>
+          <td>0.98</td>
+          <td>10</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td class="z-bad">-0.14</td>
+          <td class="z-bad">-0.08</td>
+          <td class="z-bad">-0.12</td>
+          <td class="z-bad">-0.14</td>
+          <td class="left rec-borderline">BORDERLINE</td>
+        </tr>
+        
+        <tr class="borderline">
+          <td class="left">
+            Framber Valdez
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left"><span class="badge badge-active">P</span></td>
+          <td>17.0</td>
+          <td>4.76</td>
+          <td>1.47</td>
+          <td>12</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td class="z-bad">-0.20</td>
+          <td class="z-bad">-0.29</td>
+          <td class="z-bad">-0.17</td>
+          <td class="z-bad">-0.20</td>
+          <td class="left rec-borderline">BORDERLINE</td>
+        </tr>
+        
+        <tr class="borderline">
+          <td class="left">
+            Shane Baz
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left"><span class="badge badge-active">P</span></td>
+          <td>11.0</td>
+          <td>4.09</td>
+          <td>1.27</td>
+          <td>9</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td class="z-bad">-0.26</td>
+          <td class="z-bad">-0.19</td>
+          <td class="z-bad">-0.24</td>
+          <td class="z-bad">-0.26</td>
+          <td class="left rec-borderline">BORDERLINE</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Jordan Romano
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left"><span class="badge badge-bench">BENCH</span></td>
+          <td>5.0</td>
+          <td>0.00</td>
+          <td>0.40</td>
+          <td>7</td>
+          <td>0</td>
+          <td>4</td>
+          <td>0</td>
+          <td class="z-good">0.68</td>
+          <td class="z-good">0.70</td>
+          <td class="z-good">0.52</td>
+          <td class="z-good">0.68</td>
+          <td class="left rec-start">START (matchup need)</td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+  
+
+  <!-- Hitters -->
+  
+  <h3 style="margin-top:20px;">Hitters</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="left">Name</th>
+          <th class="left">Pos</th>
+          <th class="left">Slot</th>
+          <th>G</th><th>AVG</th><th>OBP</th><th>R</th><th>HR</th><th>RBI</th><th>SB</th>
+          <th>Z-Ssn</th><th>Z-7d</th><th>Z-14d</th><th>Z-30d</th>
+          <th class="left">Rec</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr class="start">
+          <td class="left">
+            Will Smith
+            
+          </td>
+          <td class="left">C</td>
+          <td class="left"><span class="badge badge-active">C</span></td>
+          <td>11</td>
+          <td>0.270</td>
+          <td>.341</td>
+          <td>6</td>
+          <td>2</td>
+          <td>7</td>
+          <td>0</td>
+          <td class="z-ok">0.48</td>
+          <td class="z-bad">-0.15</td>
+          <td class="z-ok">0.07</td>
+          <td class="z-good">0.50</td>
+          <td class="left rec-start">START (matchup need)</td>
+        </tr>
+        
+        <tr class="borderline">
+          <td class="left">
+            Samuel Basallo
+            
+          </td>
+          <td class="left">C</td>
+          <td class="left"><span class="badge badge-active">C</span></td>
+          <td>8</td>
+          <td>0.167</td>
+          <td>.265</td>
+          <td>4</td>
+          <td>1</td>
+          <td>1</td>
+          <td>0</td>
+          <td class="z-bad">-0.37</td>
+          <td class="z-terrible">-1.24</td>
+          <td class="z-bad">-0.42</td>
+          <td class="z-bad">-0.38</td>
+          <td class="left rec-borderline">BORDERLINE</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Nico Hoerner
+            
+          </td>
+          <td class="left">2B</td>
+          <td class="left"><span class="badge badge-active">1B</span></td>
+          <td>12</td>
+          <td>0.333</td>
+          <td>.453</td>
+          <td>8</td>
+          <td>1</td>
+          <td>9</td>
+          <td>5</td>
+          <td class="z-good">1.19</td>
+          <td class="z-good">0.72</td>
+          <td class="z-good">1.26</td>
+          <td class="z-good">1.13</td>
+          <td class="left rec-start">START</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Xavier Edwards
+            
+          </td>
+          <td class="left">2B</td>
+          <td class="left"><span class="badge badge-active">2B</span></td>
+          <td>13</td>
+          <td>0.396</td>
+          <td>.453</td>
+          <td>11</td>
+          <td>1</td>
+          <td>6</td>
+          <td>2</td>
+          <td class="z-good">0.75</td>
+          <td class="z-good">0.63</td>
+          <td class="z-good">0.85</td>
+          <td class="z-good">0.78</td>
+          <td class="left rec-start">START (matchup need)</td>
+        </tr>
+        
+        <tr class="borderline">
+          <td class="left">
+            Jeff McNeil
+            
+          </td>
+          <td class="left">2B</td>
+          <td class="left"><span class="badge badge-active">SS</span></td>
+          <td>11</td>
+          <td>0.258</td>
+          <td>.343</td>
+          <td>3</td>
+          <td>0</td>
+          <td>2</td>
+          <td>1</td>
+          <td class="z-terrible">-0.82</td>
+          <td class="z-terrible">-1.18</td>
+          <td class="z-terrible">-0.91</td>
+          <td class="z-terrible">-0.90</td>
+          <td class="left rec-borderline">BENCH</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Corbin Carroll
+            
+          </td>
+          <td class="left">OF</td>
+          <td class="left"><span class="badge badge-active">3B</span></td>
+          <td>12</td>
+          <td>0.333</td>
+          <td>.408</td>
+          <td>9</td>
+          <td>2</td>
+          <td>11</td>
+          <td>1</td>
+          <td class="z-good">0.96</td>
+          <td class="z-bad">-0.07</td>
+          <td class="z-good">0.93</td>
+          <td class="z-good">0.89</td>
+          <td class="left rec-start">START (matchup need)</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Mike Trout
+            
+          </td>
+          <td class="left">OF</td>
+          <td class="left"><span class="badge badge-active">3B</span></td>
+          <td>12</td>
+          <td>0.190</td>
+          <td>.382</td>
+          <td>9</td>
+          <td>2</td>
+          <td>3</td>
+          <td>2</td>
+          <td class="z-good">0.52</td>
+          <td class="z-terrible">-1.19</td>
+          <td class="z-bad">-0.09</td>
+          <td class="z-ok">0.47</td>
+          <td class="left rec-start">START (matchup need)</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Pete Crow-Armstrong
+            
+          </td>
+          <td class="left">OF</td>
+          <td class="left"><span class="badge badge-active">3B</span></td>
+          <td>12</td>
+          <td>0.234</td>
+          <td>.265</td>
+          <td>8</td>
+          <td>1</td>
+          <td>4</td>
+          <td>4</td>
+          <td class="z-ok">0.44</td>
+          <td class="z-bad">-0.10</td>
+          <td class="z-ok">0.31</td>
+          <td class="z-ok">0.41</td>
+          <td class="left rec-start">START (matchup need)</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Steven Kwan
+            
+          </td>
+          <td class="left">OF</td>
+          <td class="left"><span class="badge badge-active">3B</span></td>
+          <td>13</td>
+          <td>0.245</td>
+          <td>.327</td>
+          <td>7</td>
+          <td>1</td>
+          <td>4</td>
+          <td>1</td>
+          <td class="z-bad">-0.05</td>
+          <td class="z-bad">-0.29</td>
+          <td class="z-ok">0.02</td>
+          <td class="z-bad">-0.10</td>
+          <td class="left rec-start">START (matchup need)</td>
+        </tr>
+        
+        <tr class="borderline">
+          <td class="left">
+            Juan Soto
+            
+          </td>
+          <td class="left">OF</td>
+          <td class="left"><span class="badge badge-active">3B</span></td>
+          <td>8</td>
+          <td>0.355</td>
+          <td>.412</td>
+          <td>3</td>
+          <td>1</td>
+          <td>5</td>
+          <td>0</td>
+          <td class="z-bad">-0.29</td>
+          <td class="z-bad">-0.38</td>
+          <td class="z-terrible">-0.52</td>
+          <td class="z-bad">-0.34</td>
+          <td class="left rec-borderline">BORDERLINE</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Willson Contreras
+            
+          </td>
+          <td class="left">1B</td>
+          <td class="left"><span class="badge badge-active">OF</span></td>
+          <td>12</td>
+          <td>0.250</td>
+          <td>.434</td>
+          <td>7</td>
+          <td>2</td>
+          <td>5</td>
+          <td>0</td>
+          <td class="z-ok">0.02</td>
+          <td class="z-good">0.97</td>
+          <td class="z-ok">0.02</td>
+          <td class="z-bad">-0.14</td>
+          <td class="left rec-start">START (matchup need)</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Mookie Betts
+            
+          </td>
+          <td class="left">SS</td>
+          <td class="left"><span class="badge badge-active">UTIL</span></td>
+          <td>8</td>
+          <td>0.179</td>
+          <td>.281</td>
+          <td>7</td>
+          <td>2</td>
+          <td>7</td>
+          <td>0</td>
+          <td class="z-ok">0.01</td>
+          <td class="z-bad">-0.28</td>
+          <td class="z-bad">-0.04</td>
+          <td class="z-ok">0.11</td>
+          <td class="left rec-start">START (matchup need)</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Christian Yelich
+            
+          </td>
+          <td class="left">DH</td>
+          <td class="left"><span class="badge badge-active">RP</span></td>
+          <td>12</td>
+          <td>0.372</td>
+          <td>.413</td>
+          <td>10</td>
+          <td>1</td>
+          <td>10</td>
+          <td>3</td>
+          <td class="z-good">1.20</td>
+          <td class="z-ok">0.22</td>
+          <td class="z-good">0.90</td>
+          <td class="z-good">1.09</td>
+          <td class="left rec-start">START</td>
+        </tr>
+        
+        <tr class="borderline">
+          <td class="left">
+            Heliot Ramos
+            
+          </td>
+          <td class="left">OF</td>
+          <td class="left"><span class="badge badge-active">RP</span></td>
+          <td>12</td>
+          <td>0.191</td>
+          <td>.224</td>
+          <td>4</td>
+          <td>0</td>
+          <td>3</td>
+          <td>0</td>
+          <td class="z-terrible">-0.95</td>
+          <td class="z-terrible">-1.38</td>
+          <td class="z-terrible">-0.96</td>
+          <td class="z-terrible">-0.99</td>
+          <td class="left rec-borderline">BENCH</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Jakob Marsee
+            
+          </td>
+          <td class="left">OF</td>
+          <td class="left"><span class="badge badge-bench">BENCH</span></td>
+          <td>13</td>
+          <td>0.160</td>
+          <td>.271</td>
+          <td>9</td>
+          <td>0</td>
+          <td>3</td>
+          <td>6</td>
+          <td class="z-good">0.63</td>
+          <td class="z-good">0.89</td>
+          <td class="z-good">0.68</td>
+          <td class="z-good">0.62</td>
+          <td class="left rec-start">START (matchup need)</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Carter Jensen
+            
+          </td>
+          <td class="left">DH</td>
+          <td class="left"><span class="badge badge-bench">BENCH</span></td>
+          <td>12</td>
+          <td>0.219</td>
+          <td>.278</td>
+          <td>5</td>
+          <td>3</td>
+          <td>6</td>
+          <td>0</td>
+          <td class="z-bad">-0.13</td>
+          <td class="z-good">0.86</td>
+          <td class="z-ok">0.49</td>
+          <td class="z-ok">0.42</td>
+          <td class="left rec-start">START (matchup need)</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Alec Bohm
+            
+          </td>
+          <td class="left">3B</td>
+          <td class="left"><span class="badge badge-bench">BENCH</span></td>
+          <td>11</td>
+          <td>0.186</td>
+          <td>.271</td>
+          <td>3</td>
+          <td>1</td>
+          <td>8</td>
+          <td>0</td>
+          <td class="z-bad">-0.48</td>
+          <td class="z-terrible">-1.06</td>
+          <td class="z-terrible">-0.95</td>
+          <td class="z-bad">-0.36</td>
+          <td class="left rec-start">START (matchup need)</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Matt Chapman
+            
+          </td>
+          <td class="left">3B</td>
+          <td class="left"><span class="badge badge-active">SLOT3</span></td>
+          <td>13</td>
+          <td>0.300</td>
+          <td>.352</td>
+          <td>7</td>
+          <td>1</td>
+          <td>7</td>
+          <td>0</td>
+          <td class="z-bad">-0.02</td>
+          <td class="z-terrible">-0.54</td>
+          <td class="z-ok">0.10</td>
+          <td class="z-bad">-0.01</td>
+          <td class="left rec-start">START (matchup need)</td>
+        </tr>
+        
+        <tr class="start">
+          <td class="left">
+            Nick Kurtz
+            
+          </td>
+          <td class="left">1B</td>
+          <td class="left"><span class="badge badge-active">SLOT1</span></td>
+          <td>11</td>
+          <td>0.220</td>
+          <td>.360</td>
+          <td>6</td>
+          <td>0</td>
+          <td>2</td>
+          <td>2</td>
+          <td class="z-bad">-0.32</td>
+          <td class="z-bad">-0.37</td>
+          <td class="z-bad">-0.11</td>
+          <td class="z-bad">-0.16</td>
+          <td class="left rec-start">START (matchup need)</td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+  
+</section>
+<hr class="section-divider">
+
+
+<!-- ══════════════════════════════════════════════ WAIVER ════════════════ -->
 <section id="waiver">
   <h2>🔍 Waiver Wire</h2>
 
@@ -921,512 +1726,14 @@
   <div class="tbl-wrap">
     <table>
       <thead>
-        <tr><th>Name</th><th>Pos</th><th>Team</th><th>Owned%</th><th>Z-Ssn</th><th>Z-7d</th></tr>
+        <tr><th class="left">Name</th><th class="left">Pos</th><th class="left">Team</th><th>Owned%</th><th>Z-Ssn</th><th>Z-7d</th><th>Z-14d</th><th>Z-30d</th></tr>
       </thead>
       <tbody>
         
         <tr>
-          <td>José Soriano <span class="two-start-badge">2-start</span></td>
-          <td>P</td>
-          <td>Los Angeles Angels</td>
-          <td>—</td>
-          <td class="z-ok">0.41</td>
-          <td class="z-ok">0.37</td>
-        </tr>
-        
-        <tr>
-          <td>Taj Bradley <span class="two-start-badge">2-start</span></td>
-          <td>P</td>
-          <td>Minnesota Twins</td>
-          <td>—</td>
-          <td class="z-ok">0.36</td>
-          <td class="z-ok">0.24</td>
-        </tr>
-        
-        <tr>
-          <td>Kyle Freeland <span class="two-start-badge">2-start</span></td>
-          <td>P</td>
-          <td>Colorado Rockies</td>
-          <td>—</td>
-          <td class="z-bad">-0.03</td>
-          <td class="z-bad">-0.06</td>
-        </tr>
-        
-        <tr>
-          <td>Noah Cameron <span class="two-start-badge">2-start</span></td>
-          <td>P</td>
-          <td>Kansas City Royals</td>
-          <td>—</td>
-          <td class="z-bad">-0.14</td>
-          <td class="z-bad">-0.19</td>
-        </tr>
-        
-        <tr>
-          <td>Andrew Abbott <span class="two-start-badge">2-start</span></td>
-          <td>P</td>
-          <td>Cincinnati Reds</td>
-          <td>—</td>
-          <td class="z-bad">-0.19</td>
-          <td class="z-terrible">-0.53</td>
-        </tr>
-        
-        <tr>
-          <td>Aaron Civale <span class="two-start-badge">2-start</span></td>
-          <td>P</td>
-          <td>Athletics</td>
-          <td>—</td>
-          <td class="z-bad">-0.20</td>
-          <td class="z-bad">-0.12</td>
-        </tr>
-        
-        <tr>
-          <td>Janson Junk <span class="two-start-badge">2-start</span></td>
-          <td>P</td>
-          <td>Miami Marlins</td>
-          <td>—</td>
-          <td class="z-bad">-0.27</td>
-          <td class="z-bad">-0.34</td>
-        </tr>
-        
-        <tr>
-          <td>Jameson Taillon <span class="two-start-badge">2-start</span></td>
-          <td>P</td>
-          <td>Chicago Cubs</td>
-          <td>—</td>
-          <td class="z-bad">-0.30</td>
-          <td class="z-bad">-0.35</td>
-        </tr>
-        
-        <tr>
-          <td>Max Scherzer <span class="two-start-badge">2-start</span></td>
-          <td>P</td>
-          <td>Toronto Blue Jays</td>
-          <td>—</td>
-          <td class="z-bad">-0.31</td>
-          <td class="z-terrible">-0.73</td>
-        </tr>
-        
-        <tr>
-          <td>Brandon Williamson <span class="two-start-badge">2-start</span></td>
-          <td>P</td>
-          <td>Cincinnati Reds</td>
-          <td>—</td>
-          <td class="z-bad">-0.32</td>
-          <td class="z-bad">-0.07</td>
-        </tr>
-        
-        <tr>
-          <td>Zack Littell <span class="two-start-badge">2-start</span></td>
-          <td>P</td>
-          <td>Washington Nationals</td>
-          <td>—</td>
-          <td class="z-bad">-0.37</td>
-          <td class="z-bad">-0.16</td>
-        </tr>
-        
-        <tr>
-          <td>Andre Pallante <span class="two-start-badge">2-start</span></td>
-          <td>P</td>
-          <td>St. Louis Cardinals</td>
-          <td>—</td>
-          <td class="z-bad">-0.38</td>
-          <td class="z-terrible">-0.51</td>
-        </tr>
-        
-        <tr>
-          <td>Adrian Houser <span class="two-start-badge">2-start</span></td>
-          <td>P</td>
-          <td>San Francisco Giants</td>
-          <td>—</td>
-          <td class="z-bad">-0.40</td>
-          <td class="z-terrible">-0.62</td>
-        </tr>
-        
-        <tr>
-          <td>Ryan Feltner <span class="two-start-badge">2-start</span></td>
-          <td>P</td>
-          <td>Colorado Rockies</td>
-          <td>—</td>
-          <td class="z-bad">-0.43</td>
-          <td class="z-terrible">-0.76</td>
-        </tr>
-        
-        <tr>
-          <td>Germán Márquez <span class="two-start-badge">2-start</span></td>
-          <td>P</td>
-          <td>San Diego Padres</td>
-          <td>—</td>
-          <td class="z-terrible">-0.57</td>
-          <td class="z-bad">-0.24</td>
-        </tr>
-        
-      </tbody>
-    </table>
-  </div>
-  
-
-  <h3>Top 25 Free Agents</h3>
-  
-  <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr><th>Name</th><th>Pos</th><th>Team</th><th>Owned%</th><th>Z-Ssn</th><th>Z-7d</th><th>Z-14d</th><th>Z-30d</th></tr>
-      </thead>
-      <tbody>
-        
-        <tr>
-          <td>
-            Cam Smith
-            
-            
-          </td>
-          <td>OF</td>
-          <td>Houston Astros</td>
-          <td>—</td>
-          <td class="z-good">1.11</td>
-          <td class="z-good">0.59</td>
-          <td>0.99</td>
-          <td>1.06</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Garrett Mitchell
-            
-            
-          </td>
-          <td>OF</td>
-          <td>Milwaukee Brewers</td>
-          <td>—</td>
-          <td class="z-good">0.93</td>
-          <td class="z-ok">0.02</td>
-          <td>0.76</td>
-          <td>0.90</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Josh Bell
-            
-            
-          </td>
-          <td>DH</td>
-          <td>Minnesota Twins</td>
-          <td>—</td>
-          <td class="z-good">0.86</td>
-          <td class="z-ok">0.39</td>
-          <td>0.83</td>
-          <td>0.65</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Royce Lewis
-            
-            
-          </td>
-          <td>3B</td>
-          <td>Minnesota Twins</td>
-          <td>—</td>
-          <td class="z-good">0.85</td>
-          <td class="z-bad">-0.34</td>
-          <td>0.97</td>
-          <td>0.85</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Dalton Rushing
-            
-            
-          </td>
-          <td>C</td>
-          <td>Los Angeles Dodgers</td>
-          <td>—</td>
-          <td class="z-good">0.83</td>
-          <td class="z-great">1.74</td>
-          <td>0.90</td>
-          <td>0.84</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Kyle Isbel
-            
-            
-          </td>
-          <td>OF</td>
-          <td>Kansas City Royals</td>
-          <td>—</td>
-          <td class="z-good">0.78</td>
-          <td class="z-terrible">-0.91</td>
-          <td>0.82</td>
-          <td>0.76</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Yandy Díaz
-            
-            
-          </td>
-          <td>DH</td>
-          <td>Tampa Bay Rays</td>
-          <td>—</td>
-          <td class="z-good">0.77</td>
-          <td class="z-bad">-0.36</td>
-          <td>0.66</td>
-          <td>0.69</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Owen Caissie
-            
-            
-          </td>
-          <td>OF</td>
-          <td>Miami Marlins</td>
-          <td>—</td>
-          <td class="z-good">0.75</td>
-          <td class="z-bad">-0.25</td>
-          <td>0.77</td>
-          <td>0.69</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Miguel Vargas
-            
-            
-          </td>
-          <td>3B</td>
-          <td>Chicago White Sox</td>
-          <td>—</td>
-          <td class="z-good">0.72</td>
-          <td class="z-bad">-0.34</td>
-          <td>1.01</td>
-          <td>0.90</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Riley O&#39;Brien
-            
-            
-          </td>
-          <td>P</td>
-          <td>St. Louis Cardinals</td>
-          <td>—</td>
-          <td class="z-good">0.65</td>
-          <td class="z-good">0.70</td>
-          <td>0.63</td>
-          <td>0.65</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Tony Santillan
-            
-            
-          </td>
-          <td>P</td>
-          <td>Cincinnati Reds</td>
-          <td>—</td>
-          <td class="z-good">0.61</td>
-          <td class="z-good">0.56</td>
-          <td>0.67</td>
-          <td>0.61</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Edwin Díaz
-            
-            
-          </td>
-          <td>P</td>
-          <td>Los Angeles Dodgers</td>
-          <td>—</td>
-          <td class="z-good">0.57</td>
-          <td class="z-good">0.56</td>
-          <td>0.63</td>
-          <td>0.57</td>
-        </tr>
-        
-        <tr>
-          <td>
-            David Hamilton
-            
-            
-          </td>
-          <td>3B</td>
-          <td>Milwaukee Brewers</td>
-          <td>—</td>
-          <td class="z-good">0.56</td>
-          <td class="z-terrible">-1.01</td>
-          <td>-0.22</td>
-          <td>0.23</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Jakob Junis
-            
-            
-          </td>
-          <td>P</td>
-          <td>Texas Rangers</td>
-          <td>—</td>
-          <td class="z-good">0.56</td>
-          <td class="z-ok">0.42</td>
-          <td>0.60</td>
-          <td>0.56</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Dillon Dingler
-            
-            
-          </td>
-          <td>C</td>
-          <td>Detroit Tigers</td>
-          <td>—</td>
-          <td class="z-good">0.54</td>
-          <td class="z-ok">0.20</td>
-          <td>0.15</td>
-          <td>0.56</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Jorge Soler
-            
-            
-          </td>
-          <td>DH</td>
-          <td>Los Angeles Angels</td>
-          <td>—</td>
-          <td class="z-good">0.52</td>
-          <td class="z-ok">0.43</td>
-          <td>0.79</td>
-          <td>0.66</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Tyler Wells
-            
-            
-          </td>
-          <td>P</td>
-          <td>Baltimore Orioles</td>
-          <td>—</td>
-          <td class="z-ok">0.49</td>
-          <td class="z-good">0.72</td>
-          <td>0.31</td>
-          <td>0.49</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Rico Garcia
-            
-            
-          </td>
-          <td>P</td>
-          <td>Baltimore Orioles</td>
-          <td>—</td>
-          <td class="z-ok">0.47</td>
-          <td class="z-good">0.87</td>
-          <td>0.51</td>
-          <td>0.47</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Gregory Soto
-            
-            
-          </td>
-          <td>P</td>
-          <td>Pittsburgh Pirates</td>
-          <td>—</td>
-          <td class="z-ok">0.46</td>
-          <td class="z-good">0.60</td>
-          <td>0.40</td>
-          <td>0.46</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Cole Young
-            
-            
-          </td>
-          <td>2B</td>
-          <td>Seattle Mariners</td>
-          <td>—</td>
-          <td class="z-ok">0.45</td>
-          <td class="z-bad">-0.19</td>
-          <td>0.49</td>
-          <td>0.29</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Graham Ashcraft
-            
-            
-          </td>
-          <td>P</td>
-          <td>Cincinnati Reds</td>
-          <td>—</td>
-          <td class="z-ok">0.45</td>
-          <td class="z-bad">-0.05</td>
-          <td>0.47</td>
-          <td>0.45</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Juan Morillo
-            
-            
-          </td>
-          <td>P</td>
-          <td>Arizona Diamondbacks</td>
-          <td>—</td>
-          <td class="z-ok">0.45</td>
-          <td class="z-good">0.63</td>
-          <td>0.49</td>
-          <td>0.45</td>
-        </tr>
-        
-        <tr>
-          <td>
-            Jonathan India
-            
-            
-          </td>
-          <td>2B</td>
-          <td>Kansas City Royals</td>
-          <td>—</td>
-          <td class="z-ok">0.42</td>
-          <td class="z-ok">0.06</td>
-          <td>0.39</td>
-          <td>0.24</td>
-        </tr>
-        
-        <tr>
-          <td>
-            José Soriano
-            <span class="two-start-badge">2-start</span>
-            
-          </td>
-          <td>P</td>
-          <td>Los Angeles Angels</td>
+          <td class="left">José Soriano <span class="two-start-badge">2-start</span></td>
+          <td class="left">P</td>
+          <td class="left">Los Angeles Angels</td>
           <td>—</td>
           <td class="z-ok">0.41</td>
           <td class="z-ok">0.37</td>
@@ -1435,13 +1742,541 @@
         </tr>
         
         <tr>
-          <td>
+          <td class="left">Taj Bradley <span class="two-start-badge">2-start</span></td>
+          <td class="left">P</td>
+          <td class="left">Minnesota Twins</td>
+          <td>—</td>
+          <td class="z-ok">0.36</td>
+          <td class="z-ok">0.24</td>
+          <td>0.41</td>
+          <td>0.36</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Kyle Freeland <span class="two-start-badge">2-start</span></td>
+          <td class="left">P</td>
+          <td class="left">Colorado Rockies</td>
+          <td>—</td>
+          <td class="z-bad">-0.03</td>
+          <td class="z-bad">-0.06</td>
+          <td>0.00</td>
+          <td>-0.03</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Noah Cameron <span class="two-start-badge">2-start</span></td>
+          <td class="left">P</td>
+          <td class="left">Kansas City Royals</td>
+          <td>—</td>
+          <td class="z-bad">-0.14</td>
+          <td class="z-bad">-0.19</td>
+          <td>-0.12</td>
+          <td>-0.14</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Andrew Abbott <span class="two-start-badge">2-start</span></td>
+          <td class="left">P</td>
+          <td class="left">Cincinnati Reds</td>
+          <td>—</td>
+          <td class="z-bad">-0.19</td>
+          <td class="z-terrible">-0.53</td>
+          <td>-0.38</td>
+          <td>-0.19</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Aaron Civale <span class="two-start-badge">2-start</span></td>
+          <td class="left">P</td>
+          <td class="left">Athletics</td>
+          <td>—</td>
+          <td class="z-bad">-0.20</td>
+          <td class="z-bad">-0.12</td>
+          <td>-0.18</td>
+          <td>-0.20</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Janson Junk <span class="two-start-badge">2-start</span></td>
+          <td class="left">P</td>
+          <td class="left">Miami Marlins</td>
+          <td>—</td>
+          <td class="z-bad">-0.27</td>
+          <td class="z-bad">-0.34</td>
+          <td>-0.25</td>
+          <td>-0.27</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Jameson Taillon <span class="two-start-badge">2-start</span></td>
+          <td class="left">P</td>
+          <td class="left">Chicago Cubs</td>
+          <td>—</td>
+          <td class="z-bad">-0.30</td>
+          <td class="z-bad">-0.35</td>
+          <td>-0.29</td>
+          <td>-0.30</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Max Scherzer <span class="two-start-badge">2-start</span></td>
+          <td class="left">P</td>
+          <td class="left">Toronto Blue Jays</td>
+          <td>—</td>
+          <td class="z-bad">-0.31</td>
+          <td class="z-terrible">-0.73</td>
+          <td>-0.31</td>
+          <td>-0.31</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Brandon Williamson <span class="two-start-badge">2-start</span></td>
+          <td class="left">P</td>
+          <td class="left">Cincinnati Reds</td>
+          <td>—</td>
+          <td class="z-bad">-0.32</td>
+          <td class="z-bad">-0.07</td>
+          <td>-0.31</td>
+          <td>-0.32</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Zack Littell <span class="two-start-badge">2-start</span></td>
+          <td class="left">P</td>
+          <td class="left">Washington Nationals</td>
+          <td>—</td>
+          <td class="z-bad">-0.37</td>
+          <td class="z-bad">-0.16</td>
+          <td>-0.36</td>
+          <td>-0.37</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Andre Pallante <span class="two-start-badge">2-start</span></td>
+          <td class="left">P</td>
+          <td class="left">St. Louis Cardinals</td>
+          <td>—</td>
+          <td class="z-bad">-0.38</td>
+          <td class="z-terrible">-0.51</td>
+          <td>-0.37</td>
+          <td>-0.38</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Adrian Houser <span class="two-start-badge">2-start</span></td>
+          <td class="left">P</td>
+          <td class="left">San Francisco Giants</td>
+          <td>—</td>
+          <td class="z-bad">-0.40</td>
+          <td class="z-terrible">-0.62</td>
+          <td>-0.39</td>
+          <td>-0.40</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Ryan Feltner <span class="two-start-badge">2-start</span></td>
+          <td class="left">P</td>
+          <td class="left">Colorado Rockies</td>
+          <td>—</td>
+          <td class="z-bad">-0.43</td>
+          <td class="z-terrible">-0.76</td>
+          <td>-0.43</td>
+          <td>-0.43</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Germán Márquez <span class="two-start-badge">2-start</span></td>
+          <td class="left">P</td>
+          <td class="left">San Diego Padres</td>
+          <td>—</td>
+          <td class="z-terrible">-0.57</td>
+          <td class="z-bad">-0.24</td>
+          <td>-0.56</td>
+          <td>-0.57</td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+  
+
+  <h3 style="margin-top:16px;">Top 25 Free Agents</h3>
+  
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th class="left">Name</th><th class="left">Pos</th><th class="left">Team</th><th>Owned%</th><th>Z-Ssn</th><th>Z-7d</th><th>Z-14d</th><th>Z-30d</th></tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td class="left">
+            Cam Smith
+            
+            
+          </td>
+          <td class="left">OF</td>
+          <td class="left">Houston Astros</td>
+          <td>—</td>
+          <td class="z-good">1.11</td>
+          <td class="z-good">0.59</td>
+          <td>0.99</td>
+          <td>1.06</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Garrett Mitchell
+            
+            
+          </td>
+          <td class="left">OF</td>
+          <td class="left">Milwaukee Brewers</td>
+          <td>—</td>
+          <td class="z-good">0.93</td>
+          <td class="z-ok">0.02</td>
+          <td>0.76</td>
+          <td>0.90</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Josh Bell
+            
+            
+          </td>
+          <td class="left">DH</td>
+          <td class="left">Minnesota Twins</td>
+          <td>—</td>
+          <td class="z-good">0.86</td>
+          <td class="z-ok">0.39</td>
+          <td>0.83</td>
+          <td>0.65</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Royce Lewis
+            
+            
+          </td>
+          <td class="left">3B</td>
+          <td class="left">Minnesota Twins</td>
+          <td>—</td>
+          <td class="z-good">0.85</td>
+          <td class="z-bad">-0.34</td>
+          <td>0.97</td>
+          <td>0.85</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Dalton Rushing
+            
+            
+          </td>
+          <td class="left">C</td>
+          <td class="left">Los Angeles Dodgers</td>
+          <td>—</td>
+          <td class="z-good">0.83</td>
+          <td class="z-great">1.74</td>
+          <td>0.90</td>
+          <td>0.84</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Kyle Isbel
+            
+            
+          </td>
+          <td class="left">OF</td>
+          <td class="left">Kansas City Royals</td>
+          <td>—</td>
+          <td class="z-good">0.78</td>
+          <td class="z-terrible">-0.91</td>
+          <td>0.82</td>
+          <td>0.76</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Yandy Díaz
+            
+            
+          </td>
+          <td class="left">DH</td>
+          <td class="left">Tampa Bay Rays</td>
+          <td>—</td>
+          <td class="z-good">0.77</td>
+          <td class="z-bad">-0.36</td>
+          <td>0.66</td>
+          <td>0.69</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Owen Caissie
+            
+            
+          </td>
+          <td class="left">OF</td>
+          <td class="left">Miami Marlins</td>
+          <td>—</td>
+          <td class="z-good">0.75</td>
+          <td class="z-bad">-0.25</td>
+          <td>0.77</td>
+          <td>0.69</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Miguel Vargas
+            
+            
+          </td>
+          <td class="left">3B</td>
+          <td class="left">Chicago White Sox</td>
+          <td>—</td>
+          <td class="z-good">0.72</td>
+          <td class="z-bad">-0.34</td>
+          <td>1.01</td>
+          <td>0.90</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Riley O&#39;Brien
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left">St. Louis Cardinals</td>
+          <td>—</td>
+          <td class="z-good">0.65</td>
+          <td class="z-good">0.70</td>
+          <td>0.63</td>
+          <td>0.65</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Tony Santillan
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left">Cincinnati Reds</td>
+          <td>—</td>
+          <td class="z-good">0.61</td>
+          <td class="z-good">0.56</td>
+          <td>0.67</td>
+          <td>0.61</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Edwin Díaz
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left">Los Angeles Dodgers</td>
+          <td>—</td>
+          <td class="z-good">0.57</td>
+          <td class="z-good">0.56</td>
+          <td>0.63</td>
+          <td>0.57</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            David Hamilton
+            
+            
+          </td>
+          <td class="left">3B</td>
+          <td class="left">Milwaukee Brewers</td>
+          <td>—</td>
+          <td class="z-good">0.56</td>
+          <td class="z-terrible">-1.01</td>
+          <td>-0.22</td>
+          <td>0.23</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Jakob Junis
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left">Texas Rangers</td>
+          <td>—</td>
+          <td class="z-good">0.56</td>
+          <td class="z-ok">0.42</td>
+          <td>0.60</td>
+          <td>0.56</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Dillon Dingler
+            
+            
+          </td>
+          <td class="left">C</td>
+          <td class="left">Detroit Tigers</td>
+          <td>—</td>
+          <td class="z-good">0.54</td>
+          <td class="z-ok">0.20</td>
+          <td>0.15</td>
+          <td>0.56</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Jorge Soler
+            
+            
+          </td>
+          <td class="left">DH</td>
+          <td class="left">Los Angeles Angels</td>
+          <td>—</td>
+          <td class="z-good">0.52</td>
+          <td class="z-ok">0.43</td>
+          <td>0.79</td>
+          <td>0.66</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Tyler Wells
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left">Baltimore Orioles</td>
+          <td>—</td>
+          <td class="z-ok">0.49</td>
+          <td class="z-good">0.72</td>
+          <td>0.31</td>
+          <td>0.49</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Rico Garcia
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left">Baltimore Orioles</td>
+          <td>—</td>
+          <td class="z-ok">0.47</td>
+          <td class="z-good">0.87</td>
+          <td>0.51</td>
+          <td>0.47</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Gregory Soto
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left">Pittsburgh Pirates</td>
+          <td>—</td>
+          <td class="z-ok">0.46</td>
+          <td class="z-good">0.60</td>
+          <td>0.40</td>
+          <td>0.46</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Cole Young
+            
+            
+          </td>
+          <td class="left">2B</td>
+          <td class="left">Seattle Mariners</td>
+          <td>—</td>
+          <td class="z-ok">0.45</td>
+          <td class="z-bad">-0.19</td>
+          <td>0.49</td>
+          <td>0.29</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Graham Ashcraft
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left">Cincinnati Reds</td>
+          <td>—</td>
+          <td class="z-ok">0.45</td>
+          <td class="z-bad">-0.05</td>
+          <td>0.47</td>
+          <td>0.45</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Juan Morillo
+            
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left">Arizona Diamondbacks</td>
+          <td>—</td>
+          <td class="z-ok">0.45</td>
+          <td class="z-good">0.63</td>
+          <td>0.49</td>
+          <td>0.45</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            Jonathan India
+            
+            
+          </td>
+          <td class="left">2B</td>
+          <td class="left">Kansas City Royals</td>
+          <td>—</td>
+          <td class="z-ok">0.42</td>
+          <td class="z-ok">0.06</td>
+          <td>0.39</td>
+          <td>0.24</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
+            José Soriano
+            <span class="two-start-badge">2-start</span>
+            
+          </td>
+          <td class="left">P</td>
+          <td class="left">Los Angeles Angels</td>
+          <td>—</td>
+          <td class="z-ok">0.41</td>
+          <td class="z-ok">0.37</td>
+          <td>0.19</td>
+          <td>0.41</td>
+        </tr>
+        
+        <tr>
+          <td class="left">
             Teoscar Hernández
             
             
           </td>
-          <td>OF</td>
-          <td>Los Angeles Dodgers</td>
+          <td class="left">OF</td>
+          <td class="left">Los Angeles Dodgers</td>
           <td>—</td>
           <td class="z-ok">0.40</td>
           <td class="z-good">1.05</td>
@@ -1457,7 +2292,7 @@
 <hr class="section-divider">
 
 
-<!-- ═══════════════════════════════════════════ TRADE ══════════════════ -->
+<!-- ══════════════════════════════════════════════ TRADE ═════════════════ -->
 <section id="trade">
   <h2>🔄 Trade</h2>
   <div class="two-col">
@@ -1467,168 +2302,168 @@
       <div class="tbl-wrap">
         <table>
           <thead>
-            <tr><th>Name</th><th>Pos</th><th>Team</th><th>Z-Ssn</th><th>Z-7d</th></tr>
+            <tr><th class="left">Name</th><th class="left">Pos</th><th class="left">Team</th><th>Z-Ssn</th><th>Z-7d</th></tr>
           </thead>
           <tbody>
             
             <tr>
-              <td>Drake Baldwin</td>
-              <td>C</td>
-              <td class="other-team">ChicksDigTheLongBall</td>
+              <td class="left">Drake Baldwin</td>
+              <td class="left">C</td>
+              <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-great">2.09</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>CJ Abrams</td>
-              <td>SS</td>
-              <td class="other-team">Jazz In Her Batters Box</td>
+              <td class="left">CJ Abrams</td>
+              <td class="left">SS</td>
+              <td class="left other-team">Jazz In Her Batters Box</td>
               <td class="z-great">1.67</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Jordan Walker</td>
-              <td>OF</td>
-              <td class="other-team">Lunch</td>
+              <td class="left">Jordan Walker</td>
+              <td class="left">OF</td>
+              <td class="left other-team">Lunch</td>
               <td class="z-great">1.60</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Sal Stewart</td>
-              <td>1B</td>
-              <td class="other-team">2010 State Sectional Champ</td>
+              <td class="left">Sal Stewart</td>
+              <td class="left">1B</td>
+              <td class="left other-team">2010 State Sectional Champ</td>
               <td class="z-great">1.58</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Yordan Alvarez</td>
-              <td>DH</td>
-              <td class="other-team">I Robbed A Nuke</td>
+              <td class="left">Yordan Alvarez</td>
+              <td class="left">DH</td>
+              <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-good">1.46</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Liam Hicks</td>
-              <td>C</td>
-              <td class="other-team">Lunch</td>
+              <td class="left">Liam Hicks</td>
+              <td class="left">C</td>
+              <td class="left other-team">Lunch</td>
               <td class="z-good">1.38</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Oneil Cruz</td>
-              <td>OF</td>
-              <td class="other-team">Lunch</td>
+              <td class="left">Oneil Cruz</td>
+              <td class="left">OF</td>
+              <td class="left other-team">Lunch</td>
               <td class="z-good">1.26</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>James Wood</td>
-              <td>OF</td>
-              <td class="other-team">ChicksDigTheLongBall</td>
+              <td class="left">James Wood</td>
+              <td class="left">OF</td>
+              <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-good">1.25</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Ben Rice</td>
-              <td>1B</td>
-              <td class="other-team">I Robbed A Nuke</td>
+              <td class="left">Ben Rice</td>
+              <td class="left">1B</td>
+              <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-good">1.24</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Chase DeLauter</td>
-              <td>OF</td>
-              <td class="other-team">I Robbed A Nuke</td>
+              <td class="left">Chase DeLauter</td>
+              <td class="left">OF</td>
+              <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-good">1.12</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Shea Langeliers</td>
-              <td>C</td>
-              <td class="other-team">2010 State Sectional Champ</td>
+              <td class="left">Shea Langeliers</td>
+              <td class="left">C</td>
+              <td class="left other-team">2010 State Sectional Champ</td>
               <td class="z-good">1.12</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Jose Altuve</td>
-              <td>2B</td>
-              <td class="other-team">All Rise Run Club</td>
+              <td class="left">Jose Altuve</td>
+              <td class="left">2B</td>
+              <td class="left other-team">All Rise Run Club</td>
               <td class="z-good">1.06</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Andy Pages</td>
-              <td>OF</td>
-              <td class="other-team">All Rise Run Club</td>
+              <td class="left">Andy Pages</td>
+              <td class="left">OF</td>
+              <td class="left other-team">All Rise Run Club</td>
               <td class="z-good">1.06</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Kyle Tucker</td>
-              <td>OF</td>
-              <td class="other-team">Lunch</td>
+              <td class="left">Kyle Tucker</td>
+              <td class="left">OF</td>
+              <td class="left other-team">Lunch</td>
               <td class="z-good">1.00</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Luis Robert Jr.</td>
-              <td>OF</td>
-              <td class="other-team">ChicksDigTheLongBall</td>
+              <td class="left">Luis Robert Jr.</td>
+              <td class="left">OF</td>
+              <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-good">0.93</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Brice Turang</td>
-              <td>2B</td>
-              <td class="other-team">I Robbed A Nuke</td>
+              <td class="left">Brice Turang</td>
+              <td class="left">2B</td>
+              <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-good">0.92</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Gunnar Henderson</td>
-              <td>SS</td>
-              <td class="other-team">2010 State Sectional Champ</td>
+              <td class="left">Gunnar Henderson</td>
+              <td class="left">SS</td>
+              <td class="left other-team">2010 State Sectional Champ</td>
               <td class="z-good">0.92</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Erik Sabrowski</td>
-              <td>P</td>
-              <td class="other-team">Lunch</td>
+              <td class="left">Erik Sabrowski</td>
+              <td class="left">P</td>
+              <td class="left other-team">Lunch</td>
               <td class="z-good">0.91</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Ryan O&#39;Hearn</td>
-              <td>OF</td>
-              <td class="other-team">I Robbed A Nuke</td>
+              <td class="left">Ryan O&#39;Hearn</td>
+              <td class="left">OF</td>
+              <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-good">0.83</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Christian Walker</td>
-              <td>1B</td>
-              <td class="other-team">ChicksDigTheLongBall</td>
+              <td class="left">Christian Walker</td>
+              <td class="left">1B</td>
+              <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-good">0.78</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
           </tbody>
@@ -1642,113 +2477,113 @@
       <div class="tbl-wrap">
         <table>
           <thead>
-            <tr><th>Name</th><th>Pos</th><th>Z-Ssn</th><th>Z-7d</th></tr>
+            <tr><th class="left">Name</th><th class="left">Pos</th><th>Z-Ssn</th><th>Z-7d</th></tr>
           </thead>
           <tbody>
             
             <tr>
-              <td>Christian Yelich</td>
-              <td>DH</td>
+              <td class="left">Christian Yelich</td>
+              <td class="left">DH</td>
               <td class="z-good">1.20</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Nico Hoerner</td>
-              <td>2B</td>
+              <td class="left">Nico Hoerner</td>
+              <td class="left">2B</td>
               <td class="z-good">1.19</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Mason Miller</td>
-              <td>P</td>
+              <td class="left">Mason Miller</td>
+              <td class="left">P</td>
               <td class="z-good">1.06</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Corbin Carroll</td>
-              <td>OF</td>
+              <td class="left">Corbin Carroll</td>
+              <td class="left">OF</td>
               <td class="z-good">0.96</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Xavier Edwards</td>
-              <td>2B</td>
+              <td class="left">Xavier Edwards</td>
+              <td class="left">2B</td>
               <td class="z-good">0.75</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Jordan Romano</td>
-              <td>P</td>
+              <td class="left">Jordan Romano</td>
+              <td class="left">P</td>
               <td class="z-good">0.68</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Jakob Marsee</td>
-              <td>OF</td>
+              <td class="left">Jakob Marsee</td>
+              <td class="left">OF</td>
               <td class="z-good">0.63</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Mike Trout</td>
-              <td>OF</td>
+              <td class="left">Mike Trout</td>
+              <td class="left">OF</td>
               <td class="z-good">0.52</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Will Smith</td>
-              <td>C</td>
+              <td class="left">Will Smith</td>
+              <td class="left">C</td>
               <td class="z-ok">0.48</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Pete Crow-Armstrong</td>
-              <td>OF</td>
+              <td class="left">Pete Crow-Armstrong</td>
+              <td class="left">OF</td>
               <td class="z-ok">0.44</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Abner Uribe</td>
-              <td>P</td>
+              <td class="left">Abner Uribe</td>
+              <td class="left">P</td>
               <td class="z-ok">0.19</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Yoshinobu Yamamoto</td>
-              <td>P</td>
+              <td class="left">Yoshinobu Yamamoto</td>
+              <td class="left">P</td>
               <td class="z-ok">0.05</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Willson Contreras</td>
-              <td>1B</td>
+              <td class="left">Willson Contreras</td>
+              <td class="left">1B</td>
               <td class="z-ok">0.02</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Mookie Betts</td>
-              <td>SS</td>
+              <td class="left">Mookie Betts</td>
+              <td class="left">SS</td>
               <td class="z-ok">0.01</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
             <tr>
-              <td>Michael King</td>
-              <td>P</td>
+              <td class="left">Michael King</td>
+              <td class="left">P</td>
               <td class="z-ok">0.01</td>
-              <td>—</td>
+              <td class="z-na">—</td>
             </tr>
             
           </tbody>
@@ -1761,7 +2596,7 @@
 <hr class="section-divider">
 
 
-<!-- ═══════════════════════════════════════════ RANKINGS ════════════════ -->
+<!-- ══════════════════════════════════════════════ RANKINGS ══════════════ -->
 <section id="rankings">
   <h2>📊 Rankings — Top 40</h2>
   <div class="two-col">
@@ -1771,14 +2606,14 @@
       <div class="tbl-wrap">
         <table>
           <thead>
-            <tr><th>Name</th><th>Pos</th><th>Owner</th><th>Z-Ssn</th><th>Z-7d</th><th>Proj-Z</th><th>Owned%</th></tr>
+            <tr><th class="left">Name</th><th class="left">Pos</th><th class="left">Owner</th><th>Z-Ssn</th><th>Z-7d</th><th>Proj-Z</th><th>Owned%</th></tr>
           </thead>
           <tbody>
             
             <tr>
-              <td>Drake Baldwin</td>
-              <td>C</td>
-              <td class="other-team">ChicksDigTheLongBall</td>
+              <td class="left">Drake Baldwin</td>
+              <td class="left">C</td>
+              <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-great">2.09</td>
               <td class="z-good">1.23</td>
               <td class="z-good">0.80</td>
@@ -1786,19 +2621,19 @@
             </tr>
             
             <tr>
-              <td>CJ Abrams</td>
-              <td>SS</td>
-              <td class="other-team">Jazz In Her Batters Box</td>
+              <td class="left">CJ Abrams</td>
+              <td class="left">SS</td>
+              <td class="left other-team">Jazz In Her Batters Box</td>
               <td class="z-great">1.67</td>
               <td class="z-great">1.78</td>
               <td class="z-ok">0.40</td>
-              <td>86.0%</td>
+              <td>86.1%</td>
             </tr>
             
             <tr>
-              <td>Jordan Walker</td>
-              <td>OF</td>
-              <td class="other-team">Lunch</td>
+              <td class="left">Jordan Walker</td>
+              <td class="left">OF</td>
+              <td class="left other-team">Lunch</td>
               <td class="z-great">1.60</td>
               <td class="z-great">1.55</td>
               <td class="z-na">—</td>
@@ -1806,9 +2641,9 @@
             </tr>
             
             <tr>
-              <td>Sal Stewart</td>
-              <td>1B</td>
-              <td class="other-team">2010 State Sectional Champ</td>
+              <td class="left">Sal Stewart</td>
+              <td class="left">1B</td>
+              <td class="left other-team">2010 State Sectional Champ</td>
               <td class="z-great">1.58</td>
               <td class="z-good">1.42</td>
               <td class="z-na">—</td>
@@ -1816,9 +2651,9 @@
             </tr>
             
             <tr>
-              <td>Yordan Alvarez</td>
-              <td>DH</td>
-              <td class="other-team">I Robbed A Nuke</td>
+              <td class="left">Yordan Alvarez</td>
+              <td class="left">DH</td>
+              <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-good">1.46</td>
               <td class="z-bad">-0.30</td>
               <td class="z-good">0.88</td>
@@ -1826,9 +2661,9 @@
             </tr>
             
             <tr>
-              <td>Liam Hicks</td>
-              <td>C</td>
-              <td class="other-team">Lunch</td>
+              <td class="left">Liam Hicks</td>
+              <td class="left">C</td>
+              <td class="left other-team">Lunch</td>
               <td class="z-good">1.38</td>
               <td class="z-terrible">-0.64</td>
               <td class="z-na">—</td>
@@ -1836,9 +2671,9 @@
             </tr>
             
             <tr>
-              <td>Oneil Cruz</td>
-              <td>OF</td>
-              <td class="other-team">Lunch</td>
+              <td class="left">Oneil Cruz</td>
+              <td class="left">OF</td>
+              <td class="left other-team">Lunch</td>
               <td class="z-good">1.26</td>
               <td class="z-ok">0.06</td>
               <td class="z-na">—</td>
@@ -1846,9 +2681,9 @@
             </tr>
             
             <tr>
-              <td>James Wood</td>
-              <td>OF</td>
-              <td class="other-team">ChicksDigTheLongBall</td>
+              <td class="left">James Wood</td>
+              <td class="left">OF</td>
+              <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-good">1.25</td>
               <td class="z-great">1.69</td>
               <td class="z-na">—</td>
@@ -1856,9 +2691,9 @@
             </tr>
             
             <tr>
-              <td>Ben Rice</td>
-              <td>1B</td>
-              <td class="other-team">I Robbed A Nuke</td>
+              <td class="left">Ben Rice</td>
+              <td class="left">1B</td>
+              <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-good">1.24</td>
               <td class="z-good">0.93</td>
               <td class="z-good">0.65</td>
@@ -1866,9 +2701,9 @@
             </tr>
             
             <tr>
-              <td>Christian Yelich</td>
-              <td>DH</td>
-              <td class="my-team">Pitch Slap</td>
+              <td class="left">Christian Yelich</td>
+              <td class="left">DH</td>
+              <td class="left my-team">Pitch Slap</td>
               <td class="z-good">1.20</td>
               <td class="z-ok">0.22</td>
               <td class="z-na">—</td>
@@ -1876,19 +2711,19 @@
             </tr>
             
             <tr>
-              <td>Nico Hoerner</td>
-              <td>2B</td>
-              <td class="my-team">Pitch Slap</td>
+              <td class="left">Nico Hoerner</td>
+              <td class="left">2B</td>
+              <td class="left my-team">Pitch Slap</td>
               <td class="z-good">1.19</td>
               <td class="z-good">0.72</td>
               <td class="z-good">0.67</td>
-              <td>98.5%</td>
+              <td>98.6%</td>
             </tr>
             
             <tr>
-              <td>Shea Langeliers</td>
-              <td>C</td>
-              <td class="other-team">2010 State Sectional Champ</td>
+              <td class="left">Shea Langeliers</td>
+              <td class="left">C</td>
+              <td class="left other-team">2010 State Sectional Champ</td>
               <td class="z-good">1.12</td>
               <td class="z-terrible">-1.01</td>
               <td class="z-good">1.09</td>
@@ -1896,9 +2731,9 @@
             </tr>
             
             <tr>
-              <td>Chase DeLauter</td>
-              <td>OF</td>
-              <td class="other-team">I Robbed A Nuke</td>
+              <td class="left">Chase DeLauter</td>
+              <td class="left">OF</td>
+              <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-good">1.12</td>
               <td class="z-bad">-0.06</td>
               <td class="z-na">—</td>
@@ -1906,9 +2741,9 @@
             </tr>
             
             <tr>
-              <td>Cam Smith</td>
-              <td>OF</td>
-              <td class="fa">FA</td>
+              <td class="left">Cam Smith</td>
+              <td class="left">OF</td>
+              <td class="left fa">FA</td>
               <td class="z-good">1.11</td>
               <td class="z-good">0.59</td>
               <td class="z-na">—</td>
@@ -1916,9 +2751,9 @@
             </tr>
             
             <tr>
-              <td>Jose Altuve</td>
-              <td>2B</td>
-              <td class="other-team">All Rise Run Club</td>
+              <td class="left">Jose Altuve</td>
+              <td class="left">2B</td>
+              <td class="left other-team">All Rise Run Club</td>
               <td class="z-good">1.06</td>
               <td class="z-bad">-0.44</td>
               <td class="z-na">—</td>
@@ -1926,9 +2761,9 @@
             </tr>
             
             <tr>
-              <td>Andy Pages</td>
-              <td>OF</td>
-              <td class="other-team">All Rise Run Club</td>
+              <td class="left">Andy Pages</td>
+              <td class="left">OF</td>
+              <td class="left other-team">All Rise Run Club</td>
               <td class="z-good">1.06</td>
               <td class="z-good">1.01</td>
               <td class="z-na">—</td>
@@ -1936,29 +2771,29 @@
             </tr>
             
             <tr>
-              <td>Kyle Tucker</td>
-              <td>OF</td>
-              <td class="other-team">Lunch</td>
+              <td class="left">Kyle Tucker</td>
+              <td class="left">OF</td>
+              <td class="left other-team">Lunch</td>
               <td class="z-good">1.00</td>
               <td class="z-good">0.96</td>
-              <td class="z-good">1.39</td>
+              <td class="z-good">1.40</td>
               <td>99.8%</td>
             </tr>
             
             <tr>
-              <td>Corbin Carroll</td>
-              <td>OF</td>
-              <td class="my-team">Pitch Slap</td>
+              <td class="left">Corbin Carroll</td>
+              <td class="left">OF</td>
+              <td class="left my-team">Pitch Slap</td>
               <td class="z-good">0.96</td>
               <td class="z-bad">-0.07</td>
-              <td class="z-good">1.33</td>
+              <td class="z-good">1.35</td>
               <td>99.8%</td>
             </tr>
             
             <tr>
-              <td>Luis Robert Jr.</td>
-              <td>OF</td>
-              <td class="other-team">ChicksDigTheLongBall</td>
+              <td class="left">Luis Robert Jr.</td>
+              <td class="left">OF</td>
+              <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-good">0.93</td>
               <td class="z-good">0.65</td>
               <td class="z-na">—</td>
@@ -1966,9 +2801,9 @@
             </tr>
             
             <tr>
-              <td>Garrett Mitchell</td>
-              <td>OF</td>
-              <td class="fa">FA</td>
+              <td class="left">Garrett Mitchell</td>
+              <td class="left">OF</td>
+              <td class="left fa">FA</td>
               <td class="z-good">0.93</td>
               <td class="z-ok">0.02</td>
               <td class="z-na">—</td>
@@ -1976,9 +2811,9 @@
             </tr>
             
             <tr>
-              <td>Brice Turang</td>
-              <td>2B</td>
-              <td class="other-team">I Robbed A Nuke</td>
+              <td class="left">Brice Turang</td>
+              <td class="left">2B</td>
+              <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-good">0.92</td>
               <td class="z-terrible">-0.54</td>
               <td class="z-good">1.23</td>
@@ -1986,39 +2821,39 @@
             </tr>
             
             <tr>
-              <td>Gunnar Henderson</td>
-              <td>SS</td>
-              <td class="other-team">2010 State Sectional Champ</td>
+              <td class="left">Gunnar Henderson</td>
+              <td class="left">SS</td>
+              <td class="left other-team">2010 State Sectional Champ</td>
               <td class="z-good">0.92</td>
               <td class="z-good">1.08</td>
               <td class="z-good">0.92</td>
-              <td>99.1%</td>
+              <td>99.2%</td>
             </tr>
             
             <tr>
-              <td>Josh Bell</td>
-              <td>DH</td>
-              <td class="fa">FA</td>
+              <td class="left">Josh Bell</td>
+              <td class="left">DH</td>
+              <td class="left fa">FA</td>
               <td class="z-good">0.86</td>
               <td class="z-ok">0.39</td>
               <td class="z-ok">0.08</td>
-              <td>11.6%</td>
+              <td>12.2%</td>
             </tr>
             
             <tr>
-              <td>Royce Lewis</td>
-              <td>3B</td>
-              <td class="fa">FA</td>
+              <td class="left">Royce Lewis</td>
+              <td class="left">3B</td>
+              <td class="left fa">FA</td>
               <td class="z-good">0.85</td>
               <td class="z-bad">-0.34</td>
-              <td class="z-ok">0.18</td>
+              <td class="z-ok">0.35</td>
               <td>14.4%</td>
             </tr>
             
             <tr>
-              <td>Dalton Rushing</td>
-              <td>C</td>
-              <td class="fa">FA</td>
+              <td class="left">Dalton Rushing</td>
+              <td class="left">C</td>
+              <td class="left fa">FA</td>
               <td class="z-good">0.83</td>
               <td class="z-great">1.74</td>
               <td class="z-bad">-0.17</td>
@@ -2026,9 +2861,9 @@
             </tr>
             
             <tr>
-              <td>Ryan O&#39;Hearn</td>
-              <td>OF</td>
-              <td class="other-team">I Robbed A Nuke</td>
+              <td class="left">Ryan O&#39;Hearn</td>
+              <td class="left">OF</td>
+              <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-good">0.83</td>
               <td class="z-ok">0.15</td>
               <td class="z-na">—</td>
@@ -2036,29 +2871,29 @@
             </tr>
             
             <tr>
-              <td>Christian Walker</td>
-              <td>1B</td>
-              <td class="other-team">ChicksDigTheLongBall</td>
+              <td class="left">Christian Walker</td>
+              <td class="left">1B</td>
+              <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-good">0.78</td>
               <td class="z-good">1.34</td>
               <td class="z-ok">0.47</td>
-              <td>68.5%</td>
+              <td>68.7%</td>
             </tr>
             
             <tr>
-              <td>Kyle Isbel</td>
-              <td>OF</td>
-              <td class="fa">FA</td>
+              <td class="left">Kyle Isbel</td>
+              <td class="left">OF</td>
+              <td class="left fa">FA</td>
               <td class="z-good">0.78</td>
               <td class="z-terrible">-0.91</td>
-              <td class="z-terrible">-0.57</td>
-              <td>15.5%</td>
+              <td class="z-terrible">-0.58</td>
+              <td>15.3%</td>
             </tr>
             
             <tr>
-              <td>Zach Neto</td>
-              <td>SS</td>
-              <td class="other-team">ChicksDigTheLongBall</td>
+              <td class="left">Zach Neto</td>
+              <td class="left">SS</td>
+              <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-good">0.77</td>
               <td class="z-bad">-0.20</td>
               <td class="z-na">—</td>
@@ -2066,9 +2901,9 @@
             </tr>
             
             <tr>
-              <td>Yandy Díaz</td>
-              <td>DH</td>
-              <td class="fa">FA</td>
+              <td class="left">Yandy Díaz</td>
+              <td class="left">DH</td>
+              <td class="left fa">FA</td>
               <td class="z-good">0.77</td>
               <td class="z-bad">-0.36</td>
               <td class="z-na">—</td>
@@ -2076,29 +2911,29 @@
             </tr>
             
             <tr>
-              <td>Xavier Edwards</td>
-              <td>2B</td>
-              <td class="my-team">Pitch Slap</td>
+              <td class="left">Xavier Edwards</td>
+              <td class="left">2B</td>
+              <td class="left my-team">Pitch Slap</td>
               <td class="z-good">0.75</td>
               <td class="z-good">0.63</td>
               <td class="z-ok">0.42</td>
-              <td>80.7%</td>
+              <td>80.9%</td>
             </tr>
             
             <tr>
-              <td>Wilyer Abreu</td>
-              <td>OF</td>
-              <td class="other-team">Jazz In Her Batters Box</td>
+              <td class="left">Wilyer Abreu</td>
+              <td class="left">OF</td>
+              <td class="left other-team">Jazz In Her Batters Box</td>
               <td class="z-good">0.75</td>
               <td class="z-bad">-0.35</td>
-              <td class="z-ok">0.33</td>
-              <td>70.0%</td>
+              <td class="z-ok">0.34</td>
+              <td>70.1%</td>
             </tr>
             
             <tr>
-              <td>Owen Caissie</td>
-              <td>OF</td>
-              <td class="fa">FA</td>
+              <td class="left">Owen Caissie</td>
+              <td class="left">OF</td>
+              <td class="left fa">FA</td>
               <td class="z-good">0.75</td>
               <td class="z-bad">-0.25</td>
               <td class="z-na">—</td>
@@ -2106,19 +2941,19 @@
             </tr>
             
             <tr>
-              <td>Brendan Donovan</td>
-              <td>3B</td>
-              <td class="other-team">All Rise Run Club</td>
+              <td class="left">Brendan Donovan</td>
+              <td class="left">3B</td>
+              <td class="left other-team">All Rise Run Club</td>
               <td class="z-good">0.73</td>
               <td class="z-terrible">-1.22</td>
-              <td class="z-ok">0.13</td>
-              <td>75.9%</td>
+              <td class="z-ok">0.21</td>
+              <td>76.0%</td>
             </tr>
             
             <tr>
-              <td>Miguel Vargas</td>
-              <td>3B</td>
-              <td class="fa">FA</td>
+              <td class="left">Miguel Vargas</td>
+              <td class="left">3B</td>
+              <td class="left fa">FA</td>
               <td class="z-good">0.72</td>
               <td class="z-bad">-0.34</td>
               <td class="z-na">—</td>
@@ -2126,9 +2961,9 @@
             </tr>
             
             <tr>
-              <td>Elly De La Cruz</td>
-              <td>SS</td>
-              <td class="other-team">ICECOLDBEERHERE!</td>
+              <td class="left">Elly De La Cruz</td>
+              <td class="left">SS</td>
+              <td class="left other-team">ICECOLDBEERHERE!</td>
               <td class="z-good">0.69</td>
               <td class="z-good">0.56</td>
               <td class="z-na">—</td>
@@ -2136,39 +2971,39 @@
             </tr>
             
             <tr>
-              <td>Aaron Judge</td>
-              <td>OF</td>
-              <td class="other-team">All Rise Run Club</td>
+              <td class="left">Aaron Judge</td>
+              <td class="left">OF</td>
+              <td class="left other-team">All Rise Run Club</td>
               <td class="z-good">0.67</td>
               <td class="z-good">0.69</td>
-              <td class="z-great">2.41</td>
+              <td class="z-great">2.44</td>
               <td>99.9%</td>
             </tr>
             
             <tr>
-              <td>Max Muncy</td>
-              <td>3B</td>
-              <td class="fa">FA</td>
+              <td class="left">Max Muncy</td>
+              <td class="left">3B</td>
+              <td class="left fa">FA</td>
               <td class="z-good">0.66</td>
               <td class="z-terrible">-1.36</td>
-              <td class="z-ok">0.39</td>
-              <td>20.0%</td>
+              <td class="z-ok">0.48</td>
+              <td>19.9%</td>
             </tr>
             
             <tr>
-              <td>Jakob Marsee</td>
-              <td>OF</td>
-              <td class="my-team">Pitch Slap</td>
+              <td class="left">Jakob Marsee</td>
+              <td class="left">OF</td>
+              <td class="left my-team">Pitch Slap</td>
               <td class="z-good">0.63</td>
               <td class="z-good">0.89</td>
-              <td class="z-good">1.00</td>
-              <td>45.0%</td>
+              <td class="z-good">1.01</td>
+              <td>44.9%</td>
             </tr>
             
             <tr>
-              <td>David Hamilton</td>
-              <td>3B</td>
-              <td class="fa">FA</td>
+              <td class="left">David Hamilton</td>
+              <td class="left">3B</td>
+              <td class="left fa">FA</td>
               <td class="z-good">0.56</td>
               <td class="z-terrible">-1.01</td>
               <td class="z-na">—</td>
@@ -2186,24 +3021,24 @@
       <div class="tbl-wrap">
         <table>
           <thead>
-            <tr><th>Name</th><th>Pos</th><th>Owner</th><th>Z-Ssn</th><th>Z-7d</th><th>Proj-Z</th><th>Owned%</th></tr>
+            <tr><th class="left">Name</th><th class="left">Pos</th><th class="left">Owner</th><th>Z-Ssn</th><th>Z-7d</th><th>Proj-Z</th><th>Owned%</th></tr>
           </thead>
           <tbody>
             
             <tr>
-              <td>Mason Miller</td>
-              <td>P</td>
-              <td class="my-team">Pitch Slap</td>
+              <td class="left">Mason Miller</td>
+              <td class="left">P</td>
+              <td class="left my-team">Pitch Slap</td>
               <td class="z-good">1.06</td>
               <td class="z-good">1.28</td>
-              <td class="z-good">1.21</td>
+              <td class="z-good">1.22</td>
               <td>99.2%</td>
             </tr>
             
             <tr>
-              <td>Erik Sabrowski</td>
-              <td>P</td>
-              <td class="other-team">Lunch</td>
+              <td class="left">Erik Sabrowski</td>
+              <td class="left">P</td>
+              <td class="left other-team">Lunch</td>
               <td class="z-good">0.91</td>
               <td class="z-ok">0.14</td>
               <td class="z-bad">-0.27</td>
@@ -2211,9 +3046,9 @@
             </tr>
             
             <tr>
-              <td>Jordan Romano</td>
-              <td>P</td>
-              <td class="my-team">Pitch Slap</td>
+              <td class="left">Jordan Romano</td>
+              <td class="left">P</td>
+              <td class="left my-team">Pitch Slap</td>
               <td class="z-good">0.68</td>
               <td class="z-good">0.70</td>
               <td class="z-na">—</td>
@@ -2221,39 +3056,39 @@
             </tr>
             
             <tr>
-              <td>Riley O&#39;Brien</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Riley O&#39;Brien</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-good">0.65</td>
               <td class="z-good">0.70</td>
               <td class="z-ok">0.18</td>
-              <td>32.5%</td>
+              <td>32.9%</td>
             </tr>
             
             <tr>
-              <td>Tony Santillan</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Tony Santillan</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-good">0.61</td>
               <td class="z-good">0.56</td>
-              <td class="z-ok">0.19</td>
+              <td class="z-ok">0.20</td>
               <td>12.3%</td>
             </tr>
             
             <tr>
-              <td>Kevin Gausman</td>
-              <td>P</td>
-              <td class="other-team">ChicksDigTheLongBall</td>
+              <td class="left">Kevin Gausman</td>
+              <td class="left">P</td>
+              <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-good">0.58</td>
               <td class="z-bad">-0.37</td>
-              <td class="z-good">0.95</td>
+              <td class="z-good">0.96</td>
               <td>98.4%</td>
             </tr>
             
             <tr>
-              <td>Edwin Díaz</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Edwin Díaz</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-good">0.57</td>
               <td class="z-good">0.56</td>
               <td class="z-na">—</td>
@@ -2261,9 +3096,9 @@
             </tr>
             
             <tr>
-              <td>Jakob Junis</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Jakob Junis</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-good">0.56</td>
               <td class="z-ok">0.42</td>
               <td class="z-na">—</td>
@@ -2271,19 +3106,19 @@
             </tr>
             
             <tr>
-              <td>Jhoan Duran</td>
-              <td>P</td>
-              <td class="other-team">Jazz In Her Batters Box</td>
+              <td class="left">Jhoan Duran</td>
+              <td class="left">P</td>
+              <td class="left other-team">Jazz In Her Batters Box</td>
               <td class="z-good">0.56</td>
               <td class="z-ok">0.45</td>
-              <td class="z-good">0.97</td>
+              <td class="z-good">0.98</td>
               <td>97.3%</td>
             </tr>
             
             <tr>
-              <td>Jacob Misiorowski</td>
-              <td>P</td>
-              <td class="other-team">ICECOLDBEERHERE!</td>
+              <td class="left">Jacob Misiorowski</td>
+              <td class="left">P</td>
+              <td class="left other-team">ICECOLDBEERHERE!</td>
               <td class="z-good">0.55</td>
               <td class="z-ok">0.07</td>
               <td class="z-na">—</td>
@@ -2291,19 +3126,19 @@
             </tr>
             
             <tr>
-              <td>David Bednar</td>
-              <td>P</td>
-              <td class="other-team">Jazz In Her Batters Box</td>
+              <td class="left">David Bednar</td>
+              <td class="left">P</td>
+              <td class="left other-team">Jazz In Her Batters Box</td>
               <td class="z-good">0.50</td>
               <td class="z-ok">0.21</td>
-              <td class="z-good">0.98</td>
+              <td class="z-good">0.99</td>
               <td>92.8%</td>
             </tr>
             
             <tr>
-              <td>Tyler Wells</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Tyler Wells</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.49</td>
               <td class="z-good">0.72</td>
               <td class="z-na">—</td>
@@ -2311,9 +3146,9 @@
             </tr>
             
             <tr>
-              <td>MacKenzie Gore</td>
-              <td>P</td>
-              <td class="other-team">ICECOLDBEERHERE!</td>
+              <td class="left">MacKenzie Gore</td>
+              <td class="left">P</td>
+              <td class="left other-team">ICECOLDBEERHERE!</td>
               <td class="z-ok">0.48</td>
               <td class="z-good">0.81</td>
               <td class="z-na">—</td>
@@ -2321,19 +3156,19 @@
             </tr>
             
             <tr>
-              <td>Rico Garcia</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Rico Garcia</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.47</td>
               <td class="z-good">0.87</td>
-              <td class="z-terrible">-0.82</td>
-              <td>0.7%</td>
+              <td class="z-terrible">-0.81</td>
+              <td>0.8%</td>
             </tr>
             
             <tr>
-              <td>Gregory Soto</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Gregory Soto</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.46</td>
               <td class="z-good">0.60</td>
               <td class="z-na">—</td>
@@ -2341,9 +3176,9 @@
             </tr>
             
             <tr>
-              <td>Cam Schlittler</td>
-              <td>P</td>
-              <td class="other-team">2010 State Sectional Champ</td>
+              <td class="left">Cam Schlittler</td>
+              <td class="left">P</td>
+              <td class="left other-team">2010 State Sectional Champ</td>
               <td class="z-ok">0.46</td>
               <td class="z-bad">-0.13</td>
               <td class="z-na">—</td>
@@ -2351,9 +3186,9 @@
             </tr>
             
             <tr>
-              <td>Gavin Williams</td>
-              <td>P</td>
-              <td class="other-team">2010 State Sectional Champ</td>
+              <td class="left">Gavin Williams</td>
+              <td class="left">P</td>
+              <td class="left other-team">2010 State Sectional Champ</td>
               <td class="z-ok">0.45</td>
               <td class="z-ok">0.06</td>
               <td class="z-na">—</td>
@@ -2361,9 +3196,9 @@
             </tr>
             
             <tr>
-              <td>Graham Ashcraft</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Graham Ashcraft</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.45</td>
               <td class="z-bad">-0.05</td>
               <td class="z-na">—</td>
@@ -2371,9 +3206,9 @@
             </tr>
             
             <tr>
-              <td>Juan Morillo</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Juan Morillo</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.45</td>
               <td class="z-good">0.63</td>
               <td class="z-na">—</td>
@@ -2381,9 +3216,9 @@
             </tr>
             
             <tr>
-              <td>Dylan Cease</td>
-              <td>P</td>
-              <td class="other-team">ICECOLDBEERHERE!</td>
+              <td class="left">Dylan Cease</td>
+              <td class="left">P</td>
+              <td class="left other-team">ICECOLDBEERHERE!</td>
               <td class="z-ok">0.42</td>
               <td class="z-ok">0.31</td>
               <td class="z-na">—</td>
@@ -2391,9 +3226,9 @@
             </tr>
             
             <tr>
-              <td>José Soriano</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">José Soriano</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.41</td>
               <td class="z-ok">0.37</td>
               <td class="z-na">—</td>
@@ -2401,9 +3236,9 @@
             </tr>
             
             <tr>
-              <td>Eric Orze</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Eric Orze</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.40</td>
               <td class="z-good">0.82</td>
               <td class="z-na">—</td>
@@ -2411,9 +3246,9 @@
             </tr>
             
             <tr>
-              <td>Taylor Clarke</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Taylor Clarke</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.39</td>
               <td class="z-good">0.53</td>
               <td class="z-na">—</td>
@@ -2421,19 +3256,19 @@
             </tr>
             
             <tr>
-              <td>Antonio Senzatela</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Antonio Senzatela</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.38</td>
               <td class="z-ok">0.34</td>
-              <td class="z-terrible">-1.36</td>
+              <td class="z-terrible">-1.35</td>
               <td>0.3%</td>
             </tr>
             
             <tr>
-              <td>Emilio Pagán</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Emilio Pagán</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.38</td>
               <td class="z-good">0.87</td>
               <td class="z-na">—</td>
@@ -2441,9 +3276,9 @@
             </tr>
             
             <tr>
-              <td>Grant Anderson</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Grant Anderson</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.37</td>
               <td class="z-ok">0.06</td>
               <td class="z-bad">-0.45</td>
@@ -2451,9 +3286,9 @@
             </tr>
             
             <tr>
-              <td>Taj Bradley</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Taj Bradley</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.36</td>
               <td class="z-ok">0.24</td>
               <td class="z-na">—</td>
@@ -2461,9 +3296,9 @@
             </tr>
             
             <tr>
-              <td>Fernando Cruz</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Fernando Cruz</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.36</td>
               <td class="z-ok">0.42</td>
               <td class="z-ok">0.26</td>
@@ -2471,9 +3306,9 @@
             </tr>
             
             <tr>
-              <td>Tim Hill</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Tim Hill</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.35</td>
               <td class="z-ok">0.04</td>
               <td class="z-na">—</td>
@@ -2481,19 +3316,19 @@
             </tr>
             
             <tr>
-              <td>Jeff Hoffman</td>
-              <td>P</td>
-              <td class="other-team">ChicksDigTheLongBall</td>
+              <td class="left">Jeff Hoffman</td>
+              <td class="left">P</td>
+              <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-ok">0.35</td>
               <td class="z-bad">-0.18</td>
-              <td class="z-ok">0.17</td>
+              <td class="z-ok">0.18</td>
               <td>76.5%</td>
             </tr>
             
             <tr>
-              <td>Paul Sewald</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Paul Sewald</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.35</td>
               <td class="z-bad">-0.29</td>
               <td class="z-na">—</td>
@@ -2501,9 +3336,9 @@
             </tr>
             
             <tr>
-              <td>Jordan Leasure</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Jordan Leasure</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.35</td>
               <td class="z-good">0.89</td>
               <td class="z-na">—</td>
@@ -2511,9 +3346,9 @@
             </tr>
             
             <tr>
-              <td>Grant Wolfram</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Grant Wolfram</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.34</td>
               <td class="z-good">1.05</td>
               <td class="z-na">—</td>
@@ -2521,9 +3356,9 @@
             </tr>
             
             <tr>
-              <td>Cristopher Sánchez</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Cristopher Sánchez</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.33</td>
               <td class="z-bad">-0.39</td>
               <td class="z-na">—</td>
@@ -2531,29 +3366,29 @@
             </tr>
             
             <tr>
-              <td>Cole Winn</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Cole Winn</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.32</td>
               <td class="z-ok">0.45</td>
-              <td class="z-bad">-0.25</td>
+              <td class="z-bad">-0.24</td>
               <td>0.7%</td>
             </tr>
             
             <tr>
-              <td>Garrett Crochet</td>
-              <td>P</td>
-              <td class="other-team">All Rise Run Club</td>
+              <td class="left">Garrett Crochet</td>
+              <td class="left">P</td>
+              <td class="left other-team">All Rise Run Club</td>
               <td class="z-ok">0.32</td>
               <td class="z-bad">-0.06</td>
-              <td class="z-great">1.54</td>
+              <td class="z-great">1.56</td>
               <td>99.8%</td>
             </tr>
             
             <tr>
-              <td>Sandy Alcantara</td>
-              <td>P</td>
-              <td class="other-team">I Robbed A Nuke</td>
+              <td class="left">Sandy Alcantara</td>
+              <td class="left">P</td>
+              <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-ok">0.30</td>
               <td class="z-bad">-0.01</td>
               <td class="z-na">—</td>
@@ -2561,19 +3396,19 @@
             </tr>
             
             <tr>
-              <td>Shawn Armstrong</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Shawn Armstrong</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.30</td>
               <td class="z-ok">0.14</td>
-              <td class="z-ok">0.29</td>
+              <td class="z-ok">0.30</td>
               <td>1.8%</td>
             </tr>
             
             <tr>
-              <td>Brooks Raley</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Brooks Raley</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.29</td>
               <td class="z-ok">0.21</td>
               <td class="z-na">—</td>
@@ -2581,9 +3416,9 @@
             </tr>
             
             <tr>
-              <td>Cole Sands</td>
-              <td>P</td>
-              <td class="fa">FA</td>
+              <td class="left">Cole Sands</td>
+              <td class="left">P</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.29</td>
               <td class="z-ok">0.31</td>
               <td class="z-na">—</td>
@@ -2598,8 +3433,8 @@
   </div>
 </section>
 
-<footer style="text-align:center;padding:24px;color:#444;font-size:11px;">
-  Pitch Slap Fantasy Baseball Engine · Generated 2026-04-10 12:30
+<footer style="text-align:center;padding:24px;color:#333;font-size:11px;">
+  Pitch Slap Fantasy Baseball Engine · Generated 2026-04-10 13:38
 </footer>
 
 </body>
