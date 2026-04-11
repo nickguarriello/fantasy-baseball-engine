@@ -135,6 +135,38 @@ ESPN_POSITION_MAP = {
     11: 'UTIL',
 }
 
+# Maps ESPN lineupSlotId (current roster slot) to readable name.
+# Also used to decode player.eligibleSlots (what slots a player can fill).
+ESPN_LINEUP_SLOT_MAP = {
+    0:  'C',
+    1:  '1B',
+    2:  '2B',
+    3:  '3B',
+    4:  'SS',
+    5:  'OF',
+    6:  '2B/SS',
+    7:  '1B/3B',
+    8:  'LF',
+    9:  'CF',
+    10: 'RF',
+    11: 'DH',
+    12: 'UTIL',
+    13: 'SP',
+    14: 'P',
+    15: 'BE',
+    16: 'IL',
+    17: 'RP',
+    18: 'IF',
+    19: 'NA',
+}
+
+# Slot names shown in the eligible positions column (real positions only,
+# excludes meta-slots like UTIL, 2B/SS flex, BE, IL).
+ESPN_PRIMARY_SLOTS = {'C', '1B', '2B', '3B', 'SS', 'OF', 'DH', 'SP', 'RP'}
+
+# lineupSlotId values that mean a player is NOT active in a lineup spot.
+ESPN_INACTIVE_SLOT_IDS = {15, 16, 19}  # BE, IL, NA
+
 # Position IDs that are pitchers
 PITCHER_POSITION_IDS = {1, 9, 10}   # SP, RP, P
 

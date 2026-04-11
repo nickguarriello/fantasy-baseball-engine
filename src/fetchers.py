@@ -22,6 +22,7 @@ from config import (
     ESPN_POSITION_MAP, PITCHER_POSITION_IDS,
     OF_POSITIONS, ESPN_STAT_IDS, ESPN_RATE_STAT_IDS,
     INJURED_STATUSES, QUESTIONABLE_STATUSES,
+    ESPN_LINEUP_SLOT_MAP, ESPN_PRIMARY_SLOTS, ESPN_INACTIVE_SLOT_IDS,
     ESPN_S2, ESPN_SWID,
 )
 
@@ -117,7 +118,11 @@ def _parse_espn_player(
 ) -> Optional[Dict]:
     """
     Parse a single ESPN roster entry into a normalised player dict.
-    Extracts injury status and maps position IDs correctly.
+    Extracts:
+      - defaultPositionId  → position (SP/RP/C/1B/etc.)
+      - lineupSlotId       → lineup_slot (current roster slot: SS, BE, SP, etc.)
+      - eligibleSlots      → eligible_positions (all real positions player can fill)
+      - injuryStatus       → injury_status
     """
     player_pool = entry.get('playerPoolEntry', {})
     player = player_pool.get('player', {})
@@ -126,10 +131,30 @@ def _parse_espn_player(
     if not espn_id:
         return None
 
+    # Default position (SP/RP/C/1B/etc.) — correct source for pitcher SP vs RP
     pos_id = player.get('defaultPositionId', 0)
     raw_position = ESPN_POSITION_MAP.get(pos_id, 'UNKNOWN')
     position = _normalize_position(raw_position)
     is_pitcher = pos_id in PITCHER_POSITION_IDS
+
+    # Current lineup slot (where this player is sitting in the lineup right now)
+    lineup_slot_id = entry.get('lineupSlotId', 15)  # default 15 = BE
+    lineup_slot = ESPN_LINEUP_SLOT_MAP.get(lineup_slot_id, f'SLOT{lineup_slot_id}')
+    is_active_lineup = lineup_slot_id not in ESPN_INACTIVE_SLOT_IDS
+
+    # Eligible positions — all real positions this player can fill
+    # (excludes utility/flex/bench slots; used for display in roster tables)
+    eligible_slot_ids = player.get('eligibleSlots', [])
+    seen: set = set()
+    eligible_positions: List[str] = []
+    for sid in eligible_slot_ids:
+        name = ESPN_LINEUP_SLOT_MAP.get(sid, '')
+        if name in ESPN_PRIMARY_SLOTS and name not in seen:
+            eligible_positions.append(name)
+            seen.add(name)
+    # Fallback: if none found, use the default position
+    if not eligible_positions:
+        eligible_positions = [position] if position not in ('UNKNOWN', 'UTIL') else []
 
     # Injury status from ESPN
     injury_status = player_pool.get('injuryStatus', 'ACTIVE') or 'ACTIVE'
@@ -137,20 +162,24 @@ def _parse_espn_player(
     is_questionable = injury_status in QUESTIONABLE_STATUSES
 
     return {
-        'espn_id': espn_id,
-        'id': espn_id,
-        'name': player.get('fullName', 'Unknown'),
-        'position': position,
-        'position_id': pos_id,
-        'is_pitcher': is_pitcher,
-        'team_id': team_id,
-        'team_name': team_name,
-        'is_my_player': team_id == my_team_id,
-        'ownership_pct': player_pool.get('percentOwned', 0.0),
-        'pro_team_id': player.get('proTeamId'),
-        'injury_status': injury_status,
-        'is_injured': is_injured,
-        'is_questionable': is_questionable,
+        'espn_id':           espn_id,
+        'id':                espn_id,
+        'name':              player.get('fullName', 'Unknown'),
+        'position':          position,           # default position (SP/RP/C/1B…)
+        'position_id':       pos_id,
+        'eligible_positions': eligible_positions, # all fillable positions
+        'lineup_slot':       lineup_slot,         # current roster slot
+        'lineup_slot_id':    lineup_slot_id,
+        'is_active_lineup':  is_active_lineup,    # True if not BE/IL
+        'is_pitcher':        is_pitcher,
+        'team_id':           team_id,
+        'team_name':         team_name,
+        'is_my_player':      team_id == my_team_id,
+        'ownership_pct':     player_pool.get('percentOwned', 0.0),
+        'pro_team_id':       player.get('proTeamId'),
+        'injury_status':     injury_status,
+        'is_injured':        is_injured,
+        'is_questionable':   is_questionable,
     }
 
 

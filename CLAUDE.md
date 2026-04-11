@@ -12,6 +12,7 @@ It gives Claude full project context without needing re-explanation.
 - **Stack:** Python 3, SQLite, MLB Stats API, ESPN Fantasy API, Jinja2 HTML report
 - **League:** ESPN public league `1985887220`, Team ID `1`, Season `2026`
 - **Format:** H2H Categories (10 cats: R, HR, RBI, SB, OBP / K, QS, ERA, WHIP, SVHD)
+- **My Team Name:** `Pitch Slap`
 
 ---
 
@@ -23,6 +24,7 @@ fantasy-baseball-engine/
 ├── config.py                # All constants: league IDs, API URLs, stat maps
 ├── requirements.txt         # requests, pandas, numpy, jinja2
 ├── run_daily.bat            # Windows Task Scheduler script (runs pipeline + git push)
+├── PLANNING.md              # ⭐ Active session plan + open questions — READ THIS NEXT
 ├── data/
 │   └── fantasy_baseball.db  # SQLite (gitignored — regenerated each run)
 ├── outputs/                 # CSV exports (gitignored)
@@ -86,6 +88,50 @@ python -X utf8 main.py --trade "Nico Hoerner,Mason Miller" "Drake Baldwin"
 - Early in the season (April), short windows are noisy — weight lightly
 - All z-scores are computed within position groups (fair comparison)
 - Two-start pitchers get a +0.4 effective z boost in lineup sorting
+- **Matchup projection**: use 7-day z-scores during regular season, season z-scores during playoffs
+
+---
+
+## Key Config Values (config.py)
+
+```python
+LEAGUE_CONFIG = { 'league_id': 1985887220, 'team_id': 1, 'season': 2026 }
+OF_POSITIONS = {'OF', 'CF', 'LF', 'RF'}   # all treated as OF
+PITCHER_POSITION_IDS = {1, 9, 10}          # SP, RP, P
+INJURED_STATUSES = {'INJURY_RESERVE', 'FIFTEEN_DAY_IL', ...}
+ESPN_STAT_IDS = { '1': 'runs', '48': 'strikeouts', ... }  # partially confirmed
+
+# Lineup slot mappings (added this session)
+ESPN_LINEUP_SLOT_MAP = {
+    0:'C', 1:'1B', 2:'2B', 3:'3B', 4:'SS', 5:'OF',
+    6:'2B/SS', 7:'1B/3B', 8:'LF', 9:'CF', 10:'RF',
+    11:'DH', 12:'UTIL', 13:'SP', 14:'P',
+    15:'BE', 16:'IL', 17:'RP', 18:'IF', 19:'NA',
+}
+ESPN_PRIMARY_SLOTS = {'C','1B','2B','3B','SS','OF','DH','SP','RP'}
+ESPN_INACTIVE_SLOT_IDS = {15, 16, 19}  # BE, IL, NA
+```
+
+---
+
+## ESPN Position Data — Critical Understanding
+
+**Two separate ESPN concepts — do not confuse them:**
+
+| Field | ESPN Source | What it means | Example |
+|-------|------------|---------------|---------|
+| `lineup_slot` | `entry.lineupSlotId` | WHERE the player sits in my lineup right now | SS, BE, SP, IL |
+| `eligible_positions` | `player.eligibleSlots` | ALL lineup slots this player CAN fill | ['2B','SS','2B/SS','UTIL'] |
+| `position` | `player.defaultPositionId` | Player's primary/default position | SS, SP, RP |
+
+**Rules for display:**
+- Green badge in tables = `lineup_slot` (current roster spot)
+- POS column = `eligible_positions` joined (e.g. `2B, SS, UTIL`)
+- Pitchers: badge must show `SP` or `RP` — never show generic `P`
+- `defaultPositionId` 1=SP, 9=RP, 10=P (generic) — ESPN is authoritative; MLB Stats API always returns 'P' for pitchers
+- DH-only → UTIL eligible only
+- DH + OF → UTIL + OF eligible
+- All positional hitters → also UTIL eligible
 
 ---
 
@@ -102,14 +148,30 @@ Free agents are **derived**: MLB stats pool minus all ESPN-rostered players (nam
 
 ---
 
-## Key Config Values (config.py)
+## HTML Report Architecture
 
-```python
-LEAGUE_CONFIG = { 'league_id': 1985887220, 'team_id': 1, 'season': 2026 }
-OF_POSITIONS = {'OF', 'CF', 'LF', 'RF'}   # all treated as OF
-PITCHER_POSITION_IDS = {1, 9, 10}          # SP, RP, P
-INJURED_STATUSES = {'INJURY_RESERVE', 'FIFTEEN_DAY_IL', ...}
-ESPN_STAT_IDS = { '1': 'runs', '48': 'strikeouts', ... }  # partially confirmed
+- **Template:** `templates/report.html` — Jinja2, edit for layout/styling only
+- **Data builder:** `src/report.py` — loads CSVs, builds context dicts, renders template
+- **Output:** `docs/index.html` — tracked in git, served via GitHub Pages
+- **Rule:** Never put business logic in the template. Never put HTML in report.py.
+
+### Report Sections (nav order)
+1. ⚔️ Matchup
+2. 🔵 My Roster
+3. 📋 Start/Sit
+4. 🔍 Waiver Wire
+5. 🔄 Trade
+6. 📊 Rankings
+
+### CSS Class Reference
+```css
+.badge-active  /* green — player is in active lineup slot */
+.badge-bench   /* gray  — player is on bench */
+.badge-il      /* red   — player is on IL/IR */
+.two-start-badge  /* blue — pitcher has 2 starts this week */
+.start / .sit / .consider / .borderline  /* left border color on Start/Sit rows */
+.z-great / .z-good / .z-ok / .z-bad / .z-terrible  /* z-score cell backgrounds */
+.my-team / .other-team / .fa  /* fantasy team color coding */
 ```
 
 ---
@@ -123,11 +185,18 @@ ESPN_STAT_IDS = { '1': 'runs', '48': 'strikeouts', ... }  # partially confirmed
 | ESPN projections + ownership % fetch | ✅ Done |
 | Projection z-scores (our math on ESPN proj data) | ✅ Done |
 | master_players.csv + data_dictionary.csv | ✅ Done |
-| Matchup section: score formatting + projected vs live table | 🔲 In progress |
-| Start/Sit: next-week focus, active/bench badges, SP/RP labels | 🔲 In progress |
-| My Roster: current-week view, z-scores + stats all splits | 🔲 In progress |
+| ESPN lineupSlotId → lineup_slot (fetchers.py) | ✅ Done |
+| ESPN eligibleSlots → eligible_positions (fetchers.py) | ✅ Done |
+| Matchup: "Cat"→"STAT", column reorder, 7d z-score | 🔲 Next session |
+| My Roster: slot badge, eligible positions, MLB team col | 🔲 Next session |
+| Start/Sit: two-col layout, changes summary callout | 🔲 Next session |
+| matchup.py: SP/RP labels, propagate slot fields to lineup CSV | 🔲 Next session |
+| outputs.py: LINEUP_COLS add is_active_lineup/lineup_slot/eligible_positions | 🔲 Next session |
+| Waiver: by-position breakdown with drop recommendations | 🔲 Next session |
+| Trade: per-team recommended trade cards | 🔲 Next session |
+| Rankings: client-side JS filtering by position/type | 🔲 Next session |
+| Global CSS: consistent column widths throughout | 🔲 Next session |
 | Tier 3: In-week cumulative stat tracking across matchups | Planned |
-| Tier 3: Trade negotiation — suggest what to offer | Planned |
 | Phase 5: Historical learning (trend model) | Placeholder — needs 2-3 weeks data |
 
 ---
@@ -138,6 +207,9 @@ ESPN_STAT_IDS = { '1': 'runs', '48': 'strikeouts', ... }  # partially confirmed
 |------|----------|
 | `all_players_ranked.csv` | All ~841 MLB players, z_season primary sort |
 | `hitters_ranked.csv` / `pitchers_ranked.csv` | Split by type |
+| `research_players.csv` | Full data lake — all fields, all rostered + FA players |
+| `master_players.csv` | All players, all fields, no column whitelist |
+| `data_dictionary.csv` | Field reference: name, source, dtype, null%, sample values |
 | `waiver_wire_top.csv` | Top 25 free agents |
 | `waiver_[pos].csv` | Top 10 per position |
 | `waiver_target_[cat].csv` | Top 10 FAs for each weak H2H category |
@@ -165,9 +237,18 @@ Schema migrations run automatically via `_add_column_if_missing()` in `init_data
 - Full run before any PR
 - Co-Author tag: `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>`
 
+---
+
+## ⭐ NEXT SESSION: Read PLANNING.md first
+
+`PLANNING.md` contains the full UI overhaul plan with open questions that need
+user answers before any code is written. Do not start coding without checking it.
+
+---
+
 ## Last Run Stats (auto-updated by pre-commit hook)
 
-- **Updated:** 2026-04-11 07:00:20
+- **Updated:** 2026-04-11 10:33:46
 - **Last data run:** 2026-04-11 11:00:18
 - **Players in DB:** 855
 - **Z-score records:** 15161
