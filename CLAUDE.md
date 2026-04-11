@@ -200,7 +200,7 @@ Free agents are **derived**: MLB stats pool minus all ESPN-rostered players (nam
 | Trade: per-team table (I Give / I Get / My Gain) | ✅ Done |
 | Rankings: JS filter buttons by position, expanded to top 100 | ✅ Done |
 | Global CSS: consistent column widths throughout | 📦 Backlog |
-| Tier 3: In-week cumulative stat tracking across matchups | 🔨 In Progress |
+| Tier 3: In-week cumulative stat tracking across matchups | ✅ Done |
 | Trade negotiation helper (multi-player, surplus vs needs) | 📦 Backlog |
 | Testing strategy + test suite | 📦 Backlog |
 | MLB player ID cross-reference (replace name matching) | 📦 Backlog |
@@ -256,7 +256,7 @@ pending open questions — the slate is clean for new feature work.
 
 ## Last Run Stats (auto-updated by pre-commit hook)
 
-- **Updated:** 2026-04-11 16:46:23
+- **Updated:** 2026-04-11 16:49:56
 - **Last data run:** 2026-04-11 17:29:29
 - **Players in DB:** 855
 - **Z-score records:** 17726

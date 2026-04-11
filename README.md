@@ -171,8 +171,8 @@ Free agents derived by cross-referencing MLB stats pool against all ESPN-rostere
 
 ## Roadmap
 
-### 🔨 In Progress
-- **In-week stat accumulation**: Append a snapshot each run, show trend arrows in matchup table
+### ✅ Recently Completed
+- **In-week stat accumulation**: `matchup_snapshots` DB table appends live scores each run. Trend arrows (↑↓→) appear in the matchup table after the 2nd daily run of a week.
 
 ### 📦 Backlog
 - **Global CSS**: Consistent column widths across all report tables
