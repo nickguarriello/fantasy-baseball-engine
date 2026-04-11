@@ -280,6 +280,9 @@ def recommend_lineup(
             entry = {
                 'name': name,
                 'position': player.get('position', '?'),
+                'eligible_positions': player.get('eligible_positions', [player.get('position', '?')]),
+                'lineup_slot':        player.get('lineup_slot', 'BE'),
+                'is_active_lineup':   player.get('is_active_lineup', False),
                 'z_season': None,
                 'z_7day': None,
                 'z_14day': None,
@@ -296,6 +299,9 @@ def recommend_lineup(
             entry = {
                 'name': name,
                 'position': player.get('position', '?'),
+                'eligible_positions': player.get('eligible_positions', [player.get('position', '?')]),
+                'lineup_slot':        player.get('lineup_slot', 'BE'),
+                'is_active_lineup':   player.get('is_active_lineup', False),
                 'z_season': None,
                 'z_7day': None,
                 'z_14day': None,
@@ -342,7 +348,10 @@ def recommend_lineup(
 
         entry = {
             'name': z_data.get('name', name),
-            'position': z_data.get('position', player.get('position', '?')),
+            'position': player.get('position', z_data.get('position', '?')),  # ESPN first
+            'eligible_positions': player.get('eligible_positions', []),
+            'lineup_slot':        player.get('lineup_slot', 'BE'),
+            'is_active_lineup':   player.get('is_active_lineup', False),
             'z_season': z_season,
             'z_7day': z_data.get('z_7day'),
             'z_14day': z_data.get('z_14day'),

@@ -1,8 +1,8 @@
 # UI Overhaul — Active Plan & Open Questions
 
 > **READ THIS FIRST** at the start of any new session before writing code.
-> This file tracks the full UI overhaul plan, what's done, what's pending,
-> and the 9 questions that need user answers before execution begins.
+> This file tracks the full UI overhaul plan. As of Session 6, all 9 Q&A items
+> are fully implemented and shipped. No open questions remain.
 
 ---
 
@@ -11,7 +11,8 @@
 - **Session 1–2:** Built full pipeline (fetchers, processors, database, outputs, matchup, waiver, trade)
 - **Session 3:** Dropped Streamlit → Jinja2 HTML report (`docs/index.html`) via GitHub Pages. Set up Windows Task Scheduler (`run_daily.bat`). Added master_players.csv + data_dictionary.csv.
 - **Session 4 (bad):** A rogue Claude session made unauthorized changes. Reverted with `git reset --hard 005c7bd` + force push.
-- **Session 5 (current):** Re-applied all good changes. Rewrote report.py + report.html. Added ESPN slot/position data extraction to fetchers.py. Ended context before executing the full UI overhaul plan below.
+- **Session 5:** Re-applied all good changes. Rewrote report.py + report.html. Added ESPN slot/position data extraction to fetchers.py. Ended context before executing the full UI overhaul plan.
+- **Session 6 (current):** Answered all 9 open questions. Executed full UI overhaul in one pass across 4 files (outputs.py, matchup.py, report.py, report.html). All items shipped and verified.
 
 ---
 
@@ -55,16 +56,13 @@ Fully rewritten with:
 
 ---
 
-## What Still Needs to Be Done (Pending User Answers)
+## Session 6 — Completed ✅
 
-The plan below is **fully designed** but awaits 9 user answers before execution.
-Once answers are received, all changes go in a single pass across 6 files.
+All items below were executed and shipped in Session 6.
 
 ---
 
-## 9 Open Questions — Get Answers First
-
-Present these to the user at the start of the next session. Do not code until answered.
+## 9 Questions — Answered Session 6
 
 ### Q1 — Matchup projection table column order
 Two instructions gave slightly different orders. Confirm which:
@@ -264,6 +262,6 @@ ESPN lineupSlotId → slot name:
 
 ---
 
-## Still Needs User Answer (9 questions above)
+## Status: All Done ✅
 
-Present Q1–Q9 to the user, get answers, then execute the full plan in one pass.
+All 9 questions answered, all code shipped, all 19 template checks passing.

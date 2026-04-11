@@ -106,7 +106,8 @@ def export_waiver_report(waiver_report: Dict) -> List[str]:
 # ---------------------------------------------------------------------------
 
 LINEUP_COLS = [
-    'name', 'position', 'z_season', 'z_7day', 'z_14day', 'z_30day',
+    'name', 'position', 'eligible_positions', 'is_active_lineup', 'lineup_slot',
+    'z_season', 'z_7day', 'z_14day', 'z_30day',
     'trend_direction', 'recommendation', 'injury_status', 'is_two_start', 'notes',
 ]
 
@@ -118,6 +119,7 @@ ACTUALS_COLS = [
     'category', 'display', 'type',
     'my_actual', 'opp_actual', 'actual_leader',
     'projected_winner', 'projected_edge', 'diverges_from_projection',
+    'my_delta', 'my_trend',   # Tier 3: in-week trend (delta since last run, UP/DOWN/FLAT/NEW)
 ]
 
 

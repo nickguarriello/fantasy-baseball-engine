@@ -246,6 +246,25 @@ def init_database() -> str:
         ''')
 
         # ====================================================================
+        # Table 9: MATCHUP_SNAPSHOTS (Tier 3 — in-week trend tracking)
+        # ====================================================================
+        # One row per category per pipeline run during an active matchup week.
+        # Keyed by week_label (e.g. "2026-W15") so we never compare across weeks.
+        # Used to compute per-category trend arrows in the HTML report.
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS matchup_snapshots (
+                snapshot_id  INTEGER PRIMARY KEY AUTOINCREMENT,
+                captured_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+                week_label   TEXT NOT NULL,
+                opponent_name TEXT,
+                category     TEXT NOT NULL,
+                my_actual    REAL,
+                opp_actual   REAL
+            )
+        ''')
+
+        # ====================================================================
         # Schema migrations — safe to run on existing databases
         # ====================================================================
         _add_column_if_missing(cursor, 'players',          'injury_status',  'TEXT DEFAULT "ACTIVE"')
@@ -582,6 +601,98 @@ def get_players_with_stats() -> List[Dict]:
     except sqlite3.Error as e:
         print(f"Error retrieving players with stats: {e}")
         return []
+    finally:
+        conn.close()
+
+
+def save_matchup_snapshot(actuals: List[Dict], opponent_name: str, week_label: str) -> int:
+    """
+    Append a per-category snapshot of the current live matchup scores.
+
+    Called once per pipeline run while a matchup is active.
+    Rows are keyed by week_label so comparisons never cross week boundaries.
+
+    Args:
+        actuals:       list of per-category dicts (from analyze_actuals_vs_projected)
+        opponent_name: current opponent's team name
+        week_label:    ISO week string e.g. "2026-W15"
+
+    Returns:
+        int: number of rows inserted (one per category)
+    """
+    if not actuals:
+        return 0
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    try:
+        rows = 0
+        for row in actuals:
+            cat = row.get('category')
+            if not cat:
+                continue
+            cursor.execute('''
+                INSERT INTO matchup_snapshots
+                    (week_label, opponent_name, category, my_actual, opp_actual)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (
+                week_label,
+                opponent_name,
+                cat,
+                row.get('my_actual'),
+                row.get('opp_actual'),
+            ))
+            rows += 1
+        conn.commit()
+        return rows
+    except sqlite3.Error as e:
+        print(f"Error saving matchup snapshot: {e}")
+        conn.rollback()
+        return 0
+    finally:
+        conn.close()
+
+
+def get_previous_matchup_snapshot(week_label: str) -> Dict[str, Dict]:
+    """
+    Return the most recent PREVIOUS snapshot for the given week.
+
+    "Previous" = the snapshot batch just before the current run.
+    We identify it by taking the max captured_at that is earlier than
+    the latest captured_at in the table for this week.
+
+    Returns:
+        dict keyed by category name: {category: {my_actual, opp_actual}}
+        Empty dict if no previous snapshot exists (first run of the week).
+    """
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    try:
+        # Find the second-most-recent captured_at timestamp for this week
+        cursor.execute('''
+            SELECT DISTINCT captured_at
+            FROM matchup_snapshots
+            WHERE week_label = ?
+            ORDER BY captured_at DESC
+            LIMIT 2
+        ''', (week_label,))
+        timestamps = [r['captured_at'] for r in cursor.fetchall()]
+        if len(timestamps) < 2:
+            return {}  # Only one (or zero) snapshots this week — no previous data
+        prev_ts = timestamps[1]
+
+        cursor.execute('''
+            SELECT category, my_actual, opp_actual
+            FROM matchup_snapshots
+            WHERE week_label = ? AND captured_at = ?
+        ''', (week_label, prev_ts))
+        return {
+            r['category']: {'my_actual': r['my_actual'], 'opp_actual': r['opp_actual']}
+            for r in cursor.fetchall()
+        }
+    except sqlite3.Error as e:
+        print(f"Error fetching previous matchup snapshot: {e}")
+        return {}
     finally:
         conn.close()
 

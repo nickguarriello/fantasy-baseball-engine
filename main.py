@@ -26,6 +26,7 @@ from config import LEAGUE_CONFIG
 from src.database import (
     init_database, store_player_stats, store_z_scores,
     store_league_teams, store_all_rosters, get_players_with_stats,
+    save_matchup_snapshot, get_previous_matchup_snapshot,
 )
 from src.fetchers import (
     test_api_connectivity,
@@ -228,6 +229,10 @@ def main():
         print(f"  {len(league_teams)} teams | {roster_rows} roster entries | "
               f"{stats_stored} stat records | {z_stored} z-score records\n")
 
+        # ISO week label e.g. "2026-W15" — used to scope trend snapshots to the current week
+        _iso = datetime.now().isocalendar()
+        week_label = f"{_iso[0]}-W{_iso[1]:02d}"
+
         # ============================================================ #
         # STEP 9: Phase outputs
         # ============================================================ #
@@ -281,6 +286,43 @@ def main():
 
             # Actual vs projected (ESPN in-week stats)
             actuals = analyze_actuals_vs_projected(matchup_actuals, matchup_edges)
+
+            # ── Tier 3: in-week trend tracking ────────────────────────
+            # Get previous snapshot BEFORE saving the new one
+            prev_snap = get_previous_matchup_snapshot(week_label)
+
+            # Build a higher_is_better lookup from the actuals list
+            hib = {r['category']: r.get('higher_is_better', True) for r in actuals}
+
+            for actual in actuals:
+                cat = actual.get('category', '')
+                higher = hib.get(cat, True)
+                my_curr  = actual.get('my_actual')
+                prev_row = prev_snap.get(cat, {})
+                my_prev  = prev_row.get('my_actual')
+
+                if my_curr is not None and my_prev is not None:
+                    try:
+                        delta = round(float(my_curr) - float(my_prev), 3)
+                        if delta == 0:
+                            trend = 'FLAT'
+                        elif (delta > 0) == higher:
+                            trend = 'UP'    # improving
+                        else:
+                            trend = 'DOWN'  # declining
+                    except (TypeError, ValueError):
+                        delta, trend = None, 'NEW'
+                else:
+                    delta, trend = None, 'NEW'
+
+                actual['my_delta']  = delta
+                actual['my_trend']  = trend
+
+            # Save this run's snapshot for future comparison
+            if actuals:
+                saved = save_matchup_snapshot(actuals, opponent_name, week_label)
+                print(f"    Matchup snapshot saved ({saved} categories, week {week_label})")
+            # ─────────────────────────────────────────────────────────
 
             lineup_result = recommend_lineup(
                 my_roster, z_scored_players,

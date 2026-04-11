@@ -104,6 +104,14 @@ def _pct(val, fallback="—") -> str:
         return fallback
 
 
+def _fmt_eligible(raw: str) -> str:
+    """Parse eligible_positions like "['2B', 'SS']" → "2B, SS"."""
+    if not raw or str(raw) in ('', 'None', 'nan', '[]'):
+        return ''
+    s = str(raw).strip("[] ").replace("'", "").replace('"', '')
+    return ', '.join(p.strip() for p in s.split(',') if p.strip())
+
+
 def _slot_sort(slot: str) -> int:
     return _SLOT_ORDER.get(str(slot).upper(), 99)
 
@@ -157,11 +165,12 @@ def _build_lineup_lookup() -> Dict[str, Dict]:
             if not key:
                 continue
             lookup[key] = {
-                'lineup_slot':  row.get('lineup_slot', 'BE'),
-                'is_active':    str(row.get('is_active_lineup', '')).lower() in ('true', '1'),
-                'rec':          row.get('recommendation', ''),
-                'is_two_start': str(row.get('is_two_start', '')).lower() in ('true', '1'),
-                'injury':       row.get('injury_status', ''),
+                'lineup_slot':       row.get('lineup_slot', 'BE'),
+                'is_active':         str(row.get('is_active_lineup', '')).lower() in ('true', '1'),
+                'rec':               row.get('recommendation', ''),
+                'is_two_start':      str(row.get('is_two_start', '')).lower() in ('true', '1'),
+                'injury':            row.get('injury_status', ''),
+                'eligible_positions': row.get('eligible_positions', ''),
             }
     return lookup
 
@@ -188,17 +197,12 @@ def _build_matchup(actuals: List[Dict], breakdown: List[Dict]) -> Dict:
     # Build a lookup of breakdown data keyed by category
     breakdown_map = {r.get('category', ''): r for r in breakdown}
 
-    live_rows = []
-    proj_rows = []
+    rows = []
     for r in actuals:
         cat    = r.get("category", "")
         leader = r.get("actual_leader", "")
-        proj   = r.get("projected_winner", "—")
 
-        # Pre-matchup projection
         bd = breakdown_map.get(cat, {})
-        my_z   = _fmt(bd.get('my_z'), 2)
-        opp_z  = _fmt(bd.get('opp_z'), 2)
         proj_winner = bd.get('projected_winner', '—')
         if proj_winner == 'ME':
             proj_display = MY_TEAM
@@ -210,7 +214,6 @@ def _build_matchup(actuals: List[Dict], breakdown: List[Dict]) -> Dict:
             proj_display = proj_winner
             proj_cls = 'loss'
 
-        # Live leader
         if leader == 'ME':
             live_display = MY_TEAM
             live_cls = 'win'
@@ -223,32 +226,50 @@ def _build_matchup(actuals: List[Dict], breakdown: List[Dict]) -> Dict:
 
         diverges = str(r.get("diverges_from_projection", "")).lower() in ("true", "1")
 
-        live_rows.append({
-            "my_score":  _fmt_stat(r.get("my_actual"),  cat),
-            "category":  cat,
-            "opp_score": _fmt_stat(r.get("opp_actual"), cat),
-            "_cls":      "win" if leader == "ME" else ("loss" if leader == "OPP" else "tie"),
-        })
-        proj_rows.append({
+        # Trend arrow from Tier 3 snapshot delta
+        trend = str(r.get("my_trend", "")).upper()
+        if trend == "UP":
+            trend_arrow, trend_cls = "↑", "trend-UP"
+        elif trend == "DOWN":
+            trend_arrow, trend_cls = "↓", "trend-DOWN"
+        elif trend == "FLAT":
+            trend_arrow, trend_cls = "→", "trend-FLAT"
+        else:
+            trend_arrow, trend_cls = "", "trend-FLAT"   # NEW or missing
+
+        my_delta = r.get("my_delta")
+        delta_str = ""
+        if my_delta not in (None, "", "None", "nan"):
+            try:
+                d = float(my_delta)
+                if d != 0:
+                    delta_str = f"+{d}" if d > 0 else str(d)
+            except (TypeError, ValueError):
+                pass
+
+        rows.append({
             "category":     cat,
-            "my_z":         my_z,
-            "opp_z":        opp_z,
+            "my_score":     _fmt_stat(r.get("my_actual"),  cat),
+            "opp_score":    _fmt_stat(r.get("opp_actual"), cat),
             "proj_display": proj_display,
             "live_display": live_display,
             "diverges":     diverges,
+            "trend_arrow":  trend_arrow,
+            "delta_str":    delta_str,
+            "_row_cls":     "win" if leader == "ME" else ("loss" if leader == "OPP" else "tie"),
             "_proj_cls":    proj_cls,
             "_live_cls":    live_cls,
+            "_trend_cls":   trend_cls,
         })
 
     return {
-        "available":  True,
-        "my_team":    MY_TEAM,
-        "opp_name":   opp_name,
-        "wins":       wins,
-        "losses":     losses,
-        "ties":       ties,
-        "live_rows":  live_rows,
-        "proj_rows":  proj_rows,
+        "available": True,
+        "my_team":   MY_TEAM,
+        "opp_name":  opp_name,
+        "wins":      wins,
+        "losses":    losses,
+        "ties":      ties,
+        "rows":      rows,
     }
 
 
@@ -267,10 +288,14 @@ def _build_my_roster(research: List[Dict], lineup_lookup: Dict) -> Dict:
         is_active = lu.get('is_active', False)
         is_pitcher = str(player.get('is_pitcher', '')).lower() in ('true', '1')
         pos = _pitcher_pos(player.get('position', '')) if is_pitcher else player.get('position', '')
+        elig_raw = lu.get('eligible_positions', '')
+        eligible = _fmt_eligible(elig_raw) if elig_raw else pos
 
         return {
             'name':        name,
             'position':    pos,
+            'eligible':    eligible,
+            'mlb_team':    player.get('mlb_team', ''),
             'slot':        slot,
             'slot_badge':  _slot_badge(slot, is_active),
             'slot_cls':    _slot_badge_cls(slot, is_active),
@@ -346,6 +371,14 @@ def _build_startsit(research: List[Dict], lineup_lookup: Dict) -> Dict:
         else:
             row_cls = _rec_cls(rec)
 
+        # Action indicator: flag players whose bench/active status disagrees with rec
+        if not is_active and rec in ('START', 'START (matchup need)'):
+            action = 'PROMOTE'
+        elif is_active and rec == 'BENCH':
+            action = 'BENCH'
+        else:
+            action = ''
+
         return {
             'name':        name,
             'position':    pos,
@@ -358,6 +391,7 @@ def _build_startsit(research: List[Dict], lineup_lookup: Dict) -> Dict:
             'injury':      inj,
             'rec':         rec,
             'row_cls':     row_cls,
+            'action':      action,
             # Hitter stats (season)
             'games_played':   _fmt(player.get('games_played'), 0),
             'avg':            _fmt(player.get('avg'), 3),
@@ -388,16 +422,20 @@ def _build_startsit(research: List[Dict], lineup_lookup: Dict) -> Dict:
         }
 
     all_players = [_proc(p) for p in my_players]
-    # Pitchers first (sorted by slot order then z_season), then hitters
     pitchers = sorted([p for p in all_players if p['is_pitcher']],
                       key=lambda p: (p['_slot_sort'], -float(p['z_season']) if p['z_season'] != '—' else 99))
     hitters  = sorted([p for p in all_players if not p['is_pitcher']],
                       key=lambda p: (p['_slot_sort'], -float(p['z_season']) if p['z_season'] != '—' else 99))
-    return {'pitchers': pitchers, 'hitters': hitters}
+
+    promote = [{'name': p['name'], 'pos': p['position']} for p in all_players if p.get('action') == 'PROMOTE']
+    bench   = [{'name': p['name'], 'pos': p['position']} for p in all_players if p.get('action') == 'BENCH']
+    changes_summary = {'promote': promote, 'bench': bench, 'has_changes': bool(promote or bench)}
+
+    return {'pitchers': pitchers, 'hitters': hitters, 'changes_summary': changes_summary}
 
 
-def _build_waiver(top: List[Dict], two_start: List[Dict]) -> Dict:
-    def _proc(rows, limit=25):
+def _build_waiver(top: List[Dict], two_start: List[Dict], research: List[Dict]) -> Dict:
+    def _proc(rows, limit=5):
         out = []
         for r in rows[:limit]:
             out.append({
@@ -415,31 +453,105 @@ def _build_waiver(top: List[Dict], two_start: List[Dict]) -> Dict:
                 "_cls_z_7day":   _z_class(r.get("z_7day")),
             })
         return out
-    return {"top": _proc(top), "two_start": _proc(two_start, 15)}
+
+    # My roster for drop recommendations
+    my_players = [r for r in research if r.get("fantasy_team") == MY_TEAM]
+    my_with_z = [p for p in my_players
+                 if p.get('z_season') not in (None, '', 'None', 'nan')]
+    my_with_z.sort(key=lambda p: float(p.get('z_season', 0)))
+    worst_overall = my_with_z[0] if my_with_z else None
+
+    def _drop_info(player_or_none):
+        if not player_or_none:
+            return None
+        return {
+            'name':     player_or_none.get('name', '—'),
+            'z_season': _fmt(player_or_none.get('z_season')),
+        }
+
+    # Build per-position sections for all 8 positions
+    by_position = []
+    for pos in ['C', '1B', '2B', 'SS', '3B', 'OF', 'SP', 'RP']:
+        pos_players = _load(f'waiver_{pos.lower()}.csv')
+        if not pos_players:
+            continue
+
+        # Worst at same position on my roster
+        if pos == 'OF':
+            pos_roster = [p for p in my_players if p.get('position', '') in ('OF', 'LF', 'CF', 'RF')]
+        elif pos == 'RP':
+            pos_roster = [p for p in my_players if p.get('position', '') in ('RP', 'P')]
+        else:
+            pos_roster = [p for p in my_players if p.get('position', '') == pos]
+        pos_with_z = [p for p in pos_roster if p.get('z_season') not in (None, '', 'None', 'nan')]
+        pos_with_z.sort(key=lambda p: float(p.get('z_season', 0)))
+
+        by_position.append({
+            'pos':        pos,
+            'players':    _proc(pos_players, 5),
+            'drop_pos':   _drop_info(pos_with_z[0] if pos_with_z else None),
+            'drop_worst': _drop_info(worst_overall),
+        })
+
+    return {
+        "top":         _proc(top, 10),
+        "two_start":   _proc(two_start, 15),
+        "by_position": by_position,
+    }
 
 
 def _build_trade(targets: List[Dict], chips: List[Dict]) -> Dict:
-    def _proc(rows, limit=20):
-        out = []
-        for r in rows[:limit]:
-            out.append({
-                "name":         r.get("name", ""),
-                "position":     r.get("position", ""),
-                "fantasy_team": r.get("fantasy_team", ""),
-                "z_season":     _fmt(r.get("z_season")),
-                "z_7day":       _fmt(r.get("z_7day")),
-                "_cls_z_season": _z_class(r.get("z_season")),
-                "_cls_z_7day":   _z_class(r.get("z_7day")),
-            })
-        return out
-    return {"targets": _proc(targets), "chips": _proc(chips)}
+    # Per-team recommendations: one suggested trade per opposing team
+    team_targets: Dict[str, list] = {}
+    for t in targets:
+        team = t.get('fantasy_team', '')
+        if team and team != MY_TEAM:
+            team_targets.setdefault(team, []).append(t)
+
+    chips_sorted = sorted(chips, key=lambda p: float(p.get('z_season') or 0), reverse=True)
+    best_chip = chips_sorted[0] if chips_sorted else None
+
+    per_team = []
+    for team in sorted(team_targets):
+        best_target = max(team_targets[team],
+                          key=lambda p: float(p.get('z_season') or 0),
+                          default=None)
+        if not best_target:
+            continue
+        chip_z = float(best_chip.get('z_season') or 0) if best_chip else 0.0
+        tgt_z  = float(best_target.get('z_season') or 0)
+        diff   = tgt_z - chip_z
+        per_team.append({
+            'team':      team,
+            'give_name': best_chip.get('name', '—') if best_chip else '—',
+            'give_pos':  best_chip.get('position', '') if best_chip else '',
+            'give_z':    _fmt(best_chip.get('z_season')) if best_chip else '—',
+            'get_name':  best_target.get('name', '—'),
+            'get_pos':   best_target.get('position', ''),
+            'get_z':     _fmt(best_target.get('z_season')),
+            'my_gain':   f"+{diff:.2f}" if diff >= 0 else f"{diff:.2f}",
+            '_give_cls': _z_class(best_chip.get('z_season') if best_chip else None),
+            '_get_cls':  _z_class(best_target.get('z_season')),
+        })
+
+    # My chips reference list
+    all_chips = []
+    for c in chips_sorted[:10]:
+        all_chips.append({
+            'name':     c.get('name', ''),
+            'position': c.get('position', ''),
+            'z_season': _fmt(c.get('z_season')),
+            '_cls':     _z_class(c.get('z_season')),
+        })
+
+    return {"per_team": per_team, "all_chips": all_chips}
 
 
 def _build_rankings(research: List[Dict]) -> Dict:
     hitters  = [r for r in research if str(r.get("is_pitcher","")).lower() not in ("true","1")]
     pitchers = [r for r in research if str(r.get("is_pitcher","")).lower() in ("true","1")]
 
-    def _proc(rows, limit=40):
+    def _proc(rows, limit=100):
         out = []
         for r in rows[:limit]:
             out.append({
@@ -489,7 +601,7 @@ def generate_report() -> str:
         "matchup":      _build_matchup(actuals, breakdown),
         "my_roster":    _build_my_roster(research, lineup_lookup),
         "startsit":     _build_startsit(research, lineup_lookup),
-        "waiver":       _build_waiver(waiver_top, two_start),
+        "waiver":       _build_waiver(waiver_top, two_start, research),
         "trade":        _build_trade(targets, chips),
         "rankings":     _build_rankings(research),
     }

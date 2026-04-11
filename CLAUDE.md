@@ -168,10 +168,14 @@ Free agents are **derived**: MLB stats pool minus all ESPN-rostered players (nam
 .badge-active  /* green — player is in active lineup slot */
 .badge-bench   /* gray  — player is on bench */
 .badge-il      /* red   — player is on IL/IR */
-.two-start-badge  /* blue — pitcher has 2 starts this week */
+.two-start-badge   /* blue — pitcher has 2 starts this week */
 .start / .sit / .consider / .borderline  /* left border color on Start/Sit rows */
 .z-great / .z-good / .z-ok / .z-bad / .z-terrible  /* z-score cell backgrounds */
 .my-team / .other-team / .fa  /* fantasy team color coding */
+.action-promote / .action-bench  /* ⬆/⬇ row indicator in Start/Sit */
+.changes-callout  /* promote/bench summary box at top of Start/Sit */
+.waiver-pos-grid  /* 2-col grid for by-position waiver sections */
+.filter-btn / .filter-btn.active  /* Rankings JS filter buttons */
 ```
 
 ---
@@ -187,17 +191,20 @@ Free agents are **derived**: MLB stats pool minus all ESPN-rostered players (nam
 | master_players.csv + data_dictionary.csv | ✅ Done |
 | ESPN lineupSlotId → lineup_slot (fetchers.py) | ✅ Done |
 | ESPN eligibleSlots → eligible_positions (fetchers.py) | ✅ Done |
-| Matchup: "Cat"→"STAT", column reorder, 7d z-score | 🔲 Next session |
-| My Roster: slot badge, eligible positions, MLB team col | 🔲 Next session |
-| Start/Sit: two-col layout, changes summary callout | 🔲 Next session |
-| matchup.py: SP/RP labels, propagate slot fields to lineup CSV | 🔲 Next session |
-| outputs.py: LINEUP_COLS add is_active_lineup/lineup_slot/eligible_positions | 🔲 Next session |
-| Waiver: by-position breakdown with drop recommendations | 🔲 Next session |
-| Trade: per-team recommended trade cards | 🔲 Next session |
-| Rankings: client-side JS filtering by position/type | 🔲 Next session |
-| Global CSS: consistent column widths throughout | 🔲 Next session |
-| Tier 3: In-week cumulative stat tracking across matchups | Planned |
-| Phase 5: Historical learning (trend model) | Placeholder — needs 2-3 weeks data |
+| Matchup: "Cat"→"STAT", unified table (live scores + pre-proj + live leader) | ✅ Done |
+| My Roster: slot badge, eligible positions (base only), MLB team col | ✅ Done |
+| Start/Sit: two-col layout, changes callout + ⬆/⬇ row indicators | ✅ Done |
+| matchup.py: ESPN position first (SP/RP), propagate slot fields to lineup CSV | ✅ Done |
+| outputs.py: LINEUP_COLS add is_active_lineup/lineup_slot/eligible_positions | ✅ Done |
+| Waiver: 2-col by-position grid, same-pos + worst-overall drop recs | ✅ Done |
+| Trade: per-team table (I Give / I Get / My Gain) | ✅ Done |
+| Rankings: JS filter buttons by position, expanded to top 100 | ✅ Done |
+| Global CSS: consistent column widths throughout | 📦 Backlog |
+| Tier 3: In-week cumulative stat tracking across matchups | 🔨 In Progress |
+| Trade negotiation helper (multi-player, surplus vs needs) | 📦 Backlog |
+| Testing strategy + test suite | 📦 Backlog |
+| MLB player ID cross-reference (replace name matching) | 📦 Backlog |
+| Phase 5: Historical learning (trend model) | ⏳ Blocked — revisit after 2-3 weeks of data |
 
 ---
 
@@ -241,16 +248,17 @@ Schema migrations run automatically via `_add_column_if_missing()` in `init_data
 
 ## ⭐ NEXT SESSION: Read PLANNING.md first
 
-`PLANNING.md` contains the full UI overhaul plan with open questions that need
-user answers before any code is written. Do not start coding without checking it.
+UI overhaul from Session 6 is fully complete (all 9 Q&A items shipped).
+PLANNING.md should be read to understand session history, but there are no
+pending open questions — the slate is clean for new feature work.
 
 ---
 
 ## Last Run Stats (auto-updated by pre-commit hook)
 
-- **Updated:** 2026-04-11 10:33:46
-- **Last data run:** 2026-04-11 11:00:18
+- **Updated:** 2026-04-11 16:46:23
+- **Last data run:** 2026-04-11 17:29:29
 - **Players in DB:** 855
-- **Z-score records:** 15161
+- **Z-score records:** 17726
 - **Roster entries:** 249
 - **League teams:** 8

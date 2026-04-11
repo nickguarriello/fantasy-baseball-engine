@@ -156,10 +156,25 @@ def _norm(name: str) -> str:
 Limitations:
 - Players with accented names (e.g., "Ramón Laureano") must match exactly
 - No fuzzy matching — a single API inconsistency breaks the link
-- MLB API and ESPN API names have been consistent in practice
+- MLB API and ESPN API names have been consistent in practice so far
 
-Future improvement: use MLB player ID cross-reference if ESPN provides it in
-their roster data (currently not extracted).
+**Backlog: MLB player ID cross-reference**
+
+Both APIs expose numeric player IDs:
+- ESPN API returns `espn_id` (extracted in `_parse_espn_player()`, stored in roster dicts)
+- MLB Stats API returns `mlb_id` / `player_id` (extracted in `_parse_hitting_split()` / `_parse_pitching_split()`)
+
+These are two *different* ID namespaces — a lookup table is needed to bridge them.
+Options:
+1. **MLB endpoint** — `statsapi.mlb.com/api/v1/people?personIds=...` accepts MLB IDs and returns
+   `xrefIds` which sometimes includes ESPN IDs. Not 100% reliable.
+2. **ESPN `kona_player_info`** — requires ESPN auth (s2/swid), returns ESPN ID + MLB ID together.
+   Already in `config.ESPN_S2/ESPN_SWID` placeholders.
+3. **Community crosswalk file** — static JSON file mapping ESPN ID ↔ MLB ID. Projects like
+   `chadwickbureau/register` maintain these. Could be bundled as `data/id_map.json`.
+
+Once the crosswalk exists, `_enrich_roster()` in `matchup.py` and `_build_zscore_lookup()` can
+join on numeric ID instead of name strings, eliminating all name-mismatch failures.
 
 ---
 
