@@ -70,13 +70,14 @@
 
   /* ── Matchup table ── */
   .matchup-tbl th, .matchup-tbl td { text-align: center; }
-  .matchup-tbl th:first-child, .matchup-tbl td:first-child { text-align: left; min-width: 50px; }
-  .matchup-tbl th:nth-child(2), .matchup-tbl td:nth-child(2),
+  .matchup-tbl th:first-child, .matchup-tbl td:first-child { text-align: right; min-width: 60px; }
+  .matchup-tbl th:nth-child(2), .matchup-tbl td:nth-child(2) { text-align: left; min-width: 50px; color: #666; font-size: 11px; text-transform: uppercase; }
   .matchup-tbl th:nth-child(3), .matchup-tbl td:nth-child(3) { min-width: 60px; }
   .win  td { background: #152515; }
   .loss td { background: #251515; }
   .tie  td { background: #1e1e1e; }
-  .win  td:nth-child(2) { color: #3fa63f; font-weight: 700; }
+  /* M4: col 1 = Pitch Slap score, col 3 = Opponent score */
+  .win  td:nth-child(1) { color: #3fa63f; font-weight: 700; }
   .loss td:nth-child(3) { color: #e74c3c; font-weight: 700; }
   .proj-winner-win  { color: #3fa63f; font-weight: 600; }
   .proj-winner-loss { color: #e74c3c; }
@@ -208,25 +209,22 @@
 
 <!-- ══════════════════════════════════════════════ MATCHUP ══════════════ -->
 <section id="matchup">
-  <h2>⚔️ This Week's Matchup</h2>
   {% if matchup.available %}
-    <div class="record">
+    <h2>⚔️ Week {{ matchup.week_num }} vs {{ matchup.opp_name }} —
       <span class="wins">{{ matchup.wins }}W</span>
-      <span class="sep">·</span>
+      <span style="color:#444;font-weight:300;font-size:16px;">·</span>
       <span class="ties">{{ matchup.ties }}T</span>
-      <span class="sep">·</span>
+      <span style="color:#444;font-weight:300;font-size:16px;">·</span>
       <span class="losses">{{ matchup.losses }}L</span>
-      <span class="opp">vs {{ matchup.opp_name }}</span>
-    </div>
-    <p class="section-note">PROJECTED = projection at week start · LIVE = current leader · ↑↓ = gap trend vs last run · ⚡ = diverged</p>
+    </h2>
+    <p class="section-note">PROJECTED = pre-week z-score advantage · LIVE = current category leader · ⚡ = projection diverged from live</p>
     <div class="tbl-wrap">
       <table class="matchup-tbl">
         <thead>
           <tr>
+            <th style="text-align:right;">PITCH SLAP</th>
             <th class="left">STAT</th>
-            <th>{{ matchup.my_team }}</th>
-            <th>Trend</th>
-            <th>{{ matchup.opp_name }}</th>
+            <th>OPPONENT</th>
             <th class="left">PROJECTED</th>
             <th class="left">LIVE</th>
           </tr>
@@ -234,9 +232,8 @@
         <tbody>
           {% for row in matchup.rows %}
           <tr class="{{ row._row_cls }}{% if row._separator %} cat-group-start{% endif %}">
-            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">{{ row.category }}</td>
             <td>{{ row.my_score }}</td>
-            <td class="{{ row._trend_cls }}" style="font-size:13px;font-weight:700;" title="{{ row.delta_str }}">{{ row.trend_arrow }}</td>
+            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">{{ row.category }}</td>
             <td>{{ row.opp_score }}</td>
             <td class="left proj-winner-{{ row._proj_cls }}">{{ row.proj_display }}</td>
             <td class="left">
@@ -249,6 +246,7 @@
       </table>
     </div>
   {% else %}
+    <h2>⚔️ This Week's Matchup</h2>
     <p class="empty">No matchup data — run the pipeline or matchup may not have started yet.</p>
   {% endif %}
 </section>
@@ -258,7 +256,16 @@
 <!-- ══════════════════════════════════════════════ MY ROSTER ════════════ -->
 <section id="roster">
   <h2>🔵 My Roster — {{ my_team }}</h2>
-  <p class="section-note">Sorted by ESPN lineup slot · Stats season-to-date · Badge = current slot · Left bar = rec · ⬆⬇ = lineup action needed</p>
+  <p class="section-note">Sorted by ESPN lineup slot · Badge = current slot · R-Ssn/TOT = position-group rank / overall rank (BAD = outside top 30/150) · ⬆⬇ = lineup action needed</p>
+
+  <!-- Stat view toggle (R1) -->
+  <div class="filter-bar" style="margin-bottom:10px;">
+    <button class="filter-btn active" id="btn-season" onclick="rosterToggle('season')">Season</button>
+    <button class="filter-btn" id="btn-week" onclick="rosterToggle('week')">This Week ({{ week_range_label }})</button>
+  </div>
+  <div id="roster-view-note" class="section-note" style="display:none;color:#f39c12;">
+    Showing stats from {{ week_range_label }} only · ranks still reflect full season
+  </div>
 
   <!-- Hitters -->
   <h3>Hitters</h3>
@@ -274,12 +281,12 @@
           <th class="left">Tm</th>
           <th class="left">Pos</th>
           <th>G</th><th>AVG</th><th>OBP</th><th>R</th><th>HR</th><th>RBI</th><th>SB</th>
-          <th>Z-7d</th><th>Z-14d</th><th>Z-30d</th><th>Z-Ssn</th><th>Rec</th>
+          <th title="7-day rank in position group">R-7d</th><th title="14-day rank">R-14d</th><th title="30-day rank">R-30d</th><th title="Season rank in position group">R-Ssn</th><th title="Overall rank vs all batters">TOT</th>
         </tr>
       </thead>
       <tbody>
         {% for p in my_roster.hitters %}
-        <tr class="{{ p.row_cls }}" data-row-idx="{{ loop.index0 }}">
+        <tr class="{{ p.row_cls }}" data-row-idx="{{ loop.index0 }}" data-player="{{ p.name|lower }}">
           <td class="left">
             {{ p.name }}
             <span class="badge {{ p.slot_cls }}">{{ p.slot_badge }}</span>
@@ -291,18 +298,18 @@
           </td>
           <td class="left" style="color:#666;">{{ p.mlb_team }}</td>
           <td class="left">{{ p.eligible if p.eligible else p.position }}</td>
-          <td>{{ p.games_played }}</td>
-          <td>{{ p.avg }}</td>
-          <td>{{ p.obp }}</td>
-          <td>{{ p.runs }}</td>
-          <td>{{ p.home_runs }}</td>
-          <td>{{ p.rbis }}</td>
-          <td>{{ p.stolen_bases }}</td>
-          <td class="{{ p._cls_z_7day }}">{{ p.z_7day }}</td>
-          <td class="{{ p._cls_z_14day }}">{{ p.z_14day }}</td>
-          <td class="{{ p._cls_z_30day }}">{{ p.z_30day }}</td>
-          <td class="{{ p._cls_z_season }}">{{ p.z_season }}</td>
-          <td class="left rec-{{ p.row_cls }}" style="font-size:11px;">{{ p.rec }}</td>
+          <td data-s="{{ p.games_played }}" data-k="g">{{ p.games_played }}</td>
+          <td data-s="{{ p.avg }}"          data-k="avg">{{ p.avg }}</td>
+          <td data-s="{{ p.obp }}"          data-k="obp">{{ p.obp }}</td>
+          <td data-s="{{ p.runs }}"         data-k="r">{{ p.runs }}</td>
+          <td data-s="{{ p.home_runs }}"    data-k="hr">{{ p.home_runs }}</td>
+          <td data-s="{{ p.rbis }}"         data-k="rbi">{{ p.rbis }}</td>
+          <td data-s="{{ p.stolen_bases }}" data-k="sb">{{ p.stolen_bases }}</td>
+          <td class="{{ p._cls_rank_7 }}">{{ p.rank_7 }}</td>
+          <td class="{{ p._cls_rank_14 }}">{{ p.rank_14 }}</td>
+          <td class="{{ p._cls_rank_30 }}">{{ p.rank_30 }}</td>
+          <td class="{{ p._cls_rank_ssn }}">{{ p.rank_ssn }}</td>
+          <td class="{{ p._cls_rank_tot }}">{{ p.rank_tot }}</td>
         </tr>
         {% else %}
         <tr><td colspan="15" class="empty">No hitters found.</td></tr>
@@ -326,12 +333,12 @@
           <th class="left">Tm</th>
           <th class="left">Pos</th>
           <th>G</th><th>IP</th><th>H</th><th>BB</th><th>ERA</th><th>WHIP</th><th>K</th><th>QS</th><th>SVHD</th>
-          <th>Z-7d</th><th>Z-14d</th><th>Z-30d</th><th>Z-Ssn</th><th>Rec</th>
+          <th title="7-day rank in position group">R-7d</th><th title="14-day rank">R-14d</th><th title="30-day rank">R-30d</th><th title="Season rank in position group">R-Ssn</th><th title="Overall rank vs all SP or all RP">TOT</th>
         </tr>
       </thead>
       <tbody>
         {% for p in my_roster.pitchers %}
-        <tr class="{{ p.row_cls }}" data-row-idx="{{ loop.index0 }}">
+        <tr class="{{ p.row_cls }}" data-row-idx="{{ loop.index0 }}" data-player="{{ p.name|lower }}">
           <td class="left">
             {{ p.name }}
             <span class="badge {{ p.slot_cls }}">{{ p.slot_badge }}</span>
@@ -344,20 +351,20 @@
           </td>
           <td class="left" style="color:#666;">{{ p.mlb_team }}</td>
           <td class="left">{{ p.eligible if p.eligible else p.position }}</td>
-          <td>{{ p.games_pitched }}</td>
-          <td>{{ p.innings_pitched }}</td>
-          <td>{{ p.hits_allowed }}</td>
-          <td>{{ p.walks }}</td>
-          <td>{{ p.era }}</td>
-          <td>{{ p.whip }}</td>
-          <td>{{ p.strikeouts_p }}</td>
-          <td>{{ p.quality_starts }}</td>
-          <td>{{ p.svhd }}</td>
-          <td class="{{ p._cls_z_7day }}">{{ p.z_7day }}</td>
-          <td class="{{ p._cls_z_14day }}">{{ p.z_14day }}</td>
-          <td class="{{ p._cls_z_30day }}">{{ p.z_30day }}</td>
-          <td class="{{ p._cls_z_season }}">{{ p.z_season }}</td>
-          <td class="left rec-{{ p.row_cls }}" style="font-size:11px;">{{ p.rec }}</td>
+          <td data-s="{{ p.games_pitched }}"   data-k="gp">{{ p.games_pitched }}</td>
+          <td data-s="{{ p.innings_pitched }}" data-k="ip">{{ p.innings_pitched }}</td>
+          <td data-s="{{ p.hits_allowed }}"    data-k="h">{{ p.hits_allowed }}</td>
+          <td data-s="{{ p.walks }}"           data-k="bb">{{ p.walks }}</td>
+          <td data-s="{{ p.era }}"             data-k="era">{{ p.era }}</td>
+          <td data-s="{{ p.whip }}"            data-k="whip">{{ p.whip }}</td>
+          <td data-s="{{ p.strikeouts_p }}"    data-k="k">{{ p.strikeouts_p }}</td>
+          <td data-s="{{ p.quality_starts }}"  data-k="qs">{{ p.quality_starts }}</td>
+          <td data-s="{{ p.svhd }}"            data-k="svhd">{{ p.svhd }}</td>
+          <td class="{{ p._cls_rank_7 }}">{{ p.rank_7 }}</td>
+          <td class="{{ p._cls_rank_14 }}">{{ p.rank_14 }}</td>
+          <td class="{{ p._cls_rank_30 }}">{{ p.rank_30 }}</td>
+          <td class="{{ p._cls_rank_ssn }}">{{ p.rank_ssn }}</td>
+          <td class="{{ p._cls_rank_tot }}">{{ p.rank_tot }}</td>
         </tr>
         {% else %}
         <tr><td colspan="17" class="empty">No pitchers found.</td></tr>
@@ -750,6 +757,38 @@ document.addEventListener('DOMContentLoaded', function() {
   initSortableTable('tbl-roster-hitters');
   initSortableTable('tbl-roster-pitchers');
 });
+
+/* ── Current-week stats toggle (R1) ── */
+var WEEK_STATS = {{ week_stats_json | safe }};
+var _rosterView = 'season';
+
+function rosterToggle(view) {
+  if (view === _rosterView) return;
+  _rosterView = view;
+
+  document.getElementById('btn-season').classList.toggle('active', view === 'season');
+  document.getElementById('btn-week').classList.toggle('active', view === 'week');
+  var note = document.getElementById('roster-view-note');
+  if (note) note.style.display = (view === 'week') ? '' : 'none';
+
+  ['tbl-roster-hitters', 'tbl-roster-pitchers'].forEach(function(tableId) {
+    var table = document.getElementById(tableId);
+    if (!table) return;
+    table.querySelectorAll('tbody tr').forEach(function(row) {
+      var playerName = (row.dataset.player || '').trim();
+      var wk = WEEK_STATS[playerName] || {};
+      row.querySelectorAll('td[data-k]').forEach(function(td) {
+        var key = td.dataset.k;
+        if (view === 'week') {
+          var val = wk[key];
+          td.textContent = (val !== undefined && val !== null) ? val : '—';
+        } else {
+          td.textContent = td.dataset.s || '—';
+        }
+      });
+    });
+  });
+}
 </script>
 
 </body>

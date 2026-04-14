@@ -21,6 +21,7 @@ nav {
 nav .brand { font-weight: 700; font-size: 15px; color: #fff; margin-right: 10px; }
 nav a { color: #888; font-size: 12px; padding: 4px 10px; border-radius: 4px; background: #1e2230; text-decoration: none; }
 nav a:hover { background: #2a2d42; color: #fff; }
+.generated { margin-left: auto; font-size: 11px; color: #555; }
 
 /* ── Week nav bar ── */
 .week-bar {
@@ -28,8 +29,6 @@ nav a:hover { background: #2a2d42; color: #fff; }
   padding: 10px 16px; display: flex; align-items: center; gap: 12px;
   position: sticky; top: 44px; z-index: 190;
 }
-.week-label { font-size: 14px; font-weight: 700; color: #fff; }
-.week-sub   { font-size: 11px; color: #555; margin-left: 4px; }
 .matchup-select {
   background: #1e2230; border: 1px solid #2a2d42; color: #e0e0e0;
   border-radius: 5px; padding: 5px 32px 5px 10px; font-size: 13px; font-weight: 600;
@@ -83,52 +82,42 @@ nav a:hover { background: #2a2d42; color: #fff; }
 /* ── Game card ── */
 .game-card {
   background: #161925; border: 1px solid #22253a; border-radius: 8px;
-  overflow: hidden;
-  transition: border-color .15s;
+  overflow: hidden; transition: border-color .15s;
 }
 .game-card:hover { border-color: #3a3f5a; }
 .game-card.has-action { border-color: #1a3050; }
 
 /* Card top: teams + score */
-.card-teams {
-  padding: 12px 14px 8px; display: flex; align-items: center; justify-content: space-between;
-}
+.card-teams { padding: 12px 14px 8px; display: flex; align-items: center; justify-content: space-between; }
 .team-block { display: flex; align-items: center; gap: 8px; flex: 1; }
 .team-block.home { flex-direction: row-reverse; text-align: right; }
 .team-logo {
   width: 34px; height: 34px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0;
-  letter-spacing: -.5px;
+  font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0; letter-spacing: -.5px;
 }
-.team-name  { font-size: 13px; font-weight: 700; color: #e0e0e0; }
-.team-record{ font-size: 10px; color: #555; }
+.team-name   { font-size: 13px; font-weight: 700; color: #e0e0e0; }
+.team-record { font-size: 10px; color: #555; }
 .score-block { text-align: center; flex-shrink: 0; padding: 0 10px; }
-.score-nums { display: flex; gap: 8px; align-items: center; font-size: 18px; font-weight: 800; }
-.score-nums .vs { font-size: 12px; color: #333; font-weight: 400; }
-.score-nums .final { color: #fff; }
+.score-nums  { display: flex; gap: 8px; align-items: center; font-size: 18px; font-weight: 800; }
+.score-nums .vs      { font-size: 12px; color: #333; font-weight: 400; }
+.score-nums .final   { color: #fff; }
 .score-nums .preview { color: #444; font-size: 14px; font-weight: 400; }
 .game-time { font-size: 11px; color: #555; text-align: center; margin-top: 1px; }
 .game-status-live { font-size: 10px; color: #3fa63f; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
 
 /* Probable pitchers line */
-.card-pitchers {
-  padding: 0 14px 8px; font-size: 10px; color: #444;
-  display: flex; justify-content: space-between;
-}
+.card-pitchers { padding: 0 14px 8px; font-size: 10px; color: #444; display: flex; justify-content: space-between; }
 .card-pitchers span { max-width: 48%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* Divider */
 .card-div { border: none; border-top: 1px solid #1e2130; margin: 0; }
 
 /* ── Fantasy overlay section ── */
-.fantasy-section {
-  padding: 0;
-}
+.fantasy-section { padding: 0; }
 .fantasy-toggle {
   padding: 7px 14px; display: flex; align-items: center; justify-content: space-between;
-  cursor: pointer; user-select: none;
-  background: #111520;
+  cursor: pointer; user-select: none; background: #111520;
 }
 .fantasy-toggle:hover { background: #141826; }
 .fantasy-toggle-label {
@@ -136,13 +125,11 @@ nav a:hover { background: #2a2d42; color: #fff; }
   color: #4da6ff; display: flex; align-items: center; gap: 5px;
 }
 .fantasy-toggle-label::before { content: '⚾'; font-size: 10px; }
-.fantasy-toggle-meta { font-size: 10px; color: #3a4060; }
+.fantasy-toggle-meta  { font-size: 10px; color: #3a4060; }
 .fantasy-toggle .chevron { font-size: 9px; color: #3a4060; transition: transform .2s; }
 .fantasy-toggle.open .chevron { transform: rotate(180deg); }
 
-.fantasy-body {
-  display: none; padding: 0 14px 10px; background: #0d1020;
-}
+.fantasy-body { display: none; padding: 0 14px 10px; background: #0d1020; }
 .fantasy-body.open { display: block; }
 
 .fantasy-matchup-label {
@@ -152,7 +139,7 @@ nav a:hover { background: #2a2d42; color: #fff; }
 }
 
 .fantasy-teams { display: flex; gap: 10px; }
-.fantasy-side { flex: 1; }
+.fantasy-side  { flex: 1; }
 .fantasy-side-label {
   font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
   margin-bottom: 5px; padding-bottom: 3px; border-bottom: 1px solid #1a1f35;
@@ -160,30 +147,19 @@ nav a:hover { background: #2a2d42; color: #fff; }
 .fantasy-side.my-side  .fantasy-side-label { color: #4da6ff; }
 .fantasy-side.opp-side .fantasy-side-label { color: #b07fff; }
 
-.fp-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 3px 0; font-size: 11px;
-}
+.fp-row  { display: flex; align-items: center; justify-content: space-between; padding: 3px 0; font-size: 11px; }
 .fp-name { color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px; }
-.fp-pos  {
-  font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px;
-  text-transform: uppercase; flex-shrink: 0; margin-left: 4px;
-}
-.pos-sp   { background: #1a3a6a; color: #7ab8ff; }
-.pos-rp   { background: #1a2a5a; color: #7ab8ff; }
-.pos-c    { background: #3a2a1a; color: #ffc07a; }
-.pos-1b,.pos-2b,.pos-3b,.pos-ss,.pos-if {
-  background: #2a3020; color: #b8d87a; }
-.pos-of   { background: #203020; color: #7adb9a; }
-.pos-dh   { background: #2a2a3a; color: #aaa; }
-.fp-bo    { font-size: 9px; color: #3a4060; flex-shrink: 0; margin-left: 2px; }
+.fp-pos  { font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px; text-transform: uppercase; flex-shrink: 0; margin-left: 4px; }
+.pos-sp  { background: #1a3a6a; color: #7ab8ff; }
+.pos-rp  { background: #1a2a5a; color: #7ab8ff; }
+.pos-c   { background: #3a2a1a; color: #ffc07a; }
+.pos-1b,.pos-2b,.pos-3b,.pos-ss,.pos-if { background: #2a3020; color: #b8d87a; }
+.pos-of  { background: #203020; color: #7adb9a; }
+.pos-dh  { background: #2a2a3a; color: #aaa; }
+.fp-bo   { font-size: 9px; color: #3a4060; flex-shrink: 0; margin-left: 2px; }
 
 .no-players { font-size: 10px; color: #2a3050; font-style: italic; padding: 2px 0; }
-
-/* card with no fantasy players */
 .game-card.no-action .fantasy-toggle { opacity: .45; }
-
-/* ── Empty day ── */
 .empty-day { color: #333; font-style: italic; padding: 24px 0; font-size: 13px; text-align: center; }
 
 /* ── Responsive ── */
@@ -199,6 +175,7 @@ nav a:hover { background: #2a2d42; color: #fff; }
 <nav>
   <span class="brand">⚾ Pitch Slap</span>
   <a href="index.html">← Dashboard</a>
+  <span class="generated">Updated 2026-04-14 14:55</span>
 </nav>
 
 <!-- Week navigation bar -->
@@ -223,6 +200,13 @@ nav a:hover { background: #2a2d42; color: #fff; }
 </div>
 
 <script>
+// ── Pipeline-injected data ───────────────────────────────────────────────────
+var MY_TEAM_NAME = "Pitch Slap";
+var MATCHUPS     = {"1": {"opp": "\u2014", "dates": "Mar 31 \u2013 Apr 6", "result": null, "score": null}, "2": {"opp": "2010 State Sectional Champ", "dates": "Apr 13 \u2013 19", "result": null, "score": null}, "3": {"opp": "\u2014", "dates": "Apr 14 \u2013 Apr 20", "result": null, "score": null}, "4": {"opp": "\u2014", "dates": "Apr 21 \u2013 Apr 27", "result": null, "score": null}, "5": {"opp": "\u2014", "dates": "Apr 28 \u2013 May 4", "result": null, "score": null}, "6": {"opp": "\u2014", "dates": "May 5 \u2013 May 11", "result": null, "score": null}, "7": {"opp": "\u2014", "dates": "May 12 \u2013 May 18", "result": null, "score": null}, "8": {"opp": "\u2014", "dates": "May 19 \u2013 May 25", "result": null, "score": null}, "9": {"opp": "\u2014", "dates": "May 26 \u2013 Jun 1", "result": null, "score": null}, "10": {"opp": "\u2014", "dates": "Jun 2 \u2013 Jun 8", "result": null, "score": null}, "11": {"opp": "\u2014", "dates": "Jun 9 \u2013 Jun 15", "result": null, "score": null}, "12": {"opp": "\u2014", "dates": "Jun 16 \u2013 Jun 22", "result": null, "score": null}, "13": {"opp": "\u2014", "dates": "Jun 23 \u2013 Jun 29", "result": null, "score": null}, "14": {"opp": "\u2014", "dates": "Jun 30 \u2013 Jul 6", "result": null, "score": null}, "15": {"opp": "\u2014", "dates": "Jul 7 \u2013 Jul 13", "result": null, "score": null}, "16": {"opp": "\u2014", "dates": "Jul 14 \u2013 Jul 20", "result": null, "score": null}, "17": {"opp": "\u2014", "dates": "Jul 21 \u2013 Jul 27", "result": null, "score": null}, "18": {"opp": "\u2014", "dates": "Jul 28 \u2013 Aug 3", "result": null, "score": null}, "19": {"opp": "\u2014", "dates": "Aug 4 \u2013 Aug 10", "result": null, "score": null}, "20": {"opp": "\u2014", "dates": "Aug 11 \u2013 Aug 17", "result": null, "score": null}, "21": {"opp": "TBD (Semifinal)", "dates": "Aug 18 \u2013 Aug 24", "result": null, "score": null, "playoff": true}, "22": {"opp": "TBD (Semifinal)", "dates": "Aug 25 \u2013 Aug 31", "result": null, "score": null, "playoff": true}, "23": {"opp": "TBD (Championship)", "dates": "Sep 1 \u2013 Sep 7", "result": null, "score": null, "playoff": true}};
+var WEEKS        = {"2": {"days": {"Mon Apr 13": [{"away": "HOU", "home": "SEA", "awayR": 2, "homeR": 6, "time": "4:10 PM", "status": "final", "awaySP": "Mike Burrows", "homeSP": "George Kirby"}, {"away": "AZ", "home": "BAL", "awayR": 7, "homeR": 9, "time": "6:35 PM", "status": "final", "awaySP": "Ryne Nelson", "homeSP": "Dean Kremer"}, {"away": "WSH", "home": "PIT", "awayR": 5, "homeR": 16, "time": "6:40 PM", "status": "final", "awaySP": "PJ Poulin", "homeSP": "Paul Skenes"}, {"away": "CHC", "home": "PHI", "awayR": 7, "homeR": 13, "time": "6:40 PM", "status": "final", "awaySP": "Javier Assad", "homeSP": "Cristopher S\u00e1nchez"}, {"away": "LAA", "home": "NYY", "awayR": 10, "homeR": 11, "time": "7:05 PM", "status": "final", "awaySP": "Yusei Kikuchi", "homeSP": "Will Warren"}, {"away": "MIA", "home": "ATL", "awayR": 10, "homeR": 4, "time": "7:15 PM", "status": "final", "awaySP": "Eury P\u00e9rez", "homeSP": "Grant Holmes"}, {"away": "BOS", "home": "MIN", "awayR": 6, "homeR": 13, "time": "7:40 PM", "status": "final", "awaySP": "Garrett Crochet", "homeSP": "Bailey Ober"}, {"away": "CLE", "home": "STL", "awayR": 9, "homeR": 3, "time": "7:45 PM", "status": "final", "awaySP": "Gavin Williams", "homeSP": "Matthew Liberatore"}, {"away": "TEX", "home": "ATH", "awayR": 8, "homeR": 1, "time": "9:40 PM", "status": "final", "awaySP": "Nathan Eovaldi", "homeSP": "Luis Severino"}, {"away": "NYM", "home": "LAD", "awayR": 0, "homeR": 4, "time": "10:10 PM", "status": "final", "awaySP": "David Peterson", "homeSP": "Justin Wrobleski"}], "Tue Apr 14": [{"away": "AZ", "home": "BAL", "awayR": null, "homeR": null, "time": "6:35 PM", "status": "preview", "awaySP": "Merrill Kelly", "homeSP": "Trevor Rogers"}, {"away": "KC", "home": "DET", "awayR": 0, "homeR": 0, "time": "6:40 PM", "status": "preview", "awaySP": "Cole Ragans", "homeSP": "Framber Valdez"}, {"away": "WSH", "home": "PIT", "awayR": null, "homeR": null, "time": "6:40 PM", "status": "preview", "awaySP": "Miles Mikolas", "homeSP": "Mitch Keller"}, {"away": "SF", "home": "CIN", "awayR": null, "homeR": null, "time": "6:40 PM", "status": "preview", "awaySP": "Robbie Ray", "homeSP": "Brady Singer"}, {"away": "CHC", "home": "PHI", "awayR": null, "homeR": null, "time": "6:40 PM", "status": "preview", "awaySP": "Riley Martin", "homeSP": "Aaron Nola"}, {"away": "LAA", "home": "NYY", "awayR": null, "homeR": null, "time": "7:05 PM", "status": "preview", "awaySP": "Reid Detmers", "homeSP": "Ryan Weathers"}, {"away": "MIA", "home": "ATL", "awayR": null, "homeR": null, "time": "7:15 PM", "status": "preview", "awaySP": "Max Meyer", "homeSP": "Reynaldo L\u00f3pez"}, {"away": "BOS", "home": "MIN", "awayR": null, "homeR": null, "time": "7:40 PM", "status": "preview", "awaySP": "Sonny Gray", "homeSP": "Mick Abel"}, {"away": "TB", "home": "CWS", "awayR": null, "homeR": null, "time": "7:40 PM", "status": "preview", "awaySP": "Shane McClanahan", "homeSP": "Noah Schultz"}, {"away": "TOR", "home": "MIL", "awayR": null, "homeR": null, "time": "7:40 PM", "status": "preview", "awaySP": "Kevin Gausman", "homeSP": "Jacob Misiorowski"}, {"away": "CLE", "home": "STL", "awayR": null, "homeR": null, "time": "7:45 PM", "status": "preview", "awaySP": "Joey Cantillo", "homeSP": "Michael McGreevy"}, {"away": "COL", "home": "HOU", "awayR": null, "homeR": null, "time": "8:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "Colton Gordon"}, {"away": "SEA", "home": "SD", "awayR": null, "homeR": null, "time": "9:40 PM", "status": "preview", "awaySP": "Bryan Woo", "homeSP": "Michael King"}, {"away": "TEX", "home": "ATH", "awayR": null, "homeR": null, "time": "9:40 PM", "status": "preview", "awaySP": "MacKenzie Gore", "homeSP": "Jeffrey Springs"}, {"away": "NYM", "home": "LAD", "awayR": null, "homeR": null, "time": "10:10 PM", "status": "preview", "awaySP": "Nolan McLean", "homeSP": "Yoshinobu Yamamoto"}], "Wed Apr 15": [{"away": "AZ", "home": "BAL", "awayR": null, "homeR": null, "time": "12:35 PM", "status": "preview", "awaySP": "Eduardo Rodriguez", "homeSP": "Kyle Bradish"}, {"away": "CLE", "home": "STL", "awayR": null, "homeR": null, "time": "1:15 PM", "status": "preview", "awaySP": "Slade Cecconi", "homeSP": "Dustin May"}, {"away": "BOS", "home": "MIN", "awayR": null, "homeR": null, "time": "1:40 PM", "status": "preview", "awaySP": "Connelly Early", "homeSP": "Simeon Woods Richardson"}, {"away": "KC", "home": "DET", "awayR": null, "homeR": null, "time": "6:40 PM", "status": "preview", "awaySP": "Seth Lugo", "homeSP": "Jack Flaherty"}, {"away": "WSH", "home": "PIT", "awayR": null, "homeR": null, "time": "6:40 PM", "status": "preview", "awaySP": "Jake Irvin", "homeSP": "TBD"}, {"away": "SF", "home": "CIN", "awayR": null, "homeR": null, "time": "6:40 PM", "status": "preview", "awaySP": "Tyler Mahle", "homeSP": "Rhett Lowder"}, {"away": "CHC", "home": "PHI", "awayR": null, "homeR": null, "time": "6:40 PM", "status": "preview", "awaySP": "Shota Imanaga", "homeSP": "Jes\u00fas Luzardo"}, {"away": "LAA", "home": "NYY", "awayR": null, "homeR": null, "time": "7:05 PM", "status": "preview", "awaySP": "TBD", "homeSP": "Luis Gil"}, {"away": "MIA", "home": "ATL", "awayR": null, "homeR": null, "time": "7:15 PM", "status": "preview", "awaySP": "Chris Paddack", "homeSP": "Bryce Elder"}, {"away": "TB", "home": "CWS", "awayR": null, "homeR": null, "time": "7:40 PM", "status": "preview", "awaySP": "Jesse Scholtens", "homeSP": "Sean Burke"}, {"away": "TOR", "home": "MIL", "awayR": null, "homeR": null, "time": "7:40 PM", "status": "preview", "awaySP": "Dylan Cease", "homeSP": "TBD"}, {"away": "COL", "home": "HOU", "awayR": null, "homeR": null, "time": "8:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "SEA", "home": "SD", "awayR": null, "homeR": null, "time": "9:40 PM", "status": "preview", "awaySP": "Emerson Hancock", "homeSP": "TBD"}, {"away": "TEX", "home": "ATH", "awayR": null, "homeR": null, "time": "9:40 PM", "status": "preview", "awaySP": "Kumar Rocker", "homeSP": "J.T. Ginn"}, {"away": "NYM", "home": "LAD", "awayR": null, "homeR": null, "time": "10:10 PM", "status": "preview", "awaySP": "Clay Holmes", "homeSP": "Shohei Ohtani"}], "Thu Apr 16": [{"away": "WSH", "home": "PIT", "awayR": null, "homeR": null, "time": "12:35 PM", "status": "preview", "awaySP": "Foster Griffin", "homeSP": "TBD"}, {"away": "SF", "home": "CIN", "awayR": null, "homeR": null, "time": "12:40 PM", "status": "preview", "awaySP": "Landen Roupp", "homeSP": "Chase Burns"}, {"away": "KC", "home": "DET", "awayR": null, "homeR": null, "time": "1:10 PM", "status": "preview", "awaySP": "Kris Bubic", "homeSP": "Keider Montero"}, {"away": "LAA", "home": "NYY", "awayR": null, "homeR": null, "time": "1:35 PM", "status": "preview", "awaySP": "TBD", "homeSP": "Max Fried"}, {"away": "TOR", "home": "MIL", "awayR": null, "homeR": null, "time": "1:40 PM", "status": "preview", "awaySP": "Patrick Corbin", "homeSP": "TBD"}, {"away": "TB", "home": "CWS", "awayR": null, "homeR": null, "time": "2:10 PM", "status": "preview", "awaySP": "Steven Matz", "homeSP": "Anthony Kay"}, {"away": "TEX", "home": "ATH", "awayR": null, "homeR": null, "time": "3:05 PM", "status": "preview", "awaySP": "Jack Leiter", "homeSP": "Jacob Lopez"}, {"away": "BAL", "home": "CLE", "awayR": null, "homeR": null, "time": "6:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "COL", "home": "HOU", "awayR": null, "homeR": null, "time": "8:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "SEA", "home": "SD", "awayR": null, "homeR": null, "time": "8:40 PM", "status": "preview", "awaySP": "Luis Castillo", "homeSP": "TBD"}], "Fri Apr 17": [{"away": "NYM", "home": "CHC", "awayR": null, "homeR": null, "time": "2:20 PM", "status": "preview", "awaySP": "Kodai Senga", "homeSP": "TBD"}, {"away": "BAL", "home": "CLE", "awayR": null, "homeR": null, "time": "6:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "ATL", "home": "PHI", "awayR": null, "homeR": null, "time": "6:40 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "SF", "home": "WSH", "awayR": null, "homeR": null, "time": "6:45 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "TB", "home": "PIT", "awayR": null, "homeR": null, "time": "6:45 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "KC", "home": "NYY", "awayR": null, "homeR": null, "time": "7:05 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "MIL", "home": "MIA", "awayR": null, "homeR": null, "time": "7:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "Janson Junk"}, {"away": "DET", "home": "BOS", "awayR": null, "homeR": null, "time": "7:15 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "STL", "home": "HOU", "awayR": null, "homeR": null, "time": "8:10 PM", "status": "preview", "awaySP": "Kyle Leahy", "homeSP": "TBD"}, {"away": "CIN", "home": "MIN", "awayR": null, "homeR": null, "time": "8:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "LAD", "home": "COL", "awayR": null, "homeR": null, "time": "8:40 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "SD", "home": "LAA", "awayR": null, "homeR": null, "time": "9:38 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "TEX", "home": "SEA", "awayR": null, "homeR": null, "time": "9:40 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "TOR", "home": "AZ", "awayR": null, "homeR": null, "time": "9:40 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "CWS", "home": "ATH", "awayR": null, "homeR": null, "time": "9:40 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}], "Sat Apr 18": [{"away": "KC", "home": "NYY", "awayR": null, "homeR": null, "time": "1:35 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "CIN", "home": "MIN", "awayR": null, "homeR": null, "time": "2:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "NYM", "home": "CHC", "awayR": null, "homeR": null, "time": "2:20 PM", "status": "preview", "awaySP": "Freddy Peralta", "homeSP": "TBD"}, {"away": "SF", "home": "WSH", "awayR": null, "homeR": null, "time": "4:05 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "TB", "home": "PIT", "awayR": null, "homeR": null, "time": "4:05 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "CWS", "home": "ATH", "awayR": null, "homeR": null, "time": "4:05 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "DET", "home": "BOS", "awayR": null, "homeR": null, "time": "4:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "MIL", "home": "MIA", "awayR": null, "homeR": null, "time": "4:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "BAL", "home": "CLE", "awayR": null, "homeR": null, "time": "6:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "STL", "home": "HOU", "awayR": null, "homeR": null, "time": "7:10 PM", "status": "preview", "awaySP": "Andre Pallante", "homeSP": "TBD"}, {"away": "TEX", "home": "SEA", "awayR": null, "homeR": null, "time": "7:15 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "ATL", "home": "PHI", "awayR": null, "homeR": null, "time": "7:15 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "LAD", "home": "COL", "awayR": null, "homeR": null, "time": "8:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "TOR", "home": "AZ", "awayR": null, "homeR": null, "time": "8:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "SD", "home": "LAA", "awayR": null, "homeR": null, "time": "9:38 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}], "Sun Apr 19": [{"away": "DET", "home": "BOS", "awayR": null, "homeR": null, "time": "1:35 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "SF", "home": "WSH", "awayR": null, "homeR": null, "time": "1:35 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "TB", "home": "PIT", "awayR": null, "homeR": null, "time": "1:35 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "KC", "home": "NYY", "awayR": null, "homeR": null, "time": "1:35 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "BAL", "home": "CLE", "awayR": null, "homeR": null, "time": "1:40 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "MIL", "home": "MIA", "awayR": null, "homeR": null, "time": "1:40 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "STL", "home": "HOU", "awayR": null, "homeR": null, "time": "2:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "CIN", "home": "MIN", "awayR": null, "homeR": null, "time": "2:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "NYM", "home": "CHC", "awayR": null, "homeR": null, "time": "2:20 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "LAD", "home": "COL", "awayR": null, "homeR": null, "time": "3:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "CWS", "home": "ATH", "awayR": null, "homeR": null, "time": "4:05 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "SD", "home": "LAA", "awayR": null, "homeR": null, "time": "4:07 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "TEX", "home": "SEA", "awayR": null, "homeR": null, "time": "4:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "TOR", "home": "AZ", "awayR": null, "homeR": null, "time": "4:10 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}, {"away": "ATL", "home": "PHI", "awayR": null, "homeR": null, "time": "7:20 PM", "status": "preview", "awaySP": "TBD", "homeSP": "TBD"}]}}};
+var MY_PLAYERS   = [{"name": "Mike Trout", "pos": "OF", "team": "LAA", "il": false}, {"name": "Mason Miller", "pos": "P", "team": "SD", "il": false}, {"name": "Cam Smith", "pos": "OF", "team": "HOU", "il": false}, {"name": "Christian Yelich", "pos": "DH", "team": "MIL", "il": false}, {"name": "Nico Hoerner", "pos": "2B", "team": "CHC", "il": false}, {"name": "Max Muncy", "pos": "3B", "team": "LAD", "il": false}, {"name": "Corbin Carroll", "pos": "OF", "team": "ARI", "il": false}, {"name": "Will Smith", "pos": "C", "team": "LAD", "il": false}, {"name": "Jakob Marsee", "pos": "OF", "team": "MIA", "il": false}, {"name": "Willson Contreras", "pos": "1B", "team": "BOS", "il": false}, {"name": "Taj Bradley", "pos": "P", "team": "MIN", "il": false}, {"name": "Xavier Edwards", "pos": "2B", "team": "MIA", "il": false}, {"name": "Jordan Romano", "pos": "P", "team": "LAA", "il": false}, {"name": "Nathan Eovaldi", "pos": "P", "team": "TEX", "il": false}, {"name": "Pete Crow-Armstrong", "pos": "OF", "team": "CHC", "il": false}, {"name": "Steven Kwan", "pos": "OF", "team": "CLE", "il": false}, {"name": "Logan Webb", "pos": "P", "team": "SF", "il": false}, {"name": "Abner Uribe", "pos": "P", "team": "MIL", "il": false}, {"name": "Yoshinobu Yamamoto", "pos": "P", "team": "LAD", "il": false}, {"name": "Michael King", "pos": "P", "team": "SD", "il": false}, {"name": "Nick Kurtz", "pos": "1B", "team": "OAK", "il": false}, {"name": "Matt Chapman", "pos": "3B", "team": "SF", "il": false}, {"name": "Samuel Basallo", "pos": "C", "team": "BAL", "il": false}, {"name": "Sonny Gray", "pos": "P", "team": "BOS", "il": false}, {"name": "Carter Jensen", "pos": "DH", "team": "KC", "il": false}, {"name": "Shane Baz", "pos": "P", "team": "BAL", "il": false}, {"name": "Framber Valdez", "pos": "P", "team": "DET", "il": false}, {"name": "Mookie Betts", "pos": "SS", "team": "LAD", "il": true}, {"name": "Juan Soto", "pos": "OF", "team": "NYM", "il": true}, {"name": "Jeff McNeil", "pos": "2B", "team": "OAK", "il": false}];
+var OPP_PLAYERS  = [{"name": "Sal Stewart", "pos": "1B", "team": "CIN", "il": false}, {"name": "Gunnar Henderson", "pos": "SS", "team": "BAL", "il": false}, {"name": "Shea Langeliers", "pos": "C", "team": "OAK", "il": false}, {"name": "Carlos Correa", "pos": "3B", "team": "HOU", "il": false}, {"name": "Cam Schlittler", "pos": "P", "team": "NYY", "il": false}, {"name": "Gavin Williams", "pos": "P", "team": "CLE", "il": false}, {"name": "Hunter Goodman", "pos": "C", "team": "COL", "il": false}, {"name": "Riley Greene", "pos": "OF", "team": "DET", "il": false}, {"name": "Luke Keaschall", "pos": "2B", "team": "MIN", "il": false}, {"name": "Joe Ryan", "pos": "P", "team": "MIN", "il": false}, {"name": "Bobby Witt Jr.", "pos": "SS", "team": "KC", "il": false}, {"name": "Shota Imanaga", "pos": "P", "team": "CHC", "il": false}, {"name": "Ian Happ", "pos": "OF", "team": "CHC", "il": false}, {"name": "Munetaka Murakami", "pos": "1B", "team": "CWS", "il": false}, {"name": "Robert Suarez", "pos": "P", "team": "ATL", "il": false}, {"name": "Robbie Ray", "pos": "P", "team": "SF", "il": false}, {"name": "Austin Riley", "pos": "3B", "team": "ATL", "il": false}, {"name": "Brent Rooker", "pos": "DH", "team": "OAK", "il": false}, {"name": "Kerry Carpenter", "pos": "OF", "team": "DET", "il": false}, {"name": "Vladimir Guerrero Jr.", "pos": "1B", "team": "TOR", "il": false}, {"name": "Willi Castro", "pos": "2B", "team": "COL", "il": false}, {"name": "Jack Flaherty", "pos": "P", "team": "DET", "il": false}, {"name": "Brenton Doyle", "pos": "OF", "team": "COL", "il": false}, {"name": "Bryson Stott", "pos": "2B", "team": "PHI", "il": false}, {"name": "Spencer Torkelson", "pos": "1B", "team": "DET", "il": false}, {"name": "Jorge Polanco", "pos": "DH", "team": "NYM", "il": false}];
+
 // ── Team colors ─────────────────────────────────────────────────────────────
 var TEAM_COLORS = {
   LAD:'#005A9C', NYM:'#002D72', NYY:'#132448', BOS:'#BD3039',
@@ -230,148 +214,11 @@ var TEAM_COLORS = {
   SF:'#FD5A1E',  CHC:'#0E3386', CLE:'#E31937', SEA:'#0C2C56',
   TB:'#092C5C',  BAL:'#DF4601', DET:'#0C2340', KC:'#004687',
   ARI:'#A71930', COL:'#33006F', MIA:'#00A3E0', PHI:'#E81828',
-  PIT:'#27251F',  WSH:'#AB0003', MIN:'#002B5C', CWS:'#27251F',
+  PIT:'#27251F', WSH:'#AB0003', MIN:'#002B5C', CWS:'#27251F',
   LAA:'#BA0021', TOR:'#134A8E', MIL:'#0A2351', CIN:'#C6011F',
   OAK:'#003831', ATH:'#003831', TEX:'#003278',
 };
 function teamColor(abbr) { return TEAM_COLORS[abbr] || '#2a2d42'; }
-
-// ── Matchup schedule (all weeks) ────────────────────────────────────────────
-var MATCHUPS = {
-  1:  { opp:'Deep Ball Franchise',       dates:'Mar 31 – Apr 6',   result:'W', score:'7-3'  },
-  2:  { opp:'Dynasty Destroyers',        dates:'Apr 7 – 13',       result:'W', score:'6-4'  },
-  3:  { opp:'Slugger City',              dates:'Apr 14 – 20',      result:'L', score:'4-6'  },
-  4:  { opp:'2010 State Sectional Champ',dates:'Apr 21 – 27',      result:null, score:null  },
-  5:  { opp:'Moonshot Monkeys',          dates:'Apr 28 – May 4',   result:null, score:null  },
-  6:  { opp:'ERA Erasers',               dates:'May 5 – 11',       result:null, score:null  },
-  7:  { opp:'Bunt Masters',              dates:'May 12 – 18',      result:null, score:null  },
-  8:  { opp:'Deep Ball Franchise',       dates:'May 19 – 25',      result:null, score:null  },
-  9:  { opp:'Dynasty Destroyers',        dates:'May 26 – Jun 1',   result:null, score:null  },
-  10: { opp:'Slugger City',              dates:'Jun 2 – 8',        result:null, score:null  },
-  11: { opp:'K-Rate Kings',              dates:'Jun 9 – 15',       result:null, score:null  },
-  12: { opp:'2010 State Sectional Champ',dates:'Jun 16 – 22',      result:null, score:null  },
-  13: { opp:'Moonshot Monkeys',          dates:'Jun 23 – 29',      result:null, score:null  },
-  14: { opp:'ERA Erasers',               dates:'Jun 30 – Jul 6',   result:null, score:null  },
-  15: { opp:'Bunt Masters',              dates:'Jul 7 – 13',       result:null, score:null  },
-  16: { opp:'Deep Ball Franchise',       dates:'Jul 14 – 20',      result:null, score:null  },
-  17: { opp:'Dynasty Destroyers',        dates:'Jul 21 – 27',      result:null, score:null  },
-  18: { opp:'K-Rate Kings',              dates:'Jul 28 – Aug 3',   result:null, score:null  },
-  19: { opp:'Slugger City',              dates:'Aug 4 – 10',       result:null, score:null  },
-  20: { opp:'2010 State Sectional Champ',dates:'Aug 11 – 17',      result:null, score:null  },
-  21: { opp:'TBD (Semifinal)',           dates:'Aug 18 – 24',      result:null, score:null, playoff:true },
-  22: { opp:'TBD (Semifinal)',           dates:'Aug 25 – 31',      result:null, score:null, playoff:true },
-  23: { opp:'TBD (Championship)',        dates:'Sep 1 – 7',        result:null, score:null, playoff:true },
-};
-
-// ── Mock data — rosters for current matchup (Week 4) ─────────────────────────
-// NOTE: replace with actual pipeline data when wired live
-var MY_PLAYERS = [
-  { name:'Freddie Freeman',  pos:'1B',  team:'LAD', bo:3 },
-  { name:'Max Muncy',        pos:'3B',  team:'LAD', bo:5 },
-  { name:'Mookie Betts',     pos:'OF',  team:'LAD', bo:2, il:true },
-  { name:'Juan Soto',        pos:'OF',  team:'NYY', bo:3 },
-  { name:'Rafael Devers',    pos:'3B',  team:'BOS', bo:4 },
-  { name:'Taj Bradley',      pos:'SP',  team:'TB'  },
-  { name:'Logan Gilbert',    pos:'SP',  team:'SEA' },
-  { name:'Mason Miller',     pos:'RP',  team:'ATH' },
-  { name:'Blake Treinen',    pos:'RP',  team:'LAD' },
-  { name:'Zack Wheeler',     pos:'SP',  team:'PHI' },
-];
-
-var OPP_PLAYERS = [
-  { name:'Francisco Lindor', pos:'SS',  team:'NYM', bo:1 },
-  { name:'Pete Alonso',      pos:'1B',  team:'NYM', bo:4 },
-  { name:'Yordan Alvarez',   pos:'OF',  team:'HOU', bo:4 },
-  { name:'Corbin Carroll',   pos:'OF',  team:'ARI', bo:1 },
-  { name:'Adley Rutschman',  pos:'C',   team:'BAL', bo:3 },
-  { name:'Gunnar Henderson', pos:'SS',  team:'BAL', bo:2 },
-  { name:'Jazz Chisholm',    pos:'2B',  team:'NYY', bo:1 },
-  { name:'Elly De La Cruz',  pos:'SS',  team:'CIN', bo:2 },
-  { name:'Kyle Tucker',      pos:'OF',  team:'CHC', bo:3 },
-  { name:'Salvador Perez',   pos:'C',   team:'KC',  bo:4 },
-  { name:'Tarik Skubal',     pos:'SP',  team:'DET' },
-  { name:'Spencer Strider',  pos:'SP',  team:'ATL' },
-  { name:'Paul Skenes',      pos:'SP',  team:'PIT' },
-  { name:'Hunter Brown',     pos:'SP',  team:'HOU' },
-  { name:'Emmanuel Clase',   pos:'RP',  team:'CLE' },
-  { name:'Josh Hader',       pos:'RP',  team:'HOU' },
-  { name:'Ryan Helsley',     pos:'RP',  team:'STL' },
-  { name:'Dylan Cease',      pos:'SP',  team:'SD'  },
-];
-
-// ── Schedule data ────────────────────────────────────────────────────────────
-var WEEKS = {
-  4: {
-    label: 'Week 4', sub: 'Apr 21 – 27',
-    days: {
-      'Mon Apr 21': [
-        { away:'KC',  home:'CLE', awayR:null, homeR:null, time:'1:10 PM', status:'preview', awaySP:'Seth Lugo',      homeSP:'Emmanuel Clase'    },
-        { away:'BAL', home:'BOS', awayR:null, homeR:null, time:'7:10 PM', status:'preview', awaySP:'Corbin Burnes',  homeSP:'Brayan Bello'       },
-        { away:'NYY', home:'TB',  awayR:null, homeR:null, time:'7:10 PM', status:'preview', awaySP:'Gerrit Cole',    homeSP:'Taj Bradley'        },
-        { away:'LAD', home:'NYM', awayR:null, homeR:null, time:'7:10 PM', status:'preview', awaySP:'Walker Buehler', homeSP:'Sean Manaea'        },
-        { away:'HOU', home:'ATL', awayR:null, homeR:null, time:'7:20 PM', status:'preview', awaySP:'Hunter Brown',   homeSP:'Spencer Strider'    },
-        { away:'CHC', home:'STL', awayR:null, homeR:null, time:'7:45 PM', status:'preview', awaySP:'Justin Steele',  homeSP:'Miles Mikolas'      },
-        { away:'ATH', home:'SEA', awayR:null, homeR:null, time:'9:40 PM', status:'preview', awaySP:'JP Sears',       homeSP:'Logan Gilbert'      },
-      ],
-      'Tue Apr 22': [
-        { away:'KC',  home:'CLE', awayR:null, homeR:null, time:'6:40 PM', status:'preview', awaySP:'Brady Singer',   homeSP:'Tanner Bibee'       },
-        { away:'BAL', home:'BOS', awayR:null, homeR:null, time:'7:10 PM', status:'preview', awaySP:'Trevor Rogers',  homeSP:'Nick Pivetta'       },
-        { away:'NYY', home:'TB',  awayR:null, homeR:null, time:'7:10 PM', status:'preview', awaySP:'Marcus Stroman', homeSP:'Zach Eflin'         },
-        { away:'PHI', home:'NYM', awayR:null, homeR:null, time:'7:10 PM', status:'preview', awaySP:'Zack Wheeler',   homeSP:'Kodai Senga'        },
-        { away:'HOU', home:'ATL', awayR:null, homeR:null, time:'7:20 PM', status:'preview', awaySP:'Framber Valdez', homeSP:'Chris Sale'         },
-        { away:'ARI', home:'CIN', awayR:null, homeR:null, time:'6:40 PM', status:'preview', awaySP:'Merrill Kelly',  homeSP:'Nick Lodolo'        },
-        { away:'SD',  home:'PIT', awayR:null, homeR:null, time:'6:35 PM', status:'preview', awaySP:'Dylan Cease',    homeSP:'Paul Skenes'        },
-        { away:'ATH', home:'SEA', awayR:null, homeR:null, time:'9:40 PM', status:'preview', awaySP:'Mason Miller',   homeSP:'Bryan Woo'          },
-      ],
-      'Wed Apr 23': [
-        { away:'KC',  home:'CLE', awayR:null, homeR:null, time:'12:10 PM', status:'preview', awaySP:'Cole Ragans',   homeSP:'Shane Bieber'       },
-        { away:'BAL', home:'BOS', awayR:null, homeR:null, time:'12:35 PM', status:'preview', awaySP:'Kyle Bradish',  homeSP:'Rafael Devers'      },
-        { away:'NYY', home:'TB',  awayR:null, homeR:null, time:'1:10 PM',  status:'preview', awaySP:'Carlos Rodon',  homeSP:'Aaron Civale'       },
-        { away:'PHI', home:'NYM', awayR:null, homeR:null, time:'1:10 PM',  status:'preview', awaySP:'Aaron Nola',    homeSP:'David Peterson'     },
-        { away:'HOU', home:'ATL', awayR:null, homeR:null, time:'12:20 PM', status:'preview', awaySP:'José Urquidy',  homeSP:'AJ Smith-Shawver'   },
-        { away:'LAD', home:'SF',  awayR:null, homeR:null, time:'3:45 PM',  status:'preview', awaySP:'Gavin Stone',   homeSP:'Logan Webb'         },
-        { away:'ARI', home:'CIN', awayR:null, homeR:null, time:'12:35 PM', status:'preview', awaySP:'Zac Gallen',    homeSP:'Frankie Montas'     },
-        { away:'SD',  home:'PIT', awayR:null, homeR:null, time:'12:35 PM', status:'preview', awaySP:'Michael King',  homeSP:'Mitch Keller'       },
-      ],
-      'Thu Apr 24': [
-        { away:'BOS', home:'NYY', awayR:null, homeR:null, time:'7:05 PM', status:'preview', awaySP:'Brayan Bello',   homeSP:'Luis Gil'           },
-        { away:'MIL', home:'CHC', awayR:null, homeR:null, time:'8:05 PM', status:'preview', awaySP:'Freddy Peralta', homeSP:'Kyle Hendricks'     },
-        { away:'CIN', home:'STL', awayR:null, homeR:null, time:'7:45 PM', status:'preview', awaySP:'Hunter Greene',  homeSP:'Sonny Gray'         },
-        { away:'LAD', home:'SF',  awayR:null, homeR:null, time:'9:45 PM', status:'preview', awaySP:'Tyler Glasnow',  homeSP:'Kyle Harrison'      },
-      ],
-      'Fri Apr 25': [
-        { away:'NYM', home:'PHI', awayR:null, homeR:null, time:'6:40 PM', status:'preview', awaySP:'José Quintana',  homeSP:'Ranger Suárez'     },
-        { away:'BAL', home:'NYY', awayR:null, homeR:null, time:'7:05 PM', status:'preview', awaySP:'Grayson Rodriguez',homeSP:'Gerrit Cole'      },
-        { away:'BOS', home:'TB',  awayR:null, homeR:null, time:'7:10 PM', status:'preview', awaySP:'Garrett Whitlock',homeSP:'Taj Bradley'       },
-        { away:'HOU', home:'KC',  awayR:null, homeR:null, time:'8:10 PM', status:'preview', awaySP:'Hunter Brown',   homeSP:'Seth Lugo'          },
-        { away:'ATL', home:'CIN', awayR:null, homeR:null, time:'6:40 PM', status:'preview', awaySP:'Spencer Strider', homeSP:'Elly De La Cruz'  },
-        { away:'SD',  home:'LAD', awayR:null, homeR:null, time:'10:10 PM',status:'preview', awaySP:'Dylan Cease',    homeSP:'Walker Buehler'     },
-        { away:'DET', home:'SEA', awayR:null, homeR:null, time:'9:40 PM', status:'preview', awaySP:'Tarik Skubal',   homeSP:'Logan Gilbert'      },
-        { away:'PIT', home:'ATH', awayR:null, homeR:null, time:'9:40 PM', status:'preview', awaySP:'Paul Skenes',    homeSP:'Mason Miller'       },
-      ],
-      'Sat Apr 26': [
-        { away:'NYM', home:'PHI', awayR:null, homeR:null, time:'1:05 PM', status:'preview', awaySP:'Kodai Senga',    homeSP:'Zack Wheeler'      },
-        { away:'BAL', home:'NYY', awayR:null, homeR:null, time:'1:05 PM', status:'preview', awaySP:'Kyle Bradish',   homeSP:'Marcus Stroman'    },
-        { away:'BOS', home:'TB',  awayR:null, homeR:null, time:'1:10 PM', status:'preview', awaySP:'Nick Pivetta',   homeSP:'Zach Eflin'        },
-        { away:'HOU', home:'KC',  awayR:null, homeR:null, time:'2:10 PM', status:'preview', awaySP:'Framber Valdez', homeSP:'Brady Singer'      },
-        { away:'ATL', home:'CIN', awayR:null, homeR:null, time:'4:10 PM', status:'preview', awaySP:'Chris Sale',     homeSP:'Nick Lodolo'       },
-        { away:'SD',  home:'LAD', awayR:null, homeR:null, time:'7:15 PM', status:'preview', awaySP:'Michael King',   homeSP:'Tyler Glasnow'     },
-        { away:'DET', home:'SEA', awayR:null, homeR:null, time:'4:10 PM', status:'preview', awaySP:'Casey Mize',     homeSP:'Bryan Woo'         },
-        { away:'PIT', home:'ATH', awayR:null, homeR:null, time:'4:05 PM', status:'preview', awaySP:'Mitch Keller',   homeSP:'JP Sears'          },
-      ],
-      'Sun Apr 27': [
-        { away:'NYM', home:'PHI', awayR:null, homeR:null, time:'1:35 PM', status:'preview', awaySP:'David Peterson',  homeSP:'Aaron Nola'       },
-        { away:'BAL', home:'NYY', awayR:null, homeR:null, time:'1:35 PM', status:'preview', awaySP:'Trevor Rogers',   homeSP:'Carlos Rodon'     },
-        { away:'BOS', home:'TB',  awayR:null, homeR:null, time:'1:10 PM', status:'preview', awaySP:'Josh Winckowski', homeSP:'Aaron Civale'     },
-        { away:'HOU', home:'KC',  awayR:null, homeR:null, time:'2:10 PM', status:'preview', awaySP:'José Urquidy',    homeSP:'Cole Ragans'      },
-        { away:'ATL', home:'CIN', awayR:null, homeR:null, time:'1:40 PM', status:'preview', awaySP:'Max Fried',       homeSP:'Hunter Greene'    },
-        { away:'SD',  home:'LAD', awayR:null, homeR:null, time:'4:10 PM', status:'preview', awaySP:'Joe Musgrove',    homeSP:'Gavin Stone'      },
-        { away:'DET', home:'SEA', awayR:null, homeR:null, time:'4:10 PM', status:'preview', awaySP:'Tarik Skubal',    homeSP:'Logan Gilbert'    },
-        { away:'PIT', home:'ATH', awayR:null, homeR:null, time:'4:05 PM', status:'preview', awaySP:'Paul Skenes',     homeSP:'Mason Miller'     },
-      ],
-    }
-  }
-};
 
 // ── Lookup helpers ────────────────────────────────────────────────────────────
 function playersInGame(roster, awayTeam, homeTeam) {
@@ -385,7 +232,7 @@ function posClass(pos) {
 }
 
 // ── Render ────────────────────────────────────────────────────────────────────
-var currentWeek = 4;
+var currentWeek   = 2;
 var currentDayIdx = 0;
 
 function buildDropdown() {
@@ -440,8 +287,8 @@ function renderWeek() {
   var tabs = document.getElementById('day-tabs');
   tabs.innerHTML = '';
   days.forEach(function(day, i) {
-    var games  = w.days[day];
-    var myCount  = 0, oppCount = 0;
+    var games = w.days[day];
+    var myCount = 0, oppCount = 0;
     games.forEach(function(g) {
       myCount  += playersInGame(MY_PLAYERS,  g.away, g.home).length;
       oppCount += playersInGame(OPP_PLAYERS, g.away, g.home).length;
@@ -453,14 +300,14 @@ function renderWeek() {
     tab.onclick = (function(idx){ return function(){ selectDay(idx); }; })(i);
     tabs.appendChild(tab);
   });
-
   renderDay(days[currentDayIdx], w.days[days[currentDayIdx]]);
 }
 
 function selectDay(idx) {
   currentDayIdx = idx;
-  var tabs = document.querySelectorAll('.day-tab');
-  tabs.forEach(function(t, i) { t.classList.toggle('active', i === idx); });
+  document.querySelectorAll('.day-tab').forEach(function(t, i) {
+    t.classList.toggle('active', i === idx);
+  });
   var w = WEEKS[currentWeek];
   var days = Object.keys(w.days);
   renderDay(days[idx], w.days[days[idx]]);
@@ -473,20 +320,20 @@ function renderDay(dayLabel, games) {
     var m = MATCHUPS[currentWeek];
     grid.innerHTML = '<p class="empty-day" style="padding:40px 0;">'
       + 'Schedule data not yet available for this matchup.<br>'
-      + '<span style="color:#333;font-size:12px;margin-top:6px;display:block;">Week ' + currentWeek + ' · ' + (m ? m.dates : '') + ' · vs ' + (m ? m.opp : '—') + '</span>'
-      + '</p>';
+      + '<span style="color:#333;font-size:12px;margin-top:6px;display:block;">'
+      + 'Week ' + currentWeek + ' · ' + (m ? m.dates : '') + ' · vs ' + (m ? m.opp : '—')
+      + '</span></p>';
     return;
   }
+  var currentOpp = (MATCHUPS[currentWeek] || {}).opp || 'Opponent';
   games.forEach(function(g, gi) {
     var myPlayers  = playersInGame(MY_PLAYERS,  g.away, g.home);
     var oppPlayers = playersInGame(OPP_PLAYERS, g.away, g.home);
     var hasAction  = myPlayers.length > 0 || oppPlayers.length > 0;
 
-    // Card wrapper
     var card = document.createElement('div');
     card.className = 'game-card' + (hasAction ? ' has-action' : ' no-action');
 
-    // Score/time block
     var scoreHTML;
     if (g.status === 'live') {
       scoreHTML = '<div class="score-nums"><span class="final">'+(g.awayR||0)+'</span><span class="vs">·</span><span class="final">'+(g.homeR||0)+'</span></div>'
@@ -506,18 +353,12 @@ function renderDay(dayLabel, games) {
       '<div class="card-teams">',
         '<div class="team-block away">',
           '<div class="team-logo" style="background:'+awayColor+'">'+g.away+'</div>',
-          '<div>',
-            '<div class="team-name">'+g.away+'</div>',
-            '<div class="team-record">Away</div>',
-          '</div>',
+          '<div><div class="team-name">'+g.away+'</div><div class="team-record">Away</div></div>',
         '</div>',
         '<div class="score-block">'+scoreHTML+'</div>',
         '<div class="team-block home">',
           '<div class="team-logo" style="background:'+homeColor+'">'+g.home+'</div>',
-          '<div>',
-            '<div class="team-name">'+g.home+'</div>',
-            '<div class="team-record">Home</div>',
-          '</div>',
+          '<div><div class="team-name">'+g.home+'</div><div class="team-record">Home</div></div>',
         '</div>',
       '</div>',
       '<div class="card-pitchers">',
@@ -526,16 +367,15 @@ function renderDay(dayLabel, games) {
         '<span style="color:#3a4060;text-align:right;">'+(g.homeSP||'TBD')+'</span>',
       '</div>',
       '<hr class="card-div">',
-      buildFantasySection(gi, g, myPlayers, oppPlayers, hasAction),
+      buildFantasySection(gi, g, myPlayers, oppPlayers, hasAction, currentOpp),
     ].join('');
 
     grid.appendChild(card);
   });
 }
 
-function buildFantasySection(gi, g, myPlayers, oppPlayers, hasAction) {
-  var id = 'fb-'+gi;
-  var myCount  = myPlayers.filter(function(p){return !p.il;}).length;
+function buildFantasySection(gi, g, myPlayers, oppPlayers, hasAction, oppName) {
+  var myCount  = myPlayers.filter(function(p){ return !p.il; }).length;
   var oppCount = oppPlayers.length;
   var label = hasAction
     ? (myCount + oppCount) + ' fantasy player' + ((myCount+oppCount)!==1?'s':'') + ' in this game'
@@ -556,6 +396,8 @@ function buildFantasySection(gi, g, myPlayers, oppPlayers, hasAction) {
       }).join('')
     : '<div class="no-players">None</div>';
 
+  var oppShort = (oppName || 'Opp').substring(0, 18);
+
   return [
     '<div class="fantasy-section">',
       '<div class="fantasy-toggle" id="ft-'+gi+'" onclick="toggleFantasy('+gi+')">',
@@ -565,15 +407,15 @@ function buildFantasySection(gi, g, myPlayers, oppPlayers, hasAction) {
           '<span class="chevron">▼</span>',
         '</div>',
       '</div>',
-      '<div class="fantasy-body" id="'+id+'">',
-        '<div class="fantasy-matchup-label">Pitch Slap vs 2010 State Sectional Champ · '+g.away+' @ '+g.home+'</div>',
+      '<div class="fantasy-body" id="fb-'+gi+'">',
+        '<div class="fantasy-matchup-label">'+MY_TEAM_NAME+' vs '+oppName+' · '+g.away+' @ '+g.home+'</div>',
         '<div class="fantasy-teams">',
           '<div class="fantasy-side my-side">',
-            '<div class="fantasy-side-label">🔵 Pitch Slap</div>',
+            '<div class="fantasy-side-label">🔵 '+MY_TEAM_NAME+'</div>',
             myRows,
           '</div>',
           '<div class="fantasy-side opp-side">',
-            '<div class="fantasy-side-label">🟣 2010 State Sect.</div>',
+            '<div class="fantasy-side-label">🟣 '+oppShort+'</div>',
             oppRows,
           '</div>',
         '</div>',
@@ -589,18 +431,15 @@ function toggleFantasy(gi) {
   toggle.classList.toggle('open', open);
 }
 
-
-// ── Auto-open games with fantasy players ────────────────────────────────────
 function autoExpand() {
   var w = WEEKS[currentWeek];
   if (!w) return;
-  var days = Object.keys(w.days);
+  var days  = Object.keys(w.days);
   var games = w.days[days[currentDayIdx]];
   if (!games) return;
   games.forEach(function(g, gi) {
-    var myP  = playersInGame(MY_PLAYERS,  g.away, g.home);
-    var oppP = playersInGame(OPP_PLAYERS, g.away, g.home);
-    if (myP.length > 0 || oppP.length > 0) {
+    if (playersInGame(MY_PLAYERS,  g.away, g.home).length ||
+        playersInGame(OPP_PLAYERS, g.away, g.home).length) {
       var body   = document.getElementById('fb-'+gi);
       var toggle = document.getElementById('ft-'+gi);
       if (body)   body.classList.add('open');

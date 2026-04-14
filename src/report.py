@@ -208,6 +208,108 @@ def _pitcher_pos(pos: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Rank computation helpers (R3-R5)
+# ---------------------------------------------------------------------------
+
+def _pos_group(p: Dict) -> str:
+    """Map a player's position to their ranking group."""
+    pos = str(p.get('position', '')).upper()
+    is_pitcher = str(p.get('is_pitcher', '')).lower() in ('true', '1')
+    if is_pitcher:
+        return 'SP' if pos == 'SP' else 'RP'
+    if pos == 'C':                       return 'C'
+    if pos in ('1B', '3B'):              return '1B3B'
+    if pos in ('2B', 'SS'):              return '2BSS'
+    if pos in ('OF', 'LF', 'CF', 'RF'): return 'OF'
+    if pos == 'DH':                      return 'DH'
+    return 'OTHER'
+
+
+def _compute_rank_maps(research: List[Dict]) -> Dict[str, Dict]:
+    """
+    Compute position-group ranks (for 4 z-score windows) and total-pool ranks.
+    Returns {name_lower: {pos_7: N, pos_14: N, pos_30: N, pos_ssn: N, tot: N}}
+    """
+    def _z(p, field):
+        try:
+            v = p.get(field)
+            return float(v) if v not in (None, '', 'None', 'nan') else -99.0
+        except (TypeError, ValueError):
+            return -99.0
+
+    windows = [
+        ('pos_7',   'z_7day'),
+        ('pos_14',  'z_14day'),
+        ('pos_30',  'z_30day'),
+        ('pos_ssn', 'z_season'),
+    ]
+
+    rank_map: Dict[str, Dict] = {}
+
+    # Position-group ranks per window
+    for rank_key, z_field in windows:
+        groups: Dict[str, List] = {}
+        for p in research:
+            g = _pos_group(p)
+            groups.setdefault(g, []).append(p)
+        for g, players in groups.items():
+            for rank, p in enumerate(sorted(players, key=lambda x: _z(x, z_field), reverse=True), 1):
+                key = p.get('name', '').lower().strip()
+                if key:
+                    rank_map.setdefault(key, {})[rank_key] = rank
+
+    # Total-pool ranks (by z_season)
+    batters   = sorted([p for p in research
+                        if str(p.get('is_pitcher', '')).lower() not in ('true', '1')],
+                       key=lambda x: _z(x, 'z_season'), reverse=True)
+    starters  = sorted([p for p in research
+                        if str(p.get('is_pitcher', '')).lower() in ('true', '1')
+                        and str(p.get('position', '')).upper() == 'SP'],
+                       key=lambda x: _z(x, 'z_season'), reverse=True)
+    relievers = sorted([p for p in research
+                        if str(p.get('is_pitcher', '')).lower() in ('true', '1')
+                        and str(p.get('position', '')).upper() != 'SP'],
+                       key=lambda x: _z(x, 'z_season'), reverse=True)
+
+    for pool in (batters, starters, relievers):
+        for rank, p in enumerate(pool, 1):
+            key = p.get('name', '').lower().strip()
+            if key:
+                rank_map.setdefault(key, {})['tot'] = rank
+
+    return rank_map
+
+
+def _rank_fmt(rank: int, bad_threshold: int = 30) -> str:
+    """Format a rank number; show 'BAD' if above threshold."""
+    if rank is None or rank >= 999:
+        return '—'
+    if rank > bad_threshold:
+        return 'BAD'
+    return str(rank)
+
+
+def _rank_cls(rank: int, bad_threshold: int = 30) -> str:
+    """CSS class for a rank number (lower = better)."""
+    if rank is None or rank >= 999:
+        return 'z-na'
+    if bad_threshold == 150:
+        # Total pool (bigger pool)
+        if rank <= 10:  return 'z-great'
+        if rank <= 30:  return 'z-good'
+        if rank <= 60:  return 'z-ok'
+        if rank <= 100: return 'z-bad'
+        return 'z-terrible'
+    else:
+        # Position group
+        if rank <= 3:   return 'z-great'
+        if rank <= 8:   return 'z-good'
+        if rank <= 15:  return 'z-ok'
+        if rank <= 30:  return 'z-bad'
+        return 'z-terrible'
+
+
+# ---------------------------------------------------------------------------
 # Build lineup lookup from lineup CSVs
 # ---------------------------------------------------------------------------
 
@@ -256,6 +358,11 @@ def _build_matchup(actuals: List[Dict], breakdown: List[Dict]) -> Dict:
     losses = sum(1 for r in actuals if r.get("actual_leader") == "OPP")
     ties   = len(actuals) - wins - losses
 
+    # Week number: season started 2026-03-31 (Week 1 = Mar 31–Apr 5)
+    today = date.today()
+    season_start = date(2026, 3, 31)
+    week_num = max(1, (today - season_start).days // 7 + 1)
+
     # Build a lookup of breakdown data keyed by category
     breakdown_map = {r.get('category', ''): r for r in breakdown}
 
@@ -270,48 +377,29 @@ def _build_matchup(actuals: List[Dict], breakdown: List[Dict]) -> Dict:
 
         bd = breakdown_map.get(cat, {})
         proj_winner = bd.get('projected_winner', '—')
+        # M6: standardize projection labels — never show raw team names
         if proj_winner == 'ME':
-            proj_display = MY_TEAM
+            proj_display = 'Pitch Slap'
             proj_cls = 'win'
-        elif proj_winner in ('TOSS-UP', 'UNKNOWN', ''):
-            proj_display = 'Toss-Up'
+        elif proj_winner in ('TOSS-UP', 'UNKNOWN', '', '—'):
+            proj_display = 'Tied'
             proj_cls = 'tie'
         else:
-            proj_display = proj_winner
+            proj_display = 'Opponent'
             proj_cls = 'loss'
 
+        # M6: standardize live labels
         if leader == 'ME':
-            live_display = MY_TEAM
+            live_display = 'Pitch Slap'
             live_cls = 'win'
         elif leader == 'OPP':
-            live_display = opp_name
+            live_display = 'Opponent'
             live_cls = 'loss'
         else:
             live_display = 'Tied'
             live_cls = 'tie'
 
         diverges = str(r.get("diverges_from_projection", "")).lower() in ("true", "1")
-
-        # Trend arrow from Tier 3 snapshot delta
-        trend = str(r.get("my_trend", "")).upper()
-        if trend == "UP":
-            trend_arrow, trend_cls = "↑", "trend-UP"
-        elif trend == "DOWN":
-            trend_arrow, trend_cls = "↓", "trend-DOWN"
-        elif trend == "FLAT":
-            trend_arrow, trend_cls = "→", "trend-FLAT"
-        else:
-            trend_arrow, trend_cls = "", "trend-FLAT"   # NEW or missing
-
-        my_delta = r.get("my_delta")
-        delta_str = ""
-        if my_delta not in (None, "", "None", "nan"):
-            try:
-                d = float(my_delta)
-                if d != 0:
-                    delta_str = f"+{d}" if d > 0 else str(d)
-            except (TypeError, ValueError):
-                pass
 
         rows.append({
             "category":     cat,
@@ -320,12 +408,9 @@ def _build_matchup(actuals: List[Dict], breakdown: List[Dict]) -> Dict:
             "proj_display": proj_display,
             "live_display": live_display,
             "diverges":     diverges,
-            "trend_arrow":  trend_arrow,
-            "delta_str":    delta_str,
             "_row_cls":     "win" if leader == "ME" else ("loss" if leader == "OPP" else "tie"),
             "_proj_cls":    proj_cls,
             "_live_cls":    live_cls,
-            "_trend_cls":   trend_cls,
             "_separator":   separator,
         })
 
@@ -333,6 +418,7 @@ def _build_matchup(actuals: List[Dict], breakdown: List[Dict]) -> Dict:
         "available": True,
         "my_team":   MY_TEAM,
         "opp_name":  opp_name,
+        "week_num":  week_num,
         "wins":      wins,
         "losses":    losses,
         "ties":      ties,
@@ -345,6 +431,9 @@ def _build_my_roster(research: List[Dict], lineup_lookup: Dict) -> Dict:
     Current-week roster view. Uses research_players for real position/stats,
     lineup lookup for active/bench slot. Sorted by ESPN slot order.
     """
+    # Compute ranks across ALL tracked players (R3-R5)
+    rank_maps = _compute_rank_maps(research)
+
     my_players_raw = [r for r in research if r.get("fantasy_team") == MY_TEAM]
     # Deduplicate by name: two MLB players can share a name (e.g., two "Max Muncy"s).
     # Keep the one that matches the lineup_lookup (has slot data), or highest games_played.
@@ -413,6 +502,14 @@ def _build_my_roster(research: List[Dict], lineup_lookup: Dict) -> Dict:
         else:
             action = ''
 
+        # Ranks (R3-R5)
+        rk = rank_maps.get(name.lower().strip(), {})
+        r7   = rk.get('pos_7',   999)
+        r14  = rk.get('pos_14',  999)
+        r30  = rk.get('pos_30',  999)
+        rssn = rk.get('pos_ssn', 999)
+        rtot = rk.get('tot',     999)
+
         return {
             'name':        name,
             'position':    pos,
@@ -448,17 +545,17 @@ def _build_my_roster(research: List[Dict], lineup_lookup: Dict) -> Dict:
             'saves':           _fmt(player.get('saves'), 0),
             'svhd':            _fmt((player.get('saves') or 0) + (player.get('holds') or 0), 0),
             'holds':           _fmt(player.get('holds'), 0),
-            # Z-scores all windows
-            'z_season': _fmt(player.get('z_season')),
-            'z_7day':   _fmt(player.get('z_7day')),
-            'z_14day':  _fmt(player.get('z_14day')),
-            'z_30day':  _fmt(player.get('z_30day')),
-            'trend':    player.get('trend_direction', ''),
-            # CSS classes
-            '_cls_z_season': _z_class(player.get('z_season')),
-            '_cls_z_7day':   _z_class(player.get('z_7day')),
-            '_cls_z_14day':  _z_class(player.get('z_14day')),
-            '_cls_z_30day':  _z_class(player.get('z_30day')),
+            # Rank columns (replace z-score display — R3/R4/R5)
+            'rank_7':    _rank_fmt(r7),
+            'rank_14':   _rank_fmt(r14),
+            'rank_30':   _rank_fmt(r30),
+            'rank_ssn':  _rank_fmt(rssn),
+            'rank_tot':  _rank_fmt(rtot, bad_threshold=150),
+            '_cls_rank_7':   _rank_cls(r7),
+            '_cls_rank_14':  _rank_cls(r14),
+            '_cls_rank_30':  _rank_cls(r30),
+            '_cls_rank_ssn': _rank_cls(rssn),
+            '_cls_rank_tot': _rank_cls(rtot, bad_threshold=150),
             '_slot_sort':    _slot_sort(slot),
             '_pos_sort':     _pos_sort(pos),
         }
@@ -471,11 +568,13 @@ def _build_my_roster(research: List[Dict], lineup_lookup: Dict) -> Dict:
     def _pitcher_sort(p):
         inactive  = 0 if p['is_active'] else 1
         pos_order = 0 if p['position'] == 'SP' else 1  # SP first, RP second
+        # Use season rank (lower = better) — z_season no longer in player dict
+        rk = p.get('rank_ssn', '999')
         try:
-            z = -float(p['z_season'])
+            r = int(rk) if rk not in ('BAD', '—', '') else 999
         except (TypeError, ValueError):
-            z = 99
-        return (inactive, pos_order, z)
+            r = 999
+        return (inactive, pos_order, r)
 
     pitchers = sorted([p for p in all_players if p['is_pitcher']], key=_pitcher_sort)
 
@@ -906,6 +1005,68 @@ def _build_matchup_calendar(research: List[Dict], matchup: Dict) -> Dict:
 
 
 # ---------------------------------------------------------------------------
+# Current-week stats (R1)
+# ---------------------------------------------------------------------------
+
+def _fetch_current_week_stats() -> Dict[str, Dict]:
+    """
+    Fetch MLB stats from Monday of the current matchup week to today.
+    Returns {name_lower: {formatted stat strings}} for JS toggle.
+    Returns {} silently on any error (toggle simply shows dashes).
+    """
+    try:
+        try:
+            from src.fetchers import fetch_mlb_stats_range
+        except ImportError:
+            from fetchers import fetch_mlb_stats_range  # type: ignore
+
+        today  = date.today()
+        monday = today - timedelta(days=today.weekday())
+        if monday >= today:
+            return {}   # Monday with no games yet
+
+        start = monday.strftime('%Y-%m-%d')
+        end   = today.strftime('%Y-%m-%d')
+        print(f"  Fetching current-week stats ({start} → {end})...")
+        raw = fetch_mlb_stats_range(start, end, label='week')
+
+        result: Dict[str, Dict] = {}
+        for stats in raw.values():
+            name = stats.get('name', '')
+            if not name:
+                continue
+            key = name.lower().strip()
+            is_pitcher = stats.get('is_pitcher', False)
+            saves = stats.get('saves', 0) or 0
+            holds = stats.get('holds', 0) or 0
+            result[key] = {
+                # Hitter stats (pre-formatted strings)
+                'g':    str(int(stats.get('games_played', 0) or 0)),
+                'avg':  _fmt_avg(stats.get('avg')),
+                'obp':  _fmt_stat(stats.get('obp'), 'OBP'),
+                'r':    str(int(stats.get('runs', 0) or 0)),
+                'hr':   str(int(stats.get('home_runs', 0) or 0)),
+                'rbi':  str(int(stats.get('rbis', 0) or 0)),
+                'sb':   str(int(stats.get('stolen_bases', 0) or 0)),
+                # Pitcher stats (pre-formatted strings)
+                'gp':   str(int(stats.get('games_played', 0) or 0)),
+                'ip':   _fmt(stats.get('innings_pitched'), 1),
+                'h':    str(int(stats.get('hits', 0) or 0)),
+                'bb':   str(int(stats.get('walks', 0) or 0)),
+                'era':  _fmt_stat(stats.get('era'), 'ERA'),
+                'whip': _fmt_stat(stats.get('whip'), 'WHIP'),
+                'k':    str(int(stats.get('strikeouts_pitch', 0) or 0)),
+                'qs':   str(int(stats.get('quality_starts', 0) or 0)),
+                'svhd': str(int(saves + holds)),
+                'is_pitcher': is_pitcher,
+            }
+        return result
+    except Exception as e:
+        print(f"  Current-week stats skipped: {e}")
+        return {}
+
+
+# ---------------------------------------------------------------------------
 # Main entry point
 # ---------------------------------------------------------------------------
 
@@ -924,18 +1085,27 @@ def generate_report() -> str:
     targets    = _load("trade_targets.csv")
     chips      = _load("trade_chips.csv")
 
-    lineup_lookup = _build_lineup_lookup()
+    lineup_lookup   = _build_lineup_lookup()
+    week_stats      = _fetch_current_week_stats()
+    week_stats_json = json.dumps(week_stats)
+
+    # Compute week date range label for the toggle button
+    today  = date.today()
+    monday = today - timedelta(days=today.weekday())
+    week_range_label = f"{monday.strftime('%b')} {monday.day}–{today.day}"
 
     context = {
-        "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
-        "my_team":      MY_TEAM,
-        "matchup":      _build_matchup(actuals, breakdown),
-        "my_roster":    _build_my_roster(research, lineup_lookup),
-        "startsit":     _build_startsit(research, lineup_lookup),
-        "waiver":       _build_waiver(waiver_top, two_start, research),
-        "trade":        _build_trade(targets, chips),
-        "rankings":     _build_rankings(research),
-        "activity":     _build_activity(),
+        "generated_at":     datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "my_team":          MY_TEAM,
+        "matchup":          _build_matchup(actuals, breakdown),
+        "my_roster":        _build_my_roster(research, lineup_lookup),
+        "startsit":         _build_startsit(research, lineup_lookup),
+        "waiver":           _build_waiver(waiver_top, two_start, research),
+        "trade":            _build_trade(targets, chips),
+        "rankings":         _build_rankings(research),
+        "activity":         _build_activity(),
+        "week_stats_json":  week_stats_json,
+        "week_range_label": week_range_label,
     }
 
     env = Environment(

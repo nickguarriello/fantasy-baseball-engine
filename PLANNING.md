@@ -285,10 +285,9 @@ All 9 questions answered, all code shipped, all 19 template checks passing.
 - IL players (Mookie/Soto) show correctly on My Roster
 - Max Muncy only appears once
 
-### Open / Backlog
+### Open / Backlog (Session 7)
 | Item | Priority | Notes |
 |------|----------|-------|
-| Matchup calendar dashboard (separate HTML) | Medium | Prototype built this session — see docs/matchup-calendar.html |
 | Past matchup results / history section | Medium | User: backlog for now |
 | ESPN OPP/STATUS for two-start detection | Low | User suggested as alt to MLB probables API |
 | Global CSS consistent column widths | Low | CLAUDE.md backlog |
@@ -296,6 +295,66 @@ All 9 questions answered, all code shipped, all 19 template checks passing.
 | Testing strategy + test suite | Low | CLAUDE.md backlog |
 | MLB player ID cross-reference | Low | CLAUDE.md backlog |
 | Phase 5: Historical learning / trend model | Blocked | Need 2-3 weeks of data |
+
+---
+
+## Session 8 — 2026-04-14
+
+### Completed this session
+
+**Matchup Section (M1–M7):**
+- M1: Header → "Week N vs Opponent — 5W 2T 3L" (week_num computed from season start date)
+- M2: Removed TREND column entirely
+- M3: Column order → Pitch Slap | STAT | OPPONENT | PROJECTED | LIVE
+- M4: Fixed CSS conditional formatting for new column order (col 1 = Pitch Slap, col 3 = Opponent)
+- M5: Column header is "OPPONENT" (not raw team name)
+- M6: PROJECTED and LIVE display "Pitch Slap" / "Opponent" / "Tied" — no raw team names
+- M7: Note updated to "pre-week z-score advantage"; trend/delta references removed
+
+**My Roster Section (R3–R6):**
+- R3/R4: Z-score columns replaced with position-group rank numbers (R-7d, R-14d, R-30d, R-Ssn)
+  - Groups: C alone, 1B+3B together, 2B+SS together, OF alone, DH alone, SP alone, RP alone
+  - "BAD" if rank > 30; CSS coloring from z-great (rank ≤3) to z-terrible (rank >30)
+- R5: TOT column added — rank vs all batters / all starters / all relievers; "BAD" if >150
+- R6: REC column removed from both hitter and pitcher tables
+- R1: "This Week" toggle button — fetches matchup week stats (Monday→today) via `fetch_mlb_stats_range`
+  - `_fetch_current_week_stats()` added to report.py; called in `generate_report()`
+  - Injected as `WEEK_STATS` JS variable; toggle swaps stat cells by `data-k` attribute
+  - Season values preserved in `data-s` attributes; restored on toggle back
+- R2: Sub-window context covered by R-7d/R-14d/R-30d rank columns (raw 7D/14D/30D stat totals
+  deferred — requires adding period stats to research_players.csv pipeline)
+
+### New helpers in report.py
+- `_pos_group(p)` — maps player to ranking group
+- `_compute_rank_maps(research)` — ranks all 841 players across 4 windows + total pool
+- `_rank_fmt(rank, bad_threshold)` — formats rank as int or "BAD"
+- `_rank_cls(rank, bad_threshold)` — CSS class for rank cell
+- `_fetch_current_week_stats()` — fetches matchup-week MLB stats, returns pre-formatted dict
+
+### Open / Backlog
+| Item | Priority | Notes |
+|------|----------|-------|
+| TOT rank BAD threshold — raise from 30 to 50? | Medium | Hoerner ranked 31 (z=0.75) but is a solid player; threshold may be too tight early season |
+| R2 raw stat sub-filter (7D/14D/30D stats in season view) | Medium | Requires adding period stats to research_players.csv pipeline |
+| Matchup projection → actual 30D category totals | Medium | Currently z-score based; user confirmed wants 30D totals (Q3) |
+| Past matchup results / history section | Medium | Backlog |
+| ESPN OPP/STATUS for two-start detection | Low | Backlog |
+| Global CSS consistent column widths | Low | Backlog |
+| Trade negotiation helper (multi-player) | Low | Backlog |
+| Testing strategy + test suite | Low | Backlog |
+| MLB player ID cross-reference | Low | Backlog |
+| Phase 5: Historical learning / trend model | Blocked | Need 2-3 weeks of data |
+
+### Rank System — Implementation Notes (for next session)
+- **Rank groups**: `_pos_group()` in report.py uses `position` field from research_players.csv
+  - C / 1B+3B / 2B+SS / OF / DH / SP / RP
+- **BAD thresholds**: pos-group rank > 30 = BAD; TOT rank > 150 = BAD
+- **TOT pool**: batters vs all non-pitchers; SP vs all SP; RP vs all non-SP pitchers
+- **Window ranks** (R-7d/R-14d/R-30d): computed from composite z_7day/z_14day/z_30day, not per-cat
+- **This Week toggle**: `_fetch_current_week_stats()` calls `fetch_mlb_stats_range(monday, today)` at report time
+  - If it's Monday or the API fails, toggle shows `—` for all cells (graceful fallback)
+  - Stat keys: hitters = g/avg/obp/r/hr/rbi/sb · pitchers = gp/ip/h/bb/era/whip/k/qs/svhd
+  - Player name matched via `data-player="{{ p.name|lower }}"` on table rows
 
 ### Matchup Calendar — SHIPPED Session 7 ✅
 Fully wired to live data. Generated every pipeline run at docs/matchup-calendar.html.

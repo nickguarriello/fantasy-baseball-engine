@@ -210,6 +210,16 @@ Free agents are **derived**: MLB stats pool minus all ESPN-rostered players (nam
 | Pitcher G column + SV+HLD → SVHD in My Roster table | ✅ Done |
 | Sortable columns + Reset button on My Roster hitter/pitcher tables | ✅ Done |
 | Matchup Calendar page (matchup-calendar.html, MLB schedule + fantasy overlay) | ✅ Done |
+| Matchup header → "Week N vs Opponent — W·T·L" | ✅ Done |
+| Matchup columns → Pitch Slap \| STAT \| OPPONENT \| PROJECTED \| LIVE (TREND removed) | ✅ Done |
+| Matchup PROJECTED/LIVE labels → "Pitch Slap" / "Opponent" / "Tied" | ✅ Done |
+| My Roster rank columns (R-7d/R-14d/R-30d/R-Ssn/TOT) replace z-scores | ✅ Done |
+| My Roster position-group ranks: C/1B3B/2BSS/OF/DH/SP/RP; BAD if >30 | ✅ Done |
+| My Roster TOT rank vs all batters/SP/RP; BAD if >150 | ✅ Done |
+| My Roster REC column removed | ✅ Done |
+| My Roster "This Week" toggle (fetches Monday→today MLB stats via `_fetch_current_week_stats`) | ✅ Done |
+| R2 raw 7D/14D/30D stat sub-filter (stats change per window, ranks fixed) | 📦 Backlog — needs period stats in research_players.csv |
+| Matchup projection using actual 30D category totals (currently z-score based) | 📦 Backlog |
 | Trade negotiation helper (multi-player, surplus vs needs) | 📦 Backlog |
 | Past matchup results / history section | 📦 Backlog |
 | Testing strategy + test suite | 📦 Backlog |
@@ -267,9 +277,9 @@ pending open questions — the slate is clean for new feature work.
 
 ## Last Run Stats (auto-updated by pre-commit hook)
 
-- **Updated:** 2026-04-14 07:00:47
-- **Last data run:** 2026-04-14 11:00:38
+- **Updated:** 2026-04-14 15:21:29
+- **Last data run:** 2026-04-14 18:55:34
 - **Players in DB:** 879
-- **Z-score records:** 44596
+- **Z-score records:** 47233
 - **Roster entries:** 250
 - **League teams:** 8

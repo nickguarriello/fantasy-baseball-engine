@@ -70,13 +70,14 @@
 
   /* ── Matchup table ── */
   .matchup-tbl th, .matchup-tbl td { text-align: center; }
-  .matchup-tbl th:first-child, .matchup-tbl td:first-child { text-align: left; min-width: 50px; }
-  .matchup-tbl th:nth-child(2), .matchup-tbl td:nth-child(2),
+  .matchup-tbl th:first-child, .matchup-tbl td:first-child { text-align: right; min-width: 60px; }
+  .matchup-tbl th:nth-child(2), .matchup-tbl td:nth-child(2) { text-align: left; min-width: 50px; color: #666; font-size: 11px; text-transform: uppercase; }
   .matchup-tbl th:nth-child(3), .matchup-tbl td:nth-child(3) { min-width: 60px; }
   .win  td { background: #152515; }
   .loss td { background: #251515; }
   .tie  td { background: #1e1e1e; }
-  .win  td:nth-child(2) { color: #3fa63f; font-weight: 700; }
+  /* M4: col 1 = Pitch Slap score, col 3 = Opponent score */
+  .win  td:nth-child(1) { color: #3fa63f; font-weight: 700; }
   .loss td:nth-child(3) { color: #e74c3c; font-weight: 700; }
   .proj-winner-win  { color: #3fa63f; font-weight: 600; }
   .proj-winner-loss { color: #e74c3c; }
@@ -202,78 +203,71 @@
   <a href="#rankings">Rankings</a>
   <a href="#activity">Activity</a>
   <a href="matchup-calendar.html">📅 Schedule</a>
-  <span class="generated">Updated 2026-04-14 07:00</span>
+  <span class="generated">Updated 2026-04-14 14:55</span>
 </nav>
 
 
 <!-- ══════════════════════════════════════════════ MATCHUP ══════════════ -->
 <section id="matchup">
-  <h2>⚔️ This Week's Matchup</h2>
   
-    <div class="record">
-      <span class="wins">0W</span>
-      <span class="sep">·</span>
-      <span class="ties">10T</span>
-      <span class="sep">·</span>
-      <span class="losses">0L</span>
-      <span class="opp">vs 2010 State Sectional Champ</span>
-    </div>
-    <p class="section-note">PROJECTED = projection at week start · LIVE = current leader · ↑↓ = gap trend vs last run · ⚡ = diverged</p>
+    <h2>⚔️ Week 3 vs 2010 State Sectional Champ —
+      <span class="wins">5W</span>
+      <span style="color:#444;font-weight:300;font-size:16px;">·</span>
+      <span class="ties">2T</span>
+      <span style="color:#444;font-weight:300;font-size:16px;">·</span>
+      <span class="losses">3L</span>
+    </h2>
+    <p class="section-note">PROJECTED = pre-week z-score advantage · LIVE = current category leader · ⚡ = projection diverged from live</p>
     <div class="tbl-wrap">
       <table class="matchup-tbl">
         <thead>
           <tr>
+            <th style="text-align:right;">PITCH SLAP</th>
             <th class="left">STAT</th>
-            <th>Pitch Slap</th>
-            <th>Trend</th>
-            <th>2010 State Sectional Champ</th>
+            <th>OPPONENT</th>
             <th class="left">PROJECTED</th>
             <th class="left">LIVE</th>
           </tr>
         </thead>
         <tbody>
           
-          <tr class="tie">
+          <tr class="win">
+            <td>11</td>
             <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">R</td>
-            <td>0</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>0</td>
+            <td>4</td>
             <td class="left proj-winner-win">Pitch Slap</td>
             <td class="left">
-              Tied
+              Pitch Slap
               
             </td>
           </tr>
           
-          <tr class="tie">
+          <tr class="win">
+            <td>2</td>
             <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">HR</td>
             <td>0</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>0</td>
-            <td class="left proj-winner-tie">Toss-Up</td>
+            <td class="left proj-winner-tie">Tied</td>
             <td class="left">
-              Tied
+              Pitch Slap
               
             </td>
           </tr>
           
-          <tr class="tie">
+          <tr class="win">
+            <td>9</td>
             <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">RBI</td>
-            <td>0</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>0</td>
-            <td class="left proj-winner-tie">Toss-Up</td>
+            <td>4</td>
+            <td class="left proj-winner-tie">Tied</td>
             <td class="left">
-              Tied
+              Pitch Slap
               
             </td>
           </tr>
           
           <tr class="tie">
+            <td>1</td>
             <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">SB</td>
-            <td>0</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>0</td>
+            <td>1</td>
             <td class="left proj-winner-win">Pitch Slap</td>
             <td class="left">
               Tied
@@ -281,70 +275,64 @@
             </td>
           </tr>
           
-          <tr class="tie">
+          <tr class="loss">
+            <td>.327</td>
             <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">OBP</td>
-            <td>.000</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>.000</td>
+            <td>.393</td>
             <td class="left proj-winner-win">Pitch Slap</td>
             <td class="left">
-              Tied
-              
+              Opponent
+              <span class="diverge-badge">⚡</span>
             </td>
           </tr>
           
-          <tr class="tie cat-group-start">
+          <tr class="win cat-group-start">
+            <td>7</td>
             <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">K</td>
-            <td>0</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>0</td>
-            <td class="left proj-winner-loss">2010 State Sectional Champ</td>
+            <td>4</td>
+            <td class="left proj-winner-loss">Opponent</td>
             <td class="left">
-              Tied
-              
+              Pitch Slap
+              <span class="diverge-badge">⚡</span>
             </td>
           </tr>
           
-          <tr class="tie">
+          <tr class="win">
+            <td>1</td>
             <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">QS</td>
             <td>0</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>0</td>
-            <td class="left proj-winner-tie">Toss-Up</td>
+            <td class="left proj-winner-tie">Tied</td>
             <td class="left">
-              Tied
+              Pitch Slap
               
             </td>
           </tr>
           
-          <tr class="tie">
+          <tr class="loss">
+            <td>3.86</td>
             <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">ERA</td>
-            <td>—</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title=""></td>
-            <td>—</td>
-            <td class="left proj-winner-tie">Toss-Up</td>
+            <td>3.60</td>
+            <td class="left proj-winner-loss">Opponent</td>
             <td class="left">
-              Tied
+              Opponent
               
             </td>
           </tr>
           
-          <tr class="tie">
+          <tr class="loss">
+            <td>1.43</td>
             <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">WHIP</td>
-            <td>—</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title=""></td>
-            <td>—</td>
-            <td class="left proj-winner-loss">2010 State Sectional Champ</td>
+            <td>1.40</td>
+            <td class="left proj-winner-loss">Opponent</td>
             <td class="left">
-              Tied
+              Opponent
               
             </td>
           </tr>
           
           <tr class="tie">
-            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">SVHD</td>
             <td>0</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
+            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">SVHD</td>
             <td>0</td>
             <td class="left proj-winner-win">Pitch Slap</td>
             <td class="left">
@@ -364,7 +352,16 @@
 <!-- ══════════════════════════════════════════════ MY ROSTER ════════════ -->
 <section id="roster">
   <h2>🔵 My Roster — Pitch Slap</h2>
-  <p class="section-note">Sorted by ESPN lineup slot · Stats season-to-date · Badge = current slot · Left bar = rec · ⬆⬇ = lineup action needed</p>
+  <p class="section-note">Sorted by ESPN lineup slot · Badge = current slot · R-Ssn/TOT = position-group rank / overall rank (BAD = outside top 30/150) · ⬆⬇ = lineup action needed</p>
+
+  <!-- Stat view toggle (R1) -->
+  <div class="filter-bar" style="margin-bottom:10px;">
+    <button class="filter-btn active" id="btn-season" onclick="rosterToggle('season')">Season</button>
+    <button class="filter-btn" id="btn-week" onclick="rosterToggle('week')">This Week (Apr 13–14)</button>
+  </div>
+  <div id="roster-view-note" class="section-note" style="display:none;color:#f39c12;">
+    Showing stats from Apr 13–14 only · ranks still reflect full season
+  </div>
 
   <!-- Hitters -->
   <h3>Hitters</h3>
@@ -380,12 +377,12 @@
           <th class="left">Tm</th>
           <th class="left">Pos</th>
           <th>G</th><th>AVG</th><th>OBP</th><th>R</th><th>HR</th><th>RBI</th><th>SB</th>
-          <th>Z-7d</th><th>Z-14d</th><th>Z-30d</th><th>Z-Ssn</th><th>Rec</th>
+          <th title="7-day rank in position group">R-7d</th><th title="14-day rank">R-14d</th><th title="30-day rank">R-30d</th><th title="Season rank in position group">R-Ssn</th><th title="Overall rank vs all batters">TOT</th>
         </tr>
       </thead>
       <tbody>
         
-        <tr class="consider" data-row-idx="0">
+        <tr class="consider" data-row-idx="0" data-player="will smith">
           <td class="left">
             Will Smith
             <span class="badge badge-active">C</span>
@@ -394,21 +391,21 @@
           </td>
           <td class="left" style="color:#666;">LAD</td>
           <td class="left">C</td>
-          <td>15</td>
-          <td>.298</td>
-          <td>.400</td>
-          <td>8</td>
-          <td>2</td>
-          <td>8</td>
-          <td>0</td>
-          <td class="z-bad">-0.08</td>
-          <td class="z-bad">-0.11</td>
-          <td class="z-good">0.57</td>
-          <td class="z-good">0.57</td>
-          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+          <td data-s="15" data-k="g">15</td>
+          <td data-s=".298"          data-k="avg">.298</td>
+          <td data-s=".400"          data-k="obp">.400</td>
+          <td data-s="8"         data-k="r">8</td>
+          <td data-s="2"    data-k="hr">2</td>
+          <td data-s="8"         data-k="rbi">8</td>
+          <td data-s="0" data-k="sb">0</td>
+          <td class="z-ok">9</td>
+          <td class="z-ok">14</td>
+          <td class="z-ok">9</td>
+          <td class="z-ok">9</td>
+          <td class="z-ok">48</td>
         </tr>
         
-        <tr class="borderline" data-row-idx="1">
+        <tr class="borderline" data-row-idx="1" data-player="carter jensen">
           <td class="left">
             Carter Jensen
             <span class="badge badge-active">C</span>
@@ -417,21 +414,21 @@
           </td>
           <td class="left" style="color:#666;">KC</td>
           <td class="left">C, DH</td>
-          <td>15</td>
-          <td>.238</td>
-          <td>.283</td>
-          <td>6</td>
-          <td>4</td>
-          <td>8</td>
-          <td>0</td>
-          <td class="z-ok">0.30</td>
-          <td class="z-good">0.61</td>
-          <td class="z-good">0.56</td>
-          <td class="z-bad">-0.22</td>
-          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
+          <td data-s="15" data-k="g">15</td>
+          <td data-s=".238"          data-k="avg">.238</td>
+          <td data-s=".283"          data-k="obp">.283</td>
+          <td data-s="6"         data-k="r">6</td>
+          <td data-s="4"    data-k="hr">4</td>
+          <td data-s="8"         data-k="rbi">8</td>
+          <td data-s="0" data-k="sb">0</td>
+          <td class="z-good">5</td>
+          <td class="z-good">4</td>
+          <td class="z-good">6</td>
+          <td class="z-ok">10</td>
+          <td class="z-terrible">BAD</td>
         </tr>
         
-        <tr class="consider" data-row-idx="2">
+        <tr class="borderline" data-row-idx="2" data-player="nick kurtz">
           <td class="left">
             Nick Kurtz
             <span class="badge badge-active">1B</span>
@@ -440,21 +437,21 @@
           </td>
           <td class="left" style="color:#666;">OAK</td>
           <td class="left">1B</td>
-          <td>15</td>
-          <td>.192</td>
-          <td>.373</td>
-          <td>8</td>
-          <td>1</td>
-          <td>3</td>
-          <td>2</td>
-          <td class="z-terrible">-0.53</td>
-          <td class="z-bad">-0.33</td>
-          <td class="z-ok">0.08</td>
-          <td class="z-bad">-0.06</td>
-          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+          <td data-s="15" data-k="g">15</td>
+          <td data-s=".192"          data-k="avg">.192</td>
+          <td data-s=".373"          data-k="obp">.373</td>
+          <td data-s="8"         data-k="r">8</td>
+          <td data-s="1"    data-k="hr">1</td>
+          <td data-s="3"         data-k="rbi">3</td>
+          <td data-s="2" data-k="sb">2</td>
+          <td class="z-bad">30</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-bad">23</td>
+          <td class="z-bad">28</td>
+          <td class="z-terrible">130</td>
         </tr>
         
-        <tr class="consider" data-row-idx="3">
+        <tr class="consider" data-row-idx="3" data-player="max muncy">
           <td class="left">
             Max Muncy
             <span class="badge badge-active">3B</span>
@@ -463,21 +460,21 @@
           </td>
           <td class="left" style="color:#666;">LAD</td>
           <td class="left">3B</td>
-          <td>15</td>
-          <td>.226</td>
-          <td>.317</td>
-          <td>11</td>
-          <td>4</td>
-          <td>4</td>
-          <td>0</td>
-          <td class="z-ok">0.45</td>
-          <td class="z-good">0.77</td>
-          <td class="z-good">0.62</td>
-          <td class="z-good">0.70</td>
-          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+          <td data-s="15" data-k="g">15</td>
+          <td data-s=".226"          data-k="avg">.226</td>
+          <td data-s=".317"          data-k="obp">.317</td>
+          <td data-s="11"         data-k="r">11</td>
+          <td data-s="4"    data-k="hr">4</td>
+          <td data-s="4"         data-k="rbi">4</td>
+          <td data-s="0" data-k="sb">0</td>
+          <td class="z-good">7</td>
+          <td class="z-good">6</td>
+          <td class="z-ok">10</td>
+          <td class="z-ok">13</td>
+          <td class="z-ok">58</td>
         </tr>
         
-        <tr class="consider" data-row-idx="4">
+        <tr class="consider" data-row-idx="4" data-player="willson contreras">
           <td class="left">
             Willson Contreras
             <span class="badge badge-active">1B/3B</span>
@@ -486,21 +483,21 @@
           </td>
           <td class="left" style="color:#666;">BOS</td>
           <td class="left">1B</td>
-          <td>16</td>
-          <td>.304</td>
-          <td>.443</td>
-          <td>9</td>
-          <td>3</td>
-          <td>11</td>
-          <td>0</td>
-          <td class="z-ok">0.08</td>
-          <td class="z-ok">0.31</td>
-          <td class="z-ok">0.18</td>
-          <td class="z-ok">0.44</td>
-          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+          <td data-s="16" data-k="g">16</td>
+          <td data-s=".304"          data-k="avg">.304</td>
+          <td data-s=".443"          data-k="obp">.443</td>
+          <td data-s="9"         data-k="r">9</td>
+          <td data-s="3"    data-k="hr">3</td>
+          <td data-s="11"         data-k="rbi">11</td>
+          <td data-s="0" data-k="sb">0</td>
+          <td class="z-ok">15</td>
+          <td class="z-ok">12</td>
+          <td class="z-bad">18</td>
+          <td class="z-ok">14</td>
+          <td class="z-bad">63</td>
         </tr>
         
-        <tr class="consider" data-row-idx="5">
+        <tr class="consider" data-row-idx="5" data-player="nico hoerner">
           <td class="left">
             Nico Hoerner
             <span class="badge badge-active">2B</span>
@@ -509,21 +506,21 @@
           </td>
           <td class="left" style="color:#666;">CHC</td>
           <td class="left">2B</td>
-          <td>16</td>
-          <td>.300</td>
-          <td>.403</td>
-          <td>9</td>
-          <td>1</td>
-          <td>10</td>
-          <td>5</td>
-          <td class="z-ok">0.10</td>
-          <td class="z-ok">0.46</td>
-          <td class="z-good">0.86</td>
-          <td class="z-good">0.75</td>
-          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+          <td data-s="16" data-k="g">16</td>
+          <td data-s=".300"          data-k="avg">.300</td>
+          <td data-s=".403"          data-k="obp">.403</td>
+          <td data-s="9"         data-k="r">9</td>
+          <td data-s="1"    data-k="hr">1</td>
+          <td data-s="10"         data-k="rbi">10</td>
+          <td data-s="5" data-k="sb">5</td>
+          <td class="z-ok">13</td>
+          <td class="z-ok">11</td>
+          <td class="z-good">7</td>
+          <td class="z-good">7</td>
+          <td class="z-ok">31</td>
         </tr>
         
-        <tr class="consider" data-row-idx="6">
+        <tr class="consider" data-row-idx="6" data-player="xavier edwards">
           <td class="left">
             Xavier Edwards
             <span class="badge badge-active">SS</span>
@@ -532,21 +529,21 @@
           </td>
           <td class="left" style="color:#666;">MIA</td>
           <td class="left">2B, SS</td>
-          <td>17</td>
-          <td>.359</td>
-          <td>.414</td>
-          <td>14</td>
-          <td>1</td>
-          <td>6</td>
-          <td>2</td>
-          <td class="z-terrible">-0.82</td>
-          <td class="z-ok">0.22</td>
-          <td class="z-ok">0.40</td>
-          <td class="z-ok">0.43</td>
-          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+          <td data-s="17" data-k="g">17</td>
+          <td data-s=".359"          data-k="avg">.359</td>
+          <td data-s=".414"          data-k="obp">.414</td>
+          <td data-s="14"         data-k="r">14</td>
+          <td data-s="1"    data-k="hr">1</td>
+          <td data-s="6"         data-k="rbi">6</td>
+          <td data-s="2" data-k="sb">2</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-bad">18</td>
+          <td class="z-ok">13</td>
+          <td class="z-ok">10</td>
+          <td class="z-bad">65</td>
         </tr>
         
-        <tr class="consider" data-row-idx="7">
+        <tr class="consider" data-row-idx="7" data-player="cam smith">
           <td class="left">
             Cam Smith
             <span class="badge badge-active">OF</span>
@@ -555,21 +552,21 @@
           </td>
           <td class="left" style="color:#666;">HOU</td>
           <td class="left">OF</td>
-          <td>17</td>
-          <td>.283</td>
-          <td>.368</td>
-          <td>11</td>
-          <td>3</td>
-          <td>8</td>
-          <td>3</td>
-          <td class="z-terrible">-0.93</td>
-          <td class="z-good">0.75</td>
-          <td class="z-good">0.77</td>
-          <td class="z-good">0.84</td>
-          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+          <td data-s="17" data-k="g">17</td>
+          <td data-s=".283"          data-k="avg">.283</td>
+          <td data-s=".368"          data-k="obp">.368</td>
+          <td data-s="11"         data-k="r">11</td>
+          <td data-s="3"    data-k="hr">3</td>
+          <td data-s="8"         data-k="rbi">8</td>
+          <td data-s="3" data-k="sb">3</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-ok">10</td>
+          <td class="z-ok">10</td>
+          <td class="z-ok">10</td>
+          <td class="z-good">24</td>
         </tr>
         
-        <tr class="consider" data-row-idx="8">
+        <tr class="consider" data-row-idx="8" data-player="corbin carroll">
           <td class="left">
             Corbin Carroll
             <span class="badge badge-active">OF</span>
@@ -578,21 +575,21 @@
           </td>
           <td class="left" style="color:#666;">ARI</td>
           <td class="left">OF</td>
-          <td>15</td>
-          <td>.321</td>
-          <td>.403</td>
-          <td>10</td>
-          <td>2</td>
-          <td>11</td>
-          <td>1</td>
-          <td class="z-terrible">-0.60</td>
-          <td class="z-ok">0.17</td>
-          <td class="z-good">0.51</td>
-          <td class="z-good">0.59</td>
-          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+          <td data-s="15" data-k="g">15</td>
+          <td data-s=".321"          data-k="avg">.321</td>
+          <td data-s=".403"          data-k="obp">.403</td>
+          <td data-s="10"         data-k="r">10</td>
+          <td data-s="2"    data-k="hr">2</td>
+          <td data-s="11"         data-k="rbi">11</td>
+          <td data-s="1" data-k="sb">1</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-bad">24</td>
+          <td class="z-bad">19</td>
+          <td class="z-bad">18</td>
+          <td class="z-ok">46</td>
         </tr>
         
-        <tr class="consider" data-row-idx="9">
+        <tr class="consider" data-row-idx="9" data-player="jakob marsee">
           <td class="left">
             Jakob Marsee
             <span class="badge badge-active">OF</span>
@@ -601,21 +598,21 @@
           </td>
           <td class="left" style="color:#666;">MIA</td>
           <td class="left">OF</td>
-          <td>17</td>
-          <td>.152</td>
-          <td>.260</td>
-          <td>12</td>
-          <td>0</td>
-          <td>3</td>
-          <td>7</td>
-          <td class="z-good">0.80</td>
-          <td class="z-good">0.63</td>
-          <td class="z-good">0.55</td>
-          <td class="z-good">0.53</td>
-          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+          <td data-s="17" data-k="g">17</td>
+          <td data-s=".152"          data-k="avg">.152</td>
+          <td data-s=".260"          data-k="obp">.260</td>
+          <td data-s="12"         data-k="r">12</td>
+          <td data-s="0"    data-k="hr">0</td>
+          <td data-s="3"         data-k="rbi">3</td>
+          <td data-s="7" data-k="sb">7</td>
+          <td class="z-good">8</td>
+          <td class="z-ok">14</td>
+          <td class="z-bad">17</td>
+          <td class="z-bad">22</td>
+          <td class="z-ok">54</td>
         </tr>
         
-        <tr class="consider" data-row-idx="10">
+        <tr class="consider" data-row-idx="10" data-player="pete crow-armstrong">
           <td class="left">
             Pete Crow-Armstrong
             <span class="badge badge-active">OF</span>
@@ -624,21 +621,21 @@
           </td>
           <td class="left" style="color:#666;">CHC</td>
           <td class="left">OF</td>
-          <td>16</td>
-          <td>.203</td>
-          <td>.239</td>
-          <td>9</td>
-          <td>1</td>
-          <td>5</td>
-          <td>4</td>
-          <td class="z-bad">-0.33</td>
-          <td class="z-bad">-0.38</td>
-          <td class="z-ok">0.14</td>
-          <td class="z-ok">0.12</td>
-          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+          <td data-s="16" data-k="g">16</td>
+          <td data-s=".203"          data-k="avg">.203</td>
+          <td data-s=".239"          data-k="obp">.239</td>
+          <td data-s="9"         data-k="r">9</td>
+          <td data-s="1"    data-k="hr">1</td>
+          <td data-s="5"         data-k="rbi">5</td>
+          <td data-s="4" data-k="sb">4</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-bad">98</td>
         </tr>
         
-        <tr class="consider" data-row-idx="11">
+        <tr class="consider" data-row-idx="11" data-player="steven kwan">
           <td class="left">
             Steven Kwan
             <span class="badge badge-active">OF</span>
@@ -647,21 +644,21 @@
           </td>
           <td class="left" style="color:#666;">CLE</td>
           <td class="left">OF</td>
-          <td>16</td>
-          <td>.258</td>
-          <td>.343</td>
-          <td>8</td>
-          <td>1</td>
-          <td>6</td>
-          <td>2</td>
-          <td class="z-bad">-0.33</td>
-          <td class="z-bad">-0.11</td>
-          <td class="z-ok">0.04</td>
-          <td class="z-ok">0.08</td>
-          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+          <td data-s="16" data-k="g">16</td>
+          <td data-s=".258"          data-k="avg">.258</td>
+          <td data-s=".343"          data-k="obp">.343</td>
+          <td data-s="8"         data-k="r">8</td>
+          <td data-s="1"    data-k="hr">1</td>
+          <td data-s="6"         data-k="rbi">6</td>
+          <td data-s="2" data-k="sb">2</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">106</td>
         </tr>
         
-        <tr class="consider" data-row-idx="12">
+        <tr class="start" data-row-idx="12" data-player="mike trout">
           <td class="left">
             Mike Trout
             <span class="badge badge-active">UTIL</span>
@@ -670,21 +667,21 @@
           </td>
           <td class="left" style="color:#666;">LAA</td>
           <td class="left">OF, DH</td>
-          <td>16</td>
-          <td>.224</td>
-          <td>.400</td>
-          <td>16</td>
-          <td>4</td>
-          <td>12</td>
-          <td>2</td>
-          <td class="z-good">1.11</td>
-          <td class="z-good">0.67</td>
-          <td class="z-good">1.30</td>
-          <td class="z-good">1.40</td>
-          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+          <td data-s="16" data-k="g">16</td>
+          <td data-s=".224"          data-k="avg">.224</td>
+          <td data-s=".400"          data-k="obp">.400</td>
+          <td data-s="16"         data-k="r">16</td>
+          <td data-s="4"    data-k="hr">4</td>
+          <td data-s="12"         data-k="rbi">12</td>
+          <td data-s="2" data-k="sb">2</td>
+          <td class="z-good">5</td>
+          <td class="z-ok">13</td>
+          <td class="z-good">6</td>
+          <td class="z-good">6</td>
+          <td class="z-great">10</td>
         </tr>
         
-        <tr class="consider" data-row-idx="13">
+        <tr class="consider" data-row-idx="13" data-player="christian yelich">
           <td class="left">
             Christian Yelich
             <span class="badge badge-active">UTIL</span>
@@ -693,21 +690,21 @@
           </td>
           <td class="left" style="color:#666;">MIL</td>
           <td class="left">DH</td>
-          <td>15</td>
-          <td>.314</td>
-          <td>.375</td>
-          <td>10</td>
-          <td>1</td>
-          <td>10</td>
-          <td>3</td>
-          <td class="z-terrible">-1.00</td>
-          <td class="z-bad">-0.06</td>
-          <td class="z-good">0.57</td>
-          <td class="z-good">0.76</td>
-          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+          <td data-s="15" data-k="g">15</td>
+          <td data-s=".314"          data-k="avg">.314</td>
+          <td data-s=".375"          data-k="obp">.375</td>
+          <td data-s="10"         data-k="r">10</td>
+          <td data-s="1"    data-k="hr">1</td>
+          <td data-s="10"         data-k="rbi">10</td>
+          <td data-s="3" data-k="sb">3</td>
+          <td class="z-bad">20</td>
+          <td class="z-ok">12</td>
+          <td class="z-good">5</td>
+          <td class="z-great">2</td>
+          <td class="z-good">30</td>
         </tr>
         
-        <tr class="borderline" data-row-idx="14">
+        <tr class="borderline" data-row-idx="14" data-player="matt chapman">
           <td class="left">
             Matt Chapman
             <span class="badge badge-bench">BENCH</span>
@@ -716,21 +713,21 @@
           </td>
           <td class="left" style="color:#666;">SF</td>
           <td class="left">3B</td>
-          <td>16</td>
-          <td>.290</td>
-          <td>.343</td>
-          <td>8</td>
-          <td>1</td>
-          <td>7</td>
-          <td>0</td>
-          <td class="z-terrible">-0.87</td>
-          <td class="z-ok">0.07</td>
-          <td class="z-ok">-0.00</td>
-          <td class="z-bad">-0.06</td>
-          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
+          <td data-s="16" data-k="g">16</td>
+          <td data-s=".290"          data-k="avg">.290</td>
+          <td data-s=".343"          data-k="obp">.343</td>
+          <td data-s="8"         data-k="r">8</td>
+          <td data-s="1"    data-k="hr">1</td>
+          <td data-s="7"         data-k="rbi">7</td>
+          <td data-s="0" data-k="sb">0</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-bad">21</td>
+          <td class="z-bad">25</td>
+          <td class="z-bad">29</td>
+          <td class="z-terrible">131</td>
         </tr>
         
-        <tr class="borderline" data-row-idx="15">
+        <tr class="borderline" data-row-idx="15" data-player="samuel basallo">
           <td class="left">
             Samuel Basallo
             <span class="badge badge-bench">BENCH</span>
@@ -739,21 +736,21 @@
           </td>
           <td class="left" style="color:#666;">BAL</td>
           <td class="left">C</td>
-          <td>12</td>
-          <td>.136</td>
-          <td>.240</td>
-          <td>5</td>
-          <td>2</td>
-          <td>3</td>
-          <td>0</td>
-          <td class="z-bad">-0.30</td>
-          <td class="z-bad">-0.24</td>
-          <td class="z-bad">-0.20</td>
-          <td class="z-bad">-0.16</td>
-          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
+          <td data-s="12" data-k="g">12</td>
+          <td data-s=".136"          data-k="avg">.136</td>
+          <td data-s=".240"          data-k="obp">.240</td>
+          <td data-s="5"         data-k="r">5</td>
+          <td data-s="2"    data-k="hr">2</td>
+          <td data-s="3"         data-k="rbi">3</td>
+          <td data-s="0" data-k="sb">0</td>
+          <td class="z-ok">11</td>
+          <td class="z-bad">22</td>
+          <td class="z-bad">24</td>
+          <td class="z-bad">23</td>
+          <td class="z-terrible">144</td>
         </tr>
         
-        <tr class="borderline" data-row-idx="16">
+        <tr class="borderline" data-row-idx="16" data-player="jeff mcneil">
           <td class="left">
             Jeff McNeil
             <span class="badge badge-bench">BENCH</span>
@@ -762,21 +759,21 @@
           </td>
           <td class="left" style="color:#666;">OAK</td>
           <td class="left">2B, OF</td>
-          <td>15</td>
-          <td>.313</td>
-          <td>.365</td>
-          <td>5</td>
-          <td>0</td>
-          <td>3</td>
-          <td>1</td>
-          <td class="z-terrible">-0.73</td>
-          <td class="z-terrible">-0.60</td>
-          <td class="z-terrible">-0.58</td>
-          <td class="z-terrible">-0.62</td>
-          <td class="left rec-borderline" style="font-size:11px;">BENCH</td>
+          <td data-s="15" data-k="g">15</td>
+          <td data-s=".313"          data-k="avg">.313</td>
+          <td data-s=".365"          data-k="obp">.365</td>
+          <td data-s="5"         data-k="r">5</td>
+          <td data-s="0"    data-k="hr">0</td>
+          <td data-s="3"         data-k="rbi">3</td>
+          <td data-s="1" data-k="sb">1</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
         </tr>
         
-        <tr class="borderline" data-row-idx="17">
+        <tr class="borderline" data-row-idx="17" data-player="mookie betts">
           <td class="left">
             Mookie Betts
             <span class="badge badge-il">IL</span>
@@ -785,21 +782,21 @@
           </td>
           <td class="left" style="color:#666;">LAD</td>
           <td class="left">SS</td>
-          <td>8</td>
-          <td>.179</td>
-          <td>.281</td>
-          <td>7</td>
-          <td>2</td>
-          <td>7</td>
-          <td>0</td>
-          <td class="z-na">—</td>
-          <td class="z-terrible">-0.85</td>
-          <td class="z-bad">-0.21</td>
-          <td class="z-bad">-0.36</td>
-          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
+          <td data-s="8" data-k="g">8</td>
+          <td data-s=".179"          data-k="avg">.179</td>
+          <td data-s=".281"          data-k="obp">.281</td>
+          <td data-s="7"         data-k="r">7</td>
+          <td data-s="2"    data-k="hr">2</td>
+          <td data-s="7"         data-k="rbi">7</td>
+          <td data-s="0" data-k="sb">0</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
         </tr>
         
-        <tr class="borderline" data-row-idx="18">
+        <tr class="borderline" data-row-idx="18" data-player="juan soto">
           <td class="left">
             Juan Soto
             <span class="badge badge-il">IL</span>
@@ -808,18 +805,18 @@
           </td>
           <td class="left" style="color:#666;">NYM</td>
           <td class="left">OF</td>
-          <td>8</td>
-          <td>.355</td>
-          <td>.412</td>
-          <td>3</td>
-          <td>1</td>
-          <td>5</td>
-          <td>0</td>
-          <td class="z-na">—</td>
-          <td class="z-terrible">-0.75</td>
-          <td class="z-bad">-0.44</td>
-          <td class="z-bad">-0.37</td>
-          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
+          <td data-s="8" data-k="g">8</td>
+          <td data-s=".355"          data-k="avg">.355</td>
+          <td data-s=".412"          data-k="obp">.412</td>
+          <td data-s="3"         data-k="r">3</td>
+          <td data-s="1"    data-k="hr">1</td>
+          <td data-s="5"         data-k="rbi">5</td>
+          <td data-s="0" data-k="sb">0</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
         </tr>
         
       </tbody>
@@ -841,12 +838,12 @@
           <th class="left">Tm</th>
           <th class="left">Pos</th>
           <th>G</th><th>IP</th><th>H</th><th>BB</th><th>ERA</th><th>WHIP</th><th>K</th><th>QS</th><th>SVHD</th>
-          <th>Z-7d</th><th>Z-14d</th><th>Z-30d</th><th>Z-Ssn</th><th>Rec</th>
+          <th title="7-day rank in position group">R-7d</th><th title="14-day rank">R-14d</th><th title="30-day rank">R-30d</th><th title="Season rank in position group">R-Ssn</th><th title="Overall rank vs all SP or all RP">TOT</th>
         </tr>
       </thead>
       <tbody>
         
-        <tr class="start" data-row-idx="0">
+        <tr class="start" data-row-idx="0" data-player="taj bradley">
           <td class="left">
             Taj Bradley
             <span class="badge badge-active">SP</span>
@@ -856,23 +853,23 @@
           </td>
           <td class="left" style="color:#666;">MIN</td>
           <td class="left">SP</td>
-          <td>4</td>
-          <td>21.2</td>
-          <td>19</td>
-          <td>8</td>
-          <td>1.25</td>
-          <td>1.25</td>
-          <td>29</td>
-          <td>0</td>
-          <td>0</td>
-          <td class="z-good">0.67</td>
-          <td class="z-ok">0.40</td>
-          <td class="z-ok">0.44</td>
-          <td class="z-ok">0.44</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td data-s="4"   data-k="gp">4</td>
+          <td data-s="21.2" data-k="ip">21.2</td>
+          <td data-s="19"    data-k="h">19</td>
+          <td data-s="8"           data-k="bb">8</td>
+          <td data-s="1.25"             data-k="era">1.25</td>
+          <td data-s="1.25"            data-k="whip">1.25</td>
+          <td data-s="29"    data-k="k">29</td>
+          <td data-s="0"  data-k="qs">0</td>
+          <td data-s="0"            data-k="svhd">0</td>
+          <td class="z-good">6</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-bad">17</td>
+          <td class="z-bad">17</td>
+          <td class="z-good">17</td>
         </tr>
         
-        <tr class="start" data-row-idx="1">
+        <tr class="start" data-row-idx="1" data-player="nathan eovaldi">
           <td class="left">
             Nathan Eovaldi
             <span class="badge badge-active">SP</span>
@@ -882,23 +879,23 @@
           </td>
           <td class="left" style="color:#666;">TEX</td>
           <td class="left">SP</td>
-          <td>4</td>
-          <td>21.2</td>
-          <td>25</td>
-          <td>7</td>
-          <td>5.40</td>
-          <td>1.48</td>
-          <td>26</td>
-          <td>0</td>
-          <td>0</td>
-          <td class="z-good">0.51</td>
-          <td class="z-ok">0.23</td>
-          <td class="z-ok">0.21</td>
-          <td class="z-ok">0.21</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td data-s="4"   data-k="gp">4</td>
+          <td data-s="21.2" data-k="ip">21.2</td>
+          <td data-s="25"    data-k="h">25</td>
+          <td data-s="7"           data-k="bb">7</td>
+          <td data-s="5.40"             data-k="era">5.40</td>
+          <td data-s="1.48"            data-k="whip">1.48</td>
+          <td data-s="26"    data-k="k">26</td>
+          <td data-s="0"  data-k="qs">0</td>
+          <td data-s="0"            data-k="svhd">0</td>
+          <td class="z-bad">19</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-bad">70</td>
         </tr>
         
-        <tr class="start" data-row-idx="2">
+        <tr class="start" data-row-idx="2" data-player="logan webb">
           <td class="left">
             Logan Webb
             <span class="badge badge-active">SP</span>
@@ -908,23 +905,23 @@
           </td>
           <td class="left" style="color:#666;">SF</td>
           <td class="left">SP</td>
-          <td>4</td>
-          <td>24.0</td>
-          <td>24</td>
-          <td>9</td>
-          <td>5.25</td>
-          <td>1.38</td>
-          <td>21</td>
-          <td>0</td>
-          <td>0</td>
-          <td class="z-bad">-0.21</td>
-          <td class="z-ok">0.06</td>
-          <td class="z-ok">0.07</td>
-          <td class="z-ok">0.07</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td data-s="4"   data-k="gp">4</td>
+          <td data-s="24.0" data-k="ip">24.0</td>
+          <td data-s="24"    data-k="h">24</td>
+          <td data-s="9"           data-k="bb">9</td>
+          <td data-s="5.25"             data-k="era">5.25</td>
+          <td data-s="1.38"            data-k="whip">1.38</td>
+          <td data-s="21"    data-k="k">21</td>
+          <td data-s="0"  data-k="qs">0</td>
+          <td data-s="0"            data-k="svhd">0</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">122</td>
         </tr>
         
-        <tr class="start" data-row-idx="3">
+        <tr class="start" data-row-idx="3" data-player="yoshinobu yamamoto">
           <td class="left">
             Yoshinobu Yamamoto
             <span class="badge badge-active">SP</span>
@@ -934,23 +931,23 @@
           </td>
           <td class="left" style="color:#666;">LAD</td>
           <td class="left">SP</td>
-          <td>3</td>
-          <td>18.0</td>
-          <td>14</td>
-          <td>2</td>
-          <td>2.50</td>
-          <td>0.89</td>
-          <td>14</td>
-          <td>0</td>
-          <td>0</td>
-          <td class="z-bad">-0.05</td>
-          <td class="z-bad">-0.10</td>
-          <td class="z-bad">-0.01</td>
-          <td class="z-bad">-0.01</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td data-s="3"   data-k="gp">3</td>
+          <td data-s="18.0" data-k="ip">18.0</td>
+          <td data-s="14"    data-k="h">14</td>
+          <td data-s="2"           data-k="bb">2</td>
+          <td data-s="2.50"             data-k="era">2.50</td>
+          <td data-s="0.89"            data-k="whip">0.89</td>
+          <td data-s="14"    data-k="k">14</td>
+          <td data-s="0"  data-k="qs">0</td>
+          <td data-s="0"            data-k="svhd">0</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
         </tr>
         
-        <tr class="start" data-row-idx="4">
+        <tr class="start" data-row-idx="4" data-player="michael king">
           <td class="left">
             Michael King
             <span class="badge badge-active">SP</span>
@@ -960,23 +957,23 @@
           </td>
           <td class="left" style="color:#666;">SD</td>
           <td class="left">SP</td>
-          <td>3</td>
-          <td>16.2</td>
-          <td>12</td>
-          <td>8</td>
-          <td>3.24</td>
-          <td>1.20</td>
-          <td>15</td>
-          <td>0</td>
-          <td>0</td>
-          <td class="z-bad">-0.25</td>
-          <td class="z-bad">-0.20</td>
-          <td class="z-bad">-0.05</td>
-          <td class="z-bad">-0.05</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td data-s="3"   data-k="gp">3</td>
+          <td data-s="16.2" data-k="ip">16.2</td>
+          <td data-s="12"    data-k="h">12</td>
+          <td data-s="8"           data-k="bb">8</td>
+          <td data-s="3.24"             data-k="era">3.24</td>
+          <td data-s="1.20"            data-k="whip">1.20</td>
+          <td data-s="15"    data-k="k">15</td>
+          <td data-s="0"  data-k="qs">0</td>
+          <td data-s="0"            data-k="svhd">0</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
         </tr>
         
-        <tr class="borderline" data-row-idx="5">
+        <tr class="borderline" data-row-idx="5" data-player="sonny gray">
           <td class="left">
             Sonny Gray
             <span class="badge badge-active">SP</span>
@@ -986,23 +983,23 @@
           </td>
           <td class="left" style="color:#666;">BOS</td>
           <td class="left">SP</td>
-          <td>3</td>
-          <td>16.1</td>
-          <td>13</td>
-          <td>3</td>
-          <td>2.76</td>
-          <td>0.98</td>
-          <td>10</td>
-          <td>0</td>
-          <td>0</td>
-          <td class="z-bad">-0.27</td>
-          <td class="z-bad">-0.17</td>
-          <td class="z-bad">-0.17</td>
-          <td class="z-bad">-0.17</td>
-          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
+          <td data-s="3"   data-k="gp">3</td>
+          <td data-s="16.1" data-k="ip">16.1</td>
+          <td data-s="13"    data-k="h">13</td>
+          <td data-s="3"           data-k="bb">3</td>
+          <td data-s="2.76"             data-k="era">2.76</td>
+          <td data-s="0.98"            data-k="whip">0.98</td>
+          <td data-s="10"    data-k="k">10</td>
+          <td data-s="0"  data-k="qs">0</td>
+          <td data-s="0"            data-k="svhd">0</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
         </tr>
         
-        <tr class="borderline" data-row-idx="6">
+        <tr class="borderline" data-row-idx="6" data-player="framber valdez">
           <td class="left">
             Framber Valdez
             <span class="badge badge-active">SP</span>
@@ -1012,23 +1009,23 @@
           </td>
           <td class="left" style="color:#666;">DET</td>
           <td class="left">SP</td>
-          <td>3</td>
-          <td>17.0</td>
-          <td>20</td>
-          <td>5</td>
-          <td>4.76</td>
-          <td>1.47</td>
-          <td>12</td>
-          <td>0</td>
-          <td>0</td>
-          <td class="z-terrible">-0.85</td>
-          <td class="z-bad">-0.40</td>
-          <td class="z-bad">-0.23</td>
-          <td class="z-bad">-0.23</td>
-          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
+          <td data-s="3"   data-k="gp">3</td>
+          <td data-s="17.0" data-k="ip">17.0</td>
+          <td data-s="20"    data-k="h">20</td>
+          <td data-s="5"           data-k="bb">5</td>
+          <td data-s="4.76"             data-k="era">4.76</td>
+          <td data-s="1.47"            data-k="whip">1.47</td>
+          <td data-s="12"    data-k="k">12</td>
+          <td data-s="0"  data-k="qs">0</td>
+          <td data-s="0"            data-k="svhd">0</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
         </tr>
         
-        <tr class="start" data-row-idx="7">
+        <tr class="start" data-row-idx="7" data-player="mason miller">
           <td class="left">
             Mason Miller
             <span class="badge badge-active">RP</span>
@@ -1038,23 +1035,23 @@
           </td>
           <td class="left" style="color:#666;">SD</td>
           <td class="left">RP</td>
-          <td>7</td>
-          <td>7.1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>0.00</td>
-          <td>0.27</td>
-          <td>19</td>
-          <td>0</td>
-          <td>40</td>
-          <td class="z-ok">0.28</td>
-          <td class="z-good">1.12</td>
-          <td class="z-good">0.96</td>
-          <td class="z-good">0.96</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td data-s="7"   data-k="gp">7</td>
+          <td data-s="7.1" data-k="ip">7.1</td>
+          <td data-s="1"    data-k="h">1</td>
+          <td data-s="1"           data-k="bb">1</td>
+          <td data-s="0.00"             data-k="era">0.00</td>
+          <td data-s="0.27"            data-k="whip">0.27</td>
+          <td data-s="19"    data-k="k">19</td>
+          <td data-s="0"  data-k="qs">0</td>
+          <td data-s="40"            data-k="svhd">40</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-great">1</td>
+          <td class="z-great">2</td>
+          <td class="z-great">2</td>
+          <td class="z-great">2</td>
         </tr>
         
-        <tr class="start" data-row-idx="8">
+        <tr class="consider" data-row-idx="8" data-player="jordan romano">
           <td class="left">
             Jordan Romano
             <span class="badge badge-active">RP</span>
@@ -1064,23 +1061,23 @@
           </td>
           <td class="left" style="color:#666;">LAA</td>
           <td class="left">RP</td>
-          <td>7</td>
-          <td>5.0</td>
-          <td>3</td>
-          <td>4</td>
-          <td>5.40</td>
-          <td>1.40</td>
-          <td>7</td>
-          <td>0</td>
-          <td>40</td>
-          <td class="z-bad">-0.28</td>
-          <td class="z-bad">-0.08</td>
-          <td class="z-ok">0.24</td>
-          <td class="z-ok">0.24</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td data-s="7"   data-k="gp">7</td>
+          <td data-s="5.0" data-k="ip">5.0</td>
+          <td data-s="3"    data-k="h">3</td>
+          <td data-s="4"           data-k="bb">4</td>
+          <td data-s="5.40"             data-k="era">5.40</td>
+          <td data-s="1.40"            data-k="whip">1.40</td>
+          <td data-s="7"    data-k="k">7</td>
+          <td data-s="0"  data-k="qs">0</td>
+          <td data-s="40"            data-k="svhd">40</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-ok">55</td>
         </tr>
         
-        <tr class="consider" data-row-idx="9">
+        <tr class="consider" data-row-idx="9" data-player="abner uribe">
           <td class="left">
             Abner Uribe
             <span class="badge badge-active">RP</span>
@@ -1090,23 +1087,23 @@
           </td>
           <td class="left" style="color:#666;">MIL</td>
           <td class="left">RP</td>
-          <td>6</td>
-          <td>5.1</td>
-          <td>6</td>
-          <td>1</td>
-          <td>5.06</td>
-          <td>1.31</td>
-          <td>6</td>
-          <td>0</td>
-          <td>3</td>
-          <td class="z-terrible">-0.67</td>
-          <td class="z-ok">0.08</td>
-          <td class="z-ok">0.06</td>
-          <td class="z-ok">0.06</td>
-          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+          <td data-s="6"   data-k="gp">6</td>
+          <td data-s="5.1" data-k="ip">5.1</td>
+          <td data-s="6"    data-k="h">6</td>
+          <td data-s="1"           data-k="bb">1</td>
+          <td data-s="5.06"             data-k="era">5.06</td>
+          <td data-s="1.31"            data-k="whip">1.31</td>
+          <td data-s="6"    data-k="k">6</td>
+          <td data-s="0"  data-k="qs">0</td>
+          <td data-s="3"            data-k="svhd">3</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">128</td>
         </tr>
         
-        <tr class="start" data-row-idx="10">
+        <tr class="start" data-row-idx="10" data-player="shane baz">
           <td class="left">
             Shane Baz
             <span class="badge badge-bench">SP</span>
@@ -1117,20 +1114,20 @@
           </td>
           <td class="left" style="color:#666;">BAL</td>
           <td class="left">SP</td>
-          <td>3</td>
-          <td>16.0</td>
-          <td>20</td>
-          <td>5</td>
-          <td>4.50</td>
-          <td>1.56</td>
-          <td>13</td>
-          <td>0</td>
-          <td>0</td>
-          <td class="z-bad">-0.47</td>
-          <td class="z-bad">-0.24</td>
-          <td class="z-bad">-0.22</td>
-          <td class="z-bad">-0.22</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td data-s="3"   data-k="gp">3</td>
+          <td data-s="16.0" data-k="ip">16.0</td>
+          <td data-s="20"    data-k="h">20</td>
+          <td data-s="5"           data-k="bb">5</td>
+          <td data-s="4.50"             data-k="era">4.50</td>
+          <td data-s="1.56"            data-k="whip">1.56</td>
+          <td data-s="13"    data-k="k">13</td>
+          <td data-s="0"  data-k="qs">0</td>
+          <td data-s="0"            data-k="svhd">0</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
+          <td class="z-terrible">BAD</td>
         </tr>
         
       </tbody>
@@ -1186,8 +1183,8 @@
               </td>
               <td class="left" style="color:#666;">Detroit Tigers</td>
               <td>—</td>
-              <td class="z-good">0.91</td>
-              <td class="z-ok">0.24</td>
+              <td class="z-good">0.82</td>
+              <td class="z-ok">0.14</td>
             </tr>
             
             <tr>
@@ -1197,8 +1194,19 @@
               </td>
               <td class="left" style="color:#666;">Los Angeles Dodgers</td>
               <td>—</td>
-              <td class="z-good">0.71</td>
-              <td class="z-good">1.01</td>
+              <td class="z-good">0.65</td>
+              <td class="z-terrible">-1.25</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Agustín Ramírez
+                
+              </td>
+              <td class="left" style="color:#666;">Miami Marlins</td>
+              <td>—</td>
+              <td class="z-ok">0.37</td>
+              <td class="z-good">0.70</td>
             </tr>
             
             <tr>
@@ -1208,19 +1216,8 @@
               </td>
               <td class="left" style="color:#666;">Houston Astros</td>
               <td>—</td>
-              <td class="z-ok">0.11</td>
-              <td class="z-bad">-0.41</td>
-            </tr>
-            
-            <tr>
-              <td class="left">
-                Daniel Susac
-                
-              </td>
-              <td class="left" style="color:#666;">San Francisco Giants</td>
-              <td>—</td>
-              <td class="z-ok">0.05</td>
-              <td class="z-bad">-0.30</td>
+              <td class="z-ok">0.04</td>
+              <td class="z-terrible">-0.63</td>
             </tr>
             
             <tr>
@@ -1230,8 +1227,8 @@
               </td>
               <td class="left" style="color:#666;">Chicago Cubs</td>
               <td>—</td>
-              <td class="z-bad">-0.04</td>
-              <td class="z-terrible">-1.11</td>
+              <td class="z-ok">0.03</td>
+              <td class="z-terrible">-1.00</td>
             </tr>
             
           </tbody>
@@ -1263,8 +1260,8 @@
               </td>
               <td class="left" style="color:#666;">Milwaukee Brewers</td>
               <td>—</td>
-              <td class="z-good">0.80</td>
-              <td class="z-bad">-0.12</td>
+              <td class="z-good">0.74</td>
+              <td class="z-bad">-0.17</td>
             </tr>
             
             <tr>
@@ -1274,8 +1271,8 @@
               </td>
               <td class="left" style="color:#666;">Milwaukee Brewers</td>
               <td>—</td>
-              <td class="z-ok">0.22</td>
-              <td class="z-bad">-0.08</td>
+              <td class="z-ok">0.16</td>
+              <td class="z-bad">-0.12</td>
             </tr>
             
             <tr>
@@ -1285,8 +1282,19 @@
               </td>
               <td class="left" style="color:#666;">Tampa Bay Rays</td>
               <td>—</td>
-              <td class="z-ok">0.14</td>
-              <td class="z-bad">-0.45</td>
+              <td class="z-ok">0.09</td>
+              <td class="z-terrible">-1.30</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Jake Burger
+                
+              </td>
+              <td class="left" style="color:#666;">Texas Rangers</td>
+              <td>—</td>
+              <td class="z-ok">0.08</td>
+              <td class="z-terrible">-0.52</td>
             </tr>
             
             <tr>
@@ -1296,19 +1304,8 @@
               </td>
               <td class="left" style="color:#666;">Arizona Diamondbacks</td>
               <td>—</td>
-              <td class="z-bad">-0.03</td>
-              <td class="z-bad">-0.40</td>
-            </tr>
-            
-            <tr>
-              <td class="left">
-                Curtis Mead
-                
-              </td>
-              <td class="left" style="color:#666;">Washington Nationals</td>
-              <td>—</td>
-              <td class="z-bad">-0.13</td>
-              <td class="z-good">0.77</td>
+              <td class="z-bad">-0.11</td>
+              <td class="z-bad">-0.50</td>
             </tr>
             
           </tbody>
@@ -1340,19 +1337,19 @@
               </td>
               <td class="left" style="color:#666;">Seattle Mariners</td>
               <td>—</td>
-              <td class="z-good">0.53</td>
-              <td class="z-terrible">-1.16</td>
+              <td class="z-ok">0.28</td>
+              <td class="z-terrible">-0.83</td>
             </tr>
             
             <tr>
               <td class="left">
-                Jonathan India
+                Jeremiah Jackson
                 
               </td>
-              <td class="left" style="color:#666;">Kansas City Royals</td>
+              <td class="left" style="color:#666;">Baltimore Orioles</td>
               <td>—</td>
-              <td class="z-ok">0.20</td>
-              <td class="z-terrible">-0.70</td>
+              <td class="z-ok">0.19</td>
+              <td class="z-good">0.59</td>
             </tr>
             
             <tr>
@@ -1362,30 +1359,30 @@
               </td>
               <td class="left" style="color:#666;">Washington Nationals</td>
               <td>—</td>
-              <td class="z-ok">0.07</td>
-              <td class="z-terrible">-0.67</td>
+              <td class="z-ok">0.16</td>
+              <td class="z-terrible">-0.88</td>
             </tr>
             
             <tr>
               <td class="left">
-                Edouard Julien
+                Brayan Rocchio
                 
               </td>
-              <td class="left" style="color:#666;">Colorado Rockies</td>
+              <td class="left" style="color:#666;">Cleveland Guardians</td>
               <td>—</td>
-              <td class="z-bad">-0.07</td>
-              <td class="z-good">1.13</td>
-            </tr>
-            
-            <tr>
-              <td class="left">
-                Luke Williams
-                
-              </td>
-              <td class="left" style="color:#666;">Atlanta Braves</td>
-              <td>—</td>
-              <td class="z-bad">-0.20</td>
+              <td class="z-ok">0.01</td>
               <td class="z-bad">-0.41</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Jonathan India
+                
+              </td>
+              <td class="left" style="color:#666;">Kansas City Royals</td>
+              <td>—</td>
+              <td class="z-ok">0.01</td>
+              <td class="z-terrible">-1.53</td>
             </tr>
             
           </tbody>
@@ -1415,8 +1412,8 @@
               </td>
               <td class="left" style="color:#666;">Atlanta Braves</td>
               <td>—</td>
-              <td class="z-ok">0.37</td>
-              <td class="z-ok">0.13</td>
+              <td class="z-ok">0.33</td>
+              <td class="z-bad">-0.48</td>
             </tr>
             
             <tr>
@@ -1426,8 +1423,8 @@
               </td>
               <td class="left" style="color:#666;">Toronto Blue Jays</td>
               <td>—</td>
-              <td class="z-ok">0.11</td>
-              <td class="z-terrible">-1.01</td>
+              <td class="z-ok">0.06</td>
+              <td class="z-terrible">-0.68</td>
             </tr>
             
             <tr>
@@ -1437,8 +1434,19 @@
               </td>
               <td class="left" style="color:#666;">Atlanta Braves</td>
               <td>—</td>
-              <td class="z-ok">0.08</td>
-              <td class="z-terrible">-0.80</td>
+              <td class="z-bad">-0.01</td>
+              <td class="z-terrible">-1.05</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                José Caballero
+                
+              </td>
+              <td class="left" style="color:#666;">New York Yankees</td>
+              <td>—</td>
+              <td class="z-bad">-0.20</td>
+              <td class="z-ok">0.05</td>
             </tr>
             
             <tr>
@@ -1448,19 +1456,8 @@
               </td>
               <td class="left" style="color:#666;">Seattle Mariners</td>
               <td>—</td>
-              <td class="z-bad">-0.35</td>
-              <td class="z-bad">-0.19</td>
-            </tr>
-            
-            <tr>
-              <td class="left">
-                Javier Báez
-                
-              </td>
-              <td class="left" style="color:#666;">Detroit Tigers</td>
-              <td>—</td>
-              <td class="z-bad">-0.45</td>
-              <td class="z-bad">-0.19</td>
+              <td class="z-bad">-0.42</td>
+              <td class="z-bad">-0.36</td>
             </tr>
             
           </tbody>
@@ -1492,8 +1489,8 @@
               </td>
               <td class="left" style="color:#666;">Cleveland Guardians</td>
               <td>—</td>
-              <td class="z-good">0.60</td>
-              <td class="z-good">0.50</td>
+              <td class="z-good">0.87</td>
+              <td class="z-good">0.65</td>
             </tr>
             
             <tr>
@@ -1503,8 +1500,8 @@
               </td>
               <td class="left" style="color:#666;">Minnesota Twins</td>
               <td>—</td>
-              <td class="z-good">0.56</td>
-              <td class="z-bad">-0.47</td>
+              <td class="z-good">0.51</td>
+              <td class="z-terrible">-0.79</td>
             </tr>
             
             <tr>
@@ -1514,8 +1511,8 @@
               </td>
               <td class="left" style="color:#666;">Chicago White Sox</td>
               <td>—</td>
-              <td class="z-ok">0.34</td>
-              <td class="z-terrible">-1.67</td>
+              <td class="z-ok">0.27</td>
+              <td class="z-terrible">-1.51</td>
             </tr>
             
             <tr>
@@ -1526,7 +1523,7 @@
               <td class="left" style="color:#666;">Minnesota Twins</td>
               <td>—</td>
               <td class="z-ok">0.11</td>
-              <td class="z-terrible">-0.62</td>
+              <td class="z-terrible">-0.56</td>
             </tr>
             
             <tr>
@@ -1537,7 +1534,7 @@
               <td class="left" style="color:#666;">St. Louis Cardinals</td>
               <td>—</td>
               <td class="z-ok">0.10</td>
-              <td class="z-terrible">-1.43</td>
+              <td class="z-terrible">-1.22</td>
             </tr>
             
           </tbody>
@@ -1569,41 +1566,8 @@
               </td>
               <td class="left" style="color:#666;">San Diego Padres</td>
               <td>—</td>
-              <td class="z-good">1.15</td>
-              <td class="z-good">1.26</td>
-            </tr>
-            
-            <tr>
-              <td class="left">
-                Teoscar Hernández
-                
-              </td>
-              <td class="left" style="color:#666;">Los Angeles Dodgers</td>
-              <td>—</td>
-              <td class="z-good">0.67</td>
-              <td class="z-good">0.87</td>
-            </tr>
-            
-            <tr>
-              <td class="left">
-                Garrett Mitchell
-                
-              </td>
-              <td class="left" style="color:#666;">Milwaukee Brewers</td>
-              <td>—</td>
-              <td class="z-good">0.66</td>
-              <td class="z-terrible">-0.83</td>
-            </tr>
-            
-            <tr>
-              <td class="left">
-                Kyle Isbel
-                
-              </td>
-              <td class="left" style="color:#666;">Kansas City Royals</td>
-              <td>—</td>
-              <td class="z-good">0.53</td>
-              <td class="z-terrible">-1.01</td>
+              <td class="z-good">1.00</td>
+              <td class="z-good">0.97</td>
             </tr>
             
             <tr>
@@ -1613,8 +1577,41 @@
               </td>
               <td class="left" style="color:#666;">Cleveland Guardians</td>
               <td>—</td>
-              <td class="z-ok">0.47</td>
-              <td class="z-good">0.95</td>
+              <td class="z-good">0.66</td>
+              <td class="z-good">1.31</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Teoscar Hernández
+                
+              </td>
+              <td class="left" style="color:#666;">Los Angeles Dodgers</td>
+              <td>—</td>
+              <td class="z-good">0.62</td>
+              <td class="z-bad">-0.30</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Garrett Mitchell
+                
+              </td>
+              <td class="left" style="color:#666;">Milwaukee Brewers</td>
+              <td>—</td>
+              <td class="z-good">0.57</td>
+              <td class="z-terrible">-1.05</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Kyle Isbel
+                
+              </td>
+              <td class="left" style="color:#666;">Kansas City Royals</td>
+              <td>—</td>
+              <td class="z-ok">0.46</td>
+              <td class="z-terrible">-0.98</td>
             </tr>
             
           </tbody>
@@ -1659,106 +1656,106 @@
         <tr>
           <td class="left other-team">2010 State Sectional Champ</td>
           <td class="left">
-            Mason Miller
-            <span style="color:#555;font-size:11px;"> P</span>
-            <span class="z-good" style="font-size:11px;"> z:0.98</span>
+            Mike Trout
+            <span style="color:#555;font-size:11px;"> OF</span>
+            <span class="z-good" style="font-size:11px;"> z:1.40</span>
           </td>
           <td class="left">
             Sal Stewart
             <span style="color:#555;font-size:11px;"> 1B</span>
-            <span class="z-good" style="font-size:11px;"> z:1.48</span>
+            <span class="z-good" style="font-size:11px;"> z:1.41</span>
           </td>
-          <td>+0.50</td>
+          <td>+0.01</td>
         </tr>
         
         <tr>
           <td class="left other-team">All Rise Run Club</td>
           <td class="left">
-            Mason Miller
-            <span style="color:#555;font-size:11px;"> P</span>
-            <span class="z-good" style="font-size:11px;"> z:0.98</span>
+            Mike Trout
+            <span style="color:#555;font-size:11px;"> OF</span>
+            <span class="z-good" style="font-size:11px;"> z:1.40</span>
           </td>
           <td class="left">
             Andy Pages
             <span style="color:#555;font-size:11px;"> OF</span>
-            <span class="z-great" style="font-size:11px;"> z:1.52</span>
+            <span class="z-great" style="font-size:11px;"> z:1.68</span>
           </td>
-          <td>+0.54</td>
+          <td>+0.28</td>
         </tr>
         
         <tr>
           <td class="left other-team">ChicksDigTheLongBall</td>
           <td class="left">
-            Mason Miller
-            <span style="color:#555;font-size:11px;"> P</span>
-            <span class="z-good" style="font-size:11px;"> z:0.98</span>
+            Mike Trout
+            <span style="color:#555;font-size:11px;"> OF</span>
+            <span class="z-good" style="font-size:11px;"> z:1.40</span>
           </td>
           <td class="left">
             Drake Baldwin
             <span style="color:#555;font-size:11px;"> C</span>
-            <span class="z-great" style="font-size:11px;"> z:2.10</span>
+            <span class="z-great" style="font-size:11px;"> z:2.01</span>
           </td>
-          <td>+1.12</td>
+          <td>+0.61</td>
         </tr>
         
         <tr>
           <td class="left other-team">I Robbed A Nuke</td>
           <td class="left">
-            Mason Miller
-            <span style="color:#555;font-size:11px;"> P</span>
-            <span class="z-good" style="font-size:11px;"> z:0.98</span>
+            Mike Trout
+            <span style="color:#555;font-size:11px;"> OF</span>
+            <span class="z-good" style="font-size:11px;"> z:1.40</span>
           </td>
           <td class="left">
-            Brice Turang
-            <span style="color:#555;font-size:11px;"> 2B</span>
-            <span class="z-great" style="font-size:11px;"> z:1.63</span>
+            Ben Rice
+            <span style="color:#555;font-size:11px;"> 1B</span>
+            <span class="z-good" style="font-size:11px;"> z:1.48</span>
           </td>
-          <td>+0.65</td>
+          <td>+0.08</td>
         </tr>
         
         <tr>
           <td class="left other-team">ICECOLDBEERHERE!</td>
           <td class="left">
-            Mason Miller
-            <span style="color:#555;font-size:11px;"> P</span>
-            <span class="z-good" style="font-size:11px;"> z:0.98</span>
+            Mike Trout
+            <span style="color:#555;font-size:11px;"> OF</span>
+            <span class="z-good" style="font-size:11px;"> z:1.40</span>
           </td>
           <td class="left">
             Elly De La Cruz
             <span style="color:#555;font-size:11px;"> SS</span>
-            <span class="z-good" style="font-size:11px;"> z:1.43</span>
+            <span class="z-good" style="font-size:11px;"> z:1.33</span>
           </td>
-          <td>+0.45</td>
+          <td>-0.07</td>
         </tr>
         
         <tr>
           <td class="left other-team">Jazz In Her Batters Box</td>
           <td class="left">
-            Mason Miller
-            <span style="color:#555;font-size:11px;"> P</span>
-            <span class="z-good" style="font-size:11px;"> z:0.98</span>
+            Mike Trout
+            <span style="color:#555;font-size:11px;"> OF</span>
+            <span class="z-good" style="font-size:11px;"> z:1.40</span>
           </td>
           <td class="left">
             CJ Abrams
             <span style="color:#555;font-size:11px;"> SS</span>
-            <span class="z-good" style="font-size:11px;"> z:1.47</span>
+            <span class="z-great" style="font-size:11px;"> z:1.62</span>
           </td>
-          <td>+0.49</td>
+          <td>+0.22</td>
         </tr>
         
         <tr>
           <td class="left other-team">Lunch</td>
           <td class="left">
-            Mason Miller
-            <span style="color:#555;font-size:11px;"> P</span>
-            <span class="z-good" style="font-size:11px;"> z:0.98</span>
+            Mike Trout
+            <span style="color:#555;font-size:11px;"> OF</span>
+            <span class="z-good" style="font-size:11px;"> z:1.40</span>
           </td>
           <td class="left">
             Oneil Cruz
             <span style="color:#555;font-size:11px;"> OF</span>
-            <span class="z-great" style="font-size:11px;"> z:2.08</span>
+            <span class="z-great" style="font-size:11px;"> z:2.41</span>
           </td>
-          <td>+1.10</td>
+          <td>+1.01</td>
         </tr>
         
       </tbody>
@@ -1777,63 +1774,63 @@
       <tbody>
         
         <tr>
-          <td class="left">Mason Miller</td>
-          <td class="left">P</td>
-          <td class="z-good">0.98</td>
+          <td class="left">Mike Trout</td>
+          <td class="left">OF</td>
+          <td class="z-good">1.40</td>
         </tr>
         
         <tr>
-          <td class="left">Nico Hoerner</td>
-          <td class="left">2B</td>
-          <td class="z-good">0.97</td>
+          <td class="left">Mason Miller</td>
+          <td class="left">P</td>
+          <td class="z-good">0.96</td>
         </tr>
         
         <tr>
           <td class="left">Cam Smith</td>
           <td class="left">OF</td>
-          <td class="z-good">0.91</td>
-        </tr>
-        
-        <tr>
-          <td class="left">Mike Trout</td>
-          <td class="left">OF</td>
-          <td class="z-good">0.79</td>
+          <td class="z-good">0.84</td>
         </tr>
         
         <tr>
           <td class="left">Christian Yelich</td>
           <td class="left">DH</td>
-          <td class="z-good">0.78</td>
+          <td class="z-good">0.76</td>
         </tr>
         
         <tr>
-          <td class="left">Corbin Carroll</td>
-          <td class="left">OF</td>
-          <td class="z-good">0.72</td>
+          <td class="left">Nico Hoerner</td>
+          <td class="left">2B</td>
+          <td class="z-good">0.75</td>
         </tr>
         
         <tr>
           <td class="left">Max Muncy</td>
           <td class="left">3B</td>
-          <td class="z-good">0.71</td>
+          <td class="z-good">0.70</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Corbin Carroll</td>
+          <td class="left">OF</td>
+          <td class="z-good">0.59</td>
         </tr>
         
         <tr>
           <td class="left">Will Smith</td>
           <td class="left">C</td>
-          <td class="z-good">0.58</td>
+          <td class="z-good">0.57</td>
         </tr>
         
         <tr>
-          <td class="left">Jordan Romano</td>
-          <td class="left">P</td>
-          <td class="z-good">0.54</td>
+          <td class="left">Jakob Marsee</td>
+          <td class="left">OF</td>
+          <td class="z-good">0.53</td>
         </tr>
         
         <tr>
           <td class="left">Willson Contreras</td>
           <td class="left">1B</td>
-          <td class="z-ok">0.46</td>
+          <td class="z-ok">0.44</td>
         </tr>
         
       </tbody>
@@ -1885,8 +1882,8 @@
               <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-great">2.01</td>
               <td class="z-bad">-0.07</td>
-              <td class="z-good">0.79</td>
-              <td>96.0%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="OF">
@@ -1916,7 +1913,7 @@
               <td class="z-great">1.62</td>
               <td class="z-ok">0.14</td>
               <td class="z-ok">0.47</td>
-              <td>88.6%</td>
+              <td>89.0%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -1945,8 +1942,8 @@
               <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-good">1.48</td>
               <td class="z-ok">0.03</td>
-              <td class="z-good">0.72</td>
-              <td>98.7%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="1B">
@@ -1976,7 +1973,7 @@
               <td class="z-good">1.34</td>
               <td class="z-ok">0.40</td>
               <td class="z-good">1.22</td>
-              <td>97.1%</td>
+              <td>97.2%</td>
             </tr>
             
             <tr data-pos="SS">
@@ -2025,8 +2022,8 @@
               <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-good">1.24</td>
               <td class="z-bad">-0.04</td>
-              <td class="z-good">0.88</td>
-              <td>99.6%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="C">
@@ -2035,8 +2032,8 @@
               <td class="left other-team">2010 State Sectional Champ</td>
               <td class="z-good">1.14</td>
               <td class="z-terrible">-0.79</td>
-              <td class="z-good">1.06</td>
-              <td>97.6%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="SS">
@@ -2065,8 +2062,8 @@
               <td class="left other-team">All Rise Run Club</td>
               <td class="z-good">0.87</td>
               <td class="z-great">2.19</td>
-              <td class="z-ok">0.22</td>
-              <td>11.0%</td>
+              <td class="z-good">0.51</td>
+              <td>12.6%</td>
             </tr>
             
             <tr data-pos="3B">
@@ -2155,8 +2152,8 @@
               <td class="left other-team">Jazz In Her Batters Box</td>
               <td class="z-good">0.78</td>
               <td class="z-good">0.75</td>
-              <td class="z-good">0.97</td>
-              <td>97.9%</td>
+              <td class="z-good">1.11</td>
+              <td>98.0%</td>
             </tr>
             
             <tr data-pos="DH">
@@ -2195,8 +2192,8 @@
               <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-good">0.73</td>
               <td class="z-good">1.16</td>
-              <td class="z-great">1.77</td>
-              <td>99.7%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="3B">
@@ -2205,8 +2202,8 @@
               <td class="left my-team">Pitch Slap</td>
               <td class="z-good">0.70</td>
               <td class="z-ok">0.45</td>
-              <td class="z-ok">0.39</td>
-              <td>27.9%</td>
+              <td class="z-good">0.53</td>
+              <td>27.7%</td>
             </tr>
             
             <tr data-pos="3B">
@@ -2215,8 +2212,8 @@
               <td class="left other-team">ICECOLDBEERHERE!</td>
               <td class="z-good">0.70</td>
               <td class="z-ok">0.10</td>
-              <td class="z-good">1.31</td>
-              <td>99.6%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="C">
@@ -2225,8 +2222,8 @@
               <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-good">0.67</td>
               <td class="z-bad">-0.40</td>
-              <td class="z-good">1.38</td>
-              <td>98.9%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2245,8 +2242,8 @@
               <td class="left other-team">All Rise Run Club</td>
               <td class="z-good">0.66</td>
               <td class="z-terrible">-0.69</td>
-              <td class="z-ok">0.11</td>
-              <td>75.0%</td>
+              <td class="z-ok">0.24</td>
+              <td>75.3%</td>
             </tr>
             
             <tr data-pos="3B">
@@ -2265,8 +2262,8 @@
               <td class="left fa">FA</td>
               <td class="z-good">0.65</td>
               <td class="z-terrible">-1.25</td>
-              <td class="z-bad">-0.17</td>
-              <td>3.6%</td>
+              <td class="z-ok">0.05</td>
+              <td>3.5%</td>
             </tr>
             
             <tr data-pos="DH">
@@ -2286,7 +2283,7 @@
               <td class="z-good">0.63</td>
               <td class="z-ok">0.09</td>
               <td class="z-good">0.70</td>
-              <td>88.5%</td>
+              <td>88.7%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2295,7 +2292,7 @@
               <td class="left other-team">Lunch</td>
               <td class="z-good">0.63</td>
               <td class="z-terrible">-0.95</td>
-              <td class="z-good">1.37</td>
+              <td class="z-good">1.38</td>
               <td>99.8%</td>
             </tr>
             
@@ -2305,8 +2302,8 @@
               <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-good">0.62</td>
               <td class="z-bad">-0.21</td>
-              <td class="z-ok">0.27</td>
-              <td>40.1%</td>
+              <td class="z-good">0.53</td>
+              <td>40.7%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2325,7 +2322,7 @@
               <td class="left my-team">Pitch Slap</td>
               <td class="z-good">0.59</td>
               <td class="z-terrible">-0.60</td>
-              <td class="z-good">1.31</td>
+              <td class="z-good">1.32</td>
               <td>99.8%</td>
             </tr>
             
@@ -2345,8 +2342,8 @@
               <td class="left my-team">Pitch Slap</td>
               <td class="z-good">0.57</td>
               <td class="z-bad">-0.08</td>
-              <td class="z-good">0.82</td>
-              <td>96.7%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2365,8 +2362,8 @@
               <td class="left fa">FA</td>
               <td class="z-good">0.56</td>
               <td class="z-ok">0.21</td>
-              <td class="z-ok">0.08</td>
-              <td>25.0%</td>
+              <td class="z-ok">0.35</td>
+              <td>26.4%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2385,8 +2382,8 @@
               <td class="left other-team">2010 State Sectional Champ</td>
               <td class="z-good">0.54</td>
               <td class="z-terrible">-1.13</td>
-              <td class="z-ok">0.14</td>
-              <td>53.6%</td>
+              <td class="z-ok">0.26</td>
+              <td>54.0%</td>
             </tr>
             
             <tr data-pos="DH">
@@ -2395,8 +2392,8 @@
               <td class="left fa">FA</td>
               <td class="z-good">0.53</td>
               <td class="z-good">1.00</td>
-              <td class="z-bad">-0.13</td>
-              <td>20.1%</td>
+              <td class="z-ok">0.08</td>
+              <td>20.6%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2406,7 +2403,7 @@
               <td class="z-good">0.53</td>
               <td class="z-good">0.80</td>
               <td class="z-good">0.98</td>
-              <td>43.1%</td>
+              <td>43.0%</td>
             </tr>
             
             <tr data-pos="X">
@@ -2425,8 +2422,8 @@
               <td class="left fa">FA</td>
               <td class="z-good">0.51</td>
               <td class="z-terrible">-0.79</td>
-              <td class="z-ok">0.10</td>
-              <td>11.6%</td>
+              <td class="z-ok">0.31</td>
+              <td>11.5%</td>
             </tr>
             
             <tr data-pos="1B">
@@ -2445,8 +2442,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.49</td>
               <td class="z-ok">0.45</td>
-              <td class="z-ok">0.39</td>
-              <td>27.9%</td>
+              <td class="z-good">0.53</td>
+              <td>27.7%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2456,7 +2453,7 @@
               <td class="z-ok">0.48</td>
               <td class="z-terrible">-0.61</td>
               <td class="z-ok">0.32</td>
-              <td>71.0%</td>
+              <td>70.9%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2465,8 +2462,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.46</td>
               <td class="z-terrible">-0.98</td>
-              <td class="z-terrible">-0.60</td>
-              <td>11.1%</td>
+              <td class="z-terrible">-0.59</td>
+              <td>10.7%</td>
             </tr>
             
             <tr data-pos="SS">
@@ -2495,8 +2492,8 @@
               <td class="left my-team">Pitch Slap</td>
               <td class="z-ok">0.44</td>
               <td class="z-ok">0.08</td>
-              <td class="z-good">0.95</td>
-              <td>29.1%</td>
+              <td class="z-good">1.14</td>
+              <td>29.8%</td>
             </tr>
             
             <tr data-pos="1B">
@@ -2505,8 +2502,8 @@
               <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-ok">0.43</td>
               <td class="z-terrible">-1.15</td>
-              <td class="z-good">0.54</td>
-              <td>68.7%</td>
+              <td class="z-good">0.68</td>
+              <td>68.5%</td>
             </tr>
             
             <tr data-pos="2B">
@@ -2516,7 +2513,7 @@
               <td class="z-ok">0.43</td>
               <td class="z-terrible">-0.82</td>
               <td class="z-ok">0.42</td>
-              <td>82.6%</td>
+              <td>82.9%</td>
             </tr>
             
             <tr data-pos="C">
@@ -2525,8 +2522,8 @@
               <td class="left other-team">2010 State Sectional Champ</td>
               <td class="z-ok">0.41</td>
               <td class="z-ok">0.25</td>
-              <td class="z-good">0.66</td>
-              <td>72.4%</td>
+              <td class="z-good">0.98</td>
+              <td>72.2%</td>
             </tr>
             
             <tr data-pos="2B">
@@ -2556,7 +2553,7 @@
               <td class="z-ok">0.40</td>
               <td class="z-ok">0.07</td>
               <td class="z-ok">0.14</td>
-              <td>5.6%</td>
+              <td>5.9%</td>
             </tr>
             
             <tr data-pos="C">
@@ -2586,7 +2583,7 @@
               <td class="z-ok">0.33</td>
               <td class="z-ok">0.43</td>
               <td class="z-ok">0.46</td>
-              <td>82.9%</td>
+              <td>83.1%</td>
             </tr>
             
             <tr data-pos="X">
@@ -2646,7 +2643,7 @@
               <td class="z-ok">0.28</td>
               <td class="z-terrible">-0.69</td>
               <td class="z-bad">-0.01</td>
-              <td>56.0%</td>
+              <td>56.5%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2655,8 +2652,8 @@
               <td class="left other-team">Lunch</td>
               <td class="z-ok">0.28</td>
               <td class="z-ok">0.07</td>
-              <td class="z-good">0.83</td>
-              <td>91.5%</td>
+              <td class="z-good">0.84</td>
+              <td>91.6%</td>
             </tr>
             
             <tr data-pos="2B">
@@ -2675,7 +2672,7 @@
               <td class="left other-team">Lunch</td>
               <td class="z-ok">0.27</td>
               <td class="z-ok">0.22</td>
-              <td class="z-great">2.46</td>
+              <td class="z-great">2.87</td>
               <td>99.7%</td>
             </tr>
             
@@ -2726,7 +2723,7 @@
               <td class="z-ok">0.25</td>
               <td class="z-terrible">-0.86</td>
               <td class="z-good">0.55</td>
-              <td>98.3%</td>
+              <td>98.2%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2735,7 +2732,7 @@
               <td class="left other-team">Lunch</td>
               <td class="z-ok">0.23</td>
               <td class="z-ok">0.20</td>
-              <td class="z-ok">0.48</td>
+              <td class="z-ok">0.49</td>
               <td>75.5%</td>
             </tr>
             
@@ -2776,7 +2773,7 @@
               <td class="z-ok">0.19</td>
               <td class="z-good">0.59</td>
               <td class="z-terrible">-1.43</td>
-              <td>2.4%</td>
+              <td>5.1%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2785,8 +2782,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.18</td>
               <td class="z-bad">-0.44</td>
-              <td class="z-bad">-0.48</td>
-              <td>6.7%</td>
+              <td class="z-bad">-0.47</td>
+              <td>6.8%</td>
             </tr>
             
             <tr data-pos="2B">
@@ -2796,7 +2793,7 @@
               <td class="z-ok">0.18</td>
               <td class="z-terrible">-1.01</td>
               <td class="z-ok">0.36</td>
-              <td>51.2%</td>
+              <td>50.5%</td>
             </tr>
             
             <tr data-pos="1B">
@@ -2897,8 +2894,8 @@
               <td class="left other-team">Lunch</td>
               <td class="z-good">0.98</td>
               <td class="z-good">0.64</td>
-              <td class="z-bad">-0.24</td>
-              <td>18.0%</td>
+              <td class="z-bad">-0.18</td>
+              <td>18.4%</td>
             </tr>
             
             <tr data-pos="P">
@@ -2907,8 +2904,8 @@
               <td class="left my-team">Pitch Slap</td>
               <td class="z-good">0.96</td>
               <td class="z-ok">0.28</td>
-              <td class="z-good">1.24</td>
-              <td>99.3%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="P">
@@ -2917,8 +2914,8 @@
               <td class="left fa">FA</td>
               <td class="z-good">0.73</td>
               <td class="z-good">0.80</td>
-              <td class="z-terrible">-0.78</td>
-              <td>3.0%</td>
+              <td class="z-terrible">-0.76</td>
+              <td>3.5%</td>
             </tr>
             
             <tr data-pos="P">
@@ -2927,8 +2924,8 @@
               <td class="left fa">FA</td>
               <td class="z-good">0.72</td>
               <td class="z-good">0.58</td>
-              <td class="z-ok">0.21</td>
-              <td>51.7%</td>
+              <td class="z-ok">0.31</td>
+              <td>53.3%</td>
             </tr>
             
             <tr data-pos="P">
@@ -2937,8 +2934,8 @@
               <td class="left fa">FA</td>
               <td class="z-good">0.68</td>
               <td class="z-ok">0.11</td>
-              <td class="z-ok">0.22</td>
-              <td>12.6%</td>
+              <td class="z-ok">0.34</td>
+              <td>12.7%</td>
             </tr>
             
             <tr data-pos="P">
@@ -2987,8 +2984,8 @@
               <td class="left other-team">Jazz In Her Batters Box</td>
               <td class="z-good">0.63</td>
               <td class="z-ok">0.11</td>
-              <td class="z-good">1.00</td>
-              <td>97.4%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="P">
@@ -3067,8 +3064,8 @@
               <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-ok">0.44</td>
               <td class="z-bad">-0.28</td>
-              <td class="z-good">0.97</td>
-              <td>98.5%</td>
+              <td class="z-good">1.01</td>
+              <td>98.6%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3097,8 +3094,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.42</td>
               <td class="z-ok">0.38</td>
-              <td class="z-bad">-0.22</td>
-              <td>1.4%</td>
+              <td class="z-bad">-0.17</td>
+              <td>1.5%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3127,7 +3124,7 @@
               <td class="left other-team">Lunch</td>
               <td class="z-ok">0.38</td>
               <td class="z-bad">-0.04</td>
-              <td class="z-ok">0.27</td>
+              <td class="z-ok">0.41</td>
               <td>12.7%</td>
             </tr>
             
@@ -3147,7 +3144,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.36</td>
               <td class="z-ok">0.39</td>
-              <td class="z-terrible">-1.32</td>
+              <td class="z-terrible">-1.35</td>
               <td>0.5%</td>
             </tr>
             
@@ -3187,8 +3184,8 @@
               <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-ok">0.33</td>
               <td class="z-ok">0.13</td>
-              <td class="z-ok">0.21</td>
-              <td>75.5%</td>
+              <td class="z-ok">0.30</td>
+              <td>75.6%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3197,7 +3194,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.33</td>
               <td class="z-good">0.60</td>
-              <td class="z-terrible">-0.61</td>
+              <td class="z-terrible">-0.56</td>
               <td>1.0%</td>
             </tr>
             
@@ -3217,7 +3214,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.30</td>
               <td class="z-bad">-0.30</td>
-              <td class="z-bad">-0.42</td>
+              <td class="z-bad">-0.38</td>
               <td>0.4%</td>
             </tr>
             
@@ -3227,8 +3224,8 @@
               <td class="left other-team">ICECOLDBEERHERE!</td>
               <td class="z-ok">0.30</td>
               <td class="z-ok">0.42</td>
-              <td class="z-good">0.70</td>
-              <td>65.8%</td>
+              <td class="z-good">0.74</td>
+              <td>66.4%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3257,7 +3254,7 @@
               <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-ok">0.28</td>
               <td class="z-ok">0.42</td>
-              <td class="z-great">2.12</td>
+              <td class="z-great">2.19</td>
               <td>99.8%</td>
             </tr>
             
@@ -3277,7 +3274,7 @@
               <td class="left other-team">All Rise Run Club</td>
               <td class="z-ok">0.28</td>
               <td class="z-ok">0.07</td>
-              <td class="z-good">1.28</td>
+              <td class="z-good">1.33</td>
               <td>98.1%</td>
             </tr>
             
@@ -3297,7 +3294,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.27</td>
               <td class="z-good">0.53</td>
-              <td class="z-bad">-0.12</td>
+              <td class="z-bad">-0.05</td>
               <td>0.3%</td>
             </tr>
             
@@ -3327,7 +3324,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.26</td>
               <td class="z-ok">-0.00</td>
-              <td class="z-ok">0.12</td>
+              <td class="z-ok">0.16</td>
               <td>0.8%</td>
             </tr>
             
@@ -3347,8 +3344,8 @@
               <td class="left other-team">Jazz In Her Batters Box</td>
               <td class="z-ok">0.26</td>
               <td class="z-bad">-0.19</td>
-              <td class="z-good">1.01</td>
-              <td>89.7%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="P">
@@ -3427,7 +3424,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.24</td>
               <td class="z-bad">-0.31</td>
-              <td class="z-ok">0.31</td>
+              <td class="z-ok">0.40</td>
               <td>1.7%</td>
             </tr>
             
@@ -3457,7 +3454,7 @@
               <td class="left other-team">All Rise Run Club</td>
               <td class="z-ok">0.23</td>
               <td class="z-ok">0.13</td>
-              <td class="z-good">1.03</td>
+              <td class="z-good">1.08</td>
               <td>97.5%</td>
             </tr>
             
@@ -3467,7 +3464,7 @@
               <td class="left other-team">All Rise Run Club</td>
               <td class="z-ok">0.23</td>
               <td class="z-ok">0.22</td>
-              <td class="z-good">0.94</td>
+              <td class="z-good">0.98</td>
               <td>98.0%</td>
             </tr>
             
@@ -3497,8 +3494,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.23</td>
               <td class="z-ok">0.11</td>
-              <td class="z-bad">-0.41</td>
-              <td>1.4%</td>
+              <td class="z-bad">-0.36</td>
+              <td>1.3%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3507,8 +3504,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.22</td>
               <td class="z-bad">-0.48</td>
-              <td class="z-ok">0.29</td>
-              <td>3.9%</td>
+              <td class="z-ok">0.38</td>
+              <td>3.8%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3517,7 +3514,7 @@
               <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-ok">0.22</td>
               <td class="z-bad">-0.06</td>
-              <td class="z-good">1.19</td>
+              <td class="z-good">1.24</td>
               <td>99.7%</td>
             </tr>
             
@@ -3547,7 +3544,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.22</td>
               <td class="z-ok">0.46</td>
-              <td class="z-ok">0.10</td>
+              <td class="z-ok">0.19</td>
               <td>0.2%</td>
             </tr>
             
@@ -3577,8 +3574,8 @@
               <td class="left other-team">All Rise Run Club</td>
               <td class="z-ok">0.21</td>
               <td class="z-bad">-0.09</td>
-              <td class="z-good">0.60</td>
-              <td>90.9%</td>
+              <td class="z-good">0.65</td>
+              <td>91.0%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3598,7 +3595,7 @@
               <td class="z-ok">0.20</td>
               <td class="z-good">0.72</td>
               <td class="z-ok">0.00</td>
-              <td>1.0%</td>
+              <td>1.2%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3607,8 +3604,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.20</td>
               <td class="z-bad">-0.35</td>
-              <td class="z-terrible">-0.82</td>
-              <td>5.1%</td>
+              <td class="z-terrible">-0.79</td>
+              <td>5.0%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3657,7 +3654,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.18</td>
               <td class="z-ok">0.38</td>
-              <td class="z-bad">-0.05</td>
+              <td class="z-ok">0.02</td>
               <td>0.7%</td>
             </tr>
             
@@ -3717,8 +3714,8 @@
               <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-ok">0.17</td>
               <td class="z-ok">0.11</td>
-              <td class="z-good">0.64</td>
-              <td>64.0%</td>
+              <td class="z-good">0.68</td>
+              <td>64.8%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3727,8 +3724,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.17</td>
               <td class="z-ok">0.15</td>
-              <td class="z-ok">0.06</td>
-              <td>26.6%</td>
+              <td class="z-ok">0.09</td>
+              <td>27.5%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3737,8 +3734,8 @@
               <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-ok">0.17</td>
               <td class="z-bad">-0.22</td>
-              <td class="z-good">1.37</td>
-              <td>94.8%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="P">
@@ -3787,7 +3784,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.14</td>
               <td class="z-bad">-0.33</td>
-              <td class="z-good">0.58</td>
+              <td class="z-good">0.70</td>
               <td>4.3%</td>
             </tr>
             
@@ -3797,7 +3794,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.14</td>
               <td class="z-ok">0.14</td>
-              <td class="z-terrible">-0.53</td>
+              <td class="z-bad">-0.48</td>
               <td>0.3%</td>
             </tr>
             
@@ -3807,8 +3804,8 @@
               <td class="left other-team">ICECOLDBEERHERE!</td>
               <td class="z-ok">0.13</td>
               <td class="z-bad">-0.11</td>
-              <td class="z-good">1.13</td>
-              <td>93.2%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="P">
@@ -3817,8 +3814,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.13</td>
               <td class="z-ok">0.06</td>
-              <td class="z-good">0.85</td>
-              <td>84.8%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="P">
@@ -3827,8 +3824,8 @@
               <td class="left other-team">Jazz In Her Batters Box</td>
               <td class="z-ok">0.13</td>
               <td class="z-bad">-0.40</td>
-              <td class="z-good">1.23</td>
-              <td>99.4%</td>
+              <td class="z-good">1.28</td>
+              <td>99.5%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3968,6 +3965,29 @@
 
     <p class="section-note">Last 21 days · Newest first · <span style="color:#4da6ff;">Blue = your team</span></p>
 
+    
+    <div style="color:#555;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+                padding:8px 0 3px;border-top:1px solid #1e2130;margin-top:4px;">
+      Apr 14
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <tbody>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              Lunch
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Noah Schultz</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Grant Holmes</span>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
     
     <div style="color:#555;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
                 padding:8px 0 3px;border-top:1px solid #1e2130;margin-top:4px;">
@@ -4402,7 +4422,7 @@
 </section>
 
 <footer style="text-align:center;padding:24px;color:#333;font-size:11px;">
-  Pitch Slap Fantasy Baseball Engine · Generated 2026-04-14 07:00
+  Pitch Slap Fantasy Baseball Engine · Generated 2026-04-14 14:55
 </footer>
 
 <script>
@@ -4484,6 +4504,38 @@ document.addEventListener('DOMContentLoaded', function() {
   initSortableTable('tbl-roster-hitters');
   initSortableTable('tbl-roster-pitchers');
 });
+
+/* ── Current-week stats toggle (R1) ── */
+var WEEK_STATS = {"mois\u00e9s ballesteros": {"g": "1", "avg": "1.000", "obp": "1.000", "r": "1", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "billy cook": {"g": "1", "avg": "1.000", "obp": "1.000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "joey loperfido": {"g": "1", "avg": "1.000", "obp": "1.000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "max muncy": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "edmundo sosa": {"g": "1", "avg": "1.000", "obp": "1.000", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "masyn winn": {"g": "1", "avg": "1.000", "obp": "1.000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "3", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "liam hicks": {"g": "1", "avg": ".750", "obp": ".600", "r": "0", "hr": "0", "rbi": "3", "sb": "1", "gp": "1", "ip": "0.0", "h": "3", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jeremiah jackson": {"g": "1", "avg": ".750", "obp": ".750", "r": "2", "hr": "2", "rbi": "5", "sb": "0", "gp": "1", "ip": "0.0", "h": "3", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "ryan jeffers": {"g": "1", "avg": ".750", "obp": ".800", "r": "3", "hr": "1", "rbi": "3", "sb": "0", "gp": "1", "ip": "0.0", "h": "3", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "brandon marsh": {"g": "1", "avg": ".750", "obp": ".800", "r": "2", "hr": "0", "rbi": "2", "sb": "1", "gp": "1", "ip": "0.0", "h": "3", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "luke raley": {"g": "1", "avg": ".750", "obp": ".750", "r": "0", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "3", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "agust\u00edn ram\u00edrez": {"g": "1", "avg": ".750", "obp": ".800", "r": "2", "hr": "1", "rbi": "4", "sb": "0", "gp": "1", "ip": "0.0", "h": "3", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "bryan reynolds": {"g": "1", "avg": ".750", "obp": ".800", "r": "1", "hr": "0", "rbi": "4", "sb": "0", "gp": "1", "ip": "0.0", "h": "3", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "miguel rojas": {"g": "1", "avg": ".750", "obp": ".750", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "3", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "wilyer abreu": {"g": "1", "avg": ".667", "obp": ".750", "r": "0", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "pete alonso": {"g": "1", "avg": ".667", "obp": ".750", "r": "2", "hr": "1", "rbi": "2", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "oneil cruz": {"g": "1", "avg": ".667", "obp": ".800", "r": "3", "hr": "0", "rbi": "3", "sb": "1", "gp": "1", "ip": "0.0", "h": "2", "bb": "2", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "adam frazier": {"g": "1", "avg": ".667", "obp": ".750", "r": "2", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "trent grisham": {"g": "1", "avg": ".667", "obp": ".667", "r": "2", "hr": "2", "rbi": "5", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "michael harris ii": {"g": "1", "avg": ".667", "obp": ".750", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "brayan rocchio": {"g": "1", "avg": ".667", "obp": ".750", "r": "2", "hr": "1", "rbi": "2", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "kyle schwarber": {"g": "1", "avg": ".667", "obp": ".800", "r": "4", "hr": "2", "rbi": "3", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "brandon lowe": {"g": "1", "avg": ".600", "obp": ".667", "r": "2", "hr": "1", "rbi": "5", "sb": "0", "gp": "1", "ip": "0.0", "h": "3", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "joc pederson": {"g": "1", "avg": ".600", "obp": ".600", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "3", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "j.t. realmuto": {"g": "1", "avg": ".600", "obp": ".600", "r": "0", "hr": "0", "rbi": "3", "sb": "0", "gp": "1", "ip": "0.0", "h": "3", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "cj abrams": {"g": "1", "avg": ".500", "obp": ".500", "r": "1", "hr": "1", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jo adell": {"g": "1", "avg": ".500", "obp": ".600", "r": "1", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "miguel amaya": {"g": "1", "avg": ".500", "obp": ".600", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "roman anthony": {"g": "1", "avg": ".500", "obp": ".800", "r": "2", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "2", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "nolan arenado": {"g": "1", "avg": ".500", "obp": ".500", "r": "2", "hr": "2", "rbi": "5", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jorge barrosa": {"g": "1", "avg": ".500", "obp": ".500", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jake burger": {"g": "1", "avg": ".500", "obp": ".600", "r": "2", "hr": "2", "rbi": "4", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "victor caratini": {"g": "1", "avg": ".500", "obp": ".750", "r": "2", "hr": "1", "rbi": "3", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "2", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "henry davis": {"g": "1", "avg": ".500", "obp": ".600", "r": "3", "hr": "0", "rbi": "0", "sb": "1", "gp": "1", "ip": "0.0", "h": "2", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "brendan donovan": {"g": "1", "avg": ".500", "obp": ".600", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "xavier edwards": {"g": "1", "avg": ".500", "obp": ".600", "r": "3", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "freddie freeman": {"g": "1", "avg": ".500", "obp": ".500", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "adolis garc\u00eda": {"g": "1", "avg": ".500", "obp": ".500", "r": "2", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "paul goldschmidt": {"g": "1", "avg": ".500", "obp": ".667", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "teoscar hern\u00e1ndez": {"g": "1", "avg": ".500", "obp": ".750", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "2", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "kyle higashioka": {"g": "1", "avg": ".500", "obp": ".600", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "spencer horwitz": {"g": "1", "avg": ".500", "obp": ".600", "r": "2", "hr": "1", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "carson kelly": {"g": "1", "avg": ".500", "obp": ".667", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "shea langeliers": {"g": "1", "avg": ".500", "obp": ".500", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "daylen lile": {"g": "1", "avg": ".500", "obp": ".500", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "andruw monasterio": {"g": "1", "avg": ".500", "obp": ".500", "r": "0", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "josh naylor": {"g": "1", "avg": ".500", "obp": ".500", "r": "2", "hr": "2", "rbi": "5", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "isaac paredes": {"g": "1", "avg": ".500", "obp": ".500", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jos\u00e9 ram\u00edrez": {"g": "1", "avg": ".500", "obp": ".600", "r": "1", "hr": "0", "rbi": "0", "sb": "2", "gp": "1", "ip": "0.0", "h": "2", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "ben rice": {"g": "1", "avg": ".500", "obp": ".667", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "julio rodr\u00edguez": {"g": "1", "avg": ".500", "obp": ".500", "r": "2", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "amed rosario": {"g": "1", "avg": ".500", "obp": ".500", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "giancarlo stanton": {"g": "1", "avg": ".500", "obp": ".600", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "ildemaro vargas": {"g": "1", "avg": ".500", "obp": ".500", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "mike yastrzemski": {"g": "1", "avg": ".500", "obp": ".500", "r": "0", "hr": "0", "rbi": "1", "sb": "1", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "alec burleson": {"g": "1", "avg": ".400", "obp": ".400", "r": "0", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "byron buxton": {"g": "1", "avg": ".400", "obp": ".400", "r": "2", "hr": "1", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jos\u00e9 caballero": {"g": "1", "avg": ".400", "obp": ".400", "r": "2", "hr": "1", "rbi": "2", "sb": "1", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "caleb durbin": {"g": "1", "avg": ".400", "obp": ".400", "r": "2", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "ian happ": {"g": "1", "avg": ".400", "obp": ".400", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "heriberto hern\u00e1ndez": {"g": "1", "avg": ".400", "obp": ".400", "r": "1", "hr": "0", "rbi": "0", "sb": "1", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "aaron judge": {"g": "1", "avg": ".400", "obp": ".400", "r": "2", "hr": "2", "rbi": "3", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "steven kwan": {"g": "1", "avg": ".400", "obp": ".400", "r": "0", "hr": "0", "rbi": "2", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "ketel marte": {"g": "1", "avg": ".400", "obp": ".400", "r": "2", "hr": "2", "rbi": "2", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "angel mart\u00ednez": {"g": "1", "avg": ".400", "obp": ".400", "r": "1", "hr": "1", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "yo\u00e1n moncada": {"g": "1", "avg": ".400", "obp": ".400", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "connor norby": {"g": "1", "avg": ".400", "obp": ".400", "r": "1", "hr": "1", "rbi": "2", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "matt olson": {"g": "1", "avg": ".400", "obp": ".400", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "cal raleigh": {"g": "1", "avg": ".400", "obp": ".400", "r": "2", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jorge soler": {"g": "1", "avg": ".400", "obp": ".400", "r": "1", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "mike trout": {"g": "1", "avg": ".400", "obp": ".400", "r": "3", "hr": "2", "rbi": "5", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jordan walker": {"g": "1", "avg": ".400", "obp": ".400", "r": "2", "hr": "1", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "francisco alvarez": {"g": "1", "avg": ".333", "obp": ".333", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "willson contreras": {"g": "1", "avg": ".333", "obp": ".333", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "yainer diaz": {"g": "1", "avg": ".333", "obp": ".333", "r": "0", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "ezequiel duran": {"g": "1", "avg": ".333", "obp": ".500", "r": "0", "hr": "0", "rbi": "0", "sb": "1", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "bryce harper": {"g": "1", "avg": ".333", "obp": ".500", "r": "2", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "pedro pag\u00e9s": {"g": "1", "avg": ".333", "obp": ".250", "r": "0", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jorge polanco": {"g": "1", "avg": ".333", "obp": ".333", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "marcus semien": {"g": "1", "avg": ".333", "obp": ".333", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "dominic smith": {"g": "1", "avg": ".333", "obp": ".250", "r": "0", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "will smith": {"g": "1", "avg": ".333", "obp": ".500", "r": "0", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "trevor story": {"g": "1", "avg": ".333", "obp": ".333", "r": "0", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "dansby swanson": {"g": "1", "avg": ".333", "obp": ".500", "r": "2", "hr": "1", "rbi": "2", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "leody taveras": {"g": "1", "avg": ".333", "obp": ".500", "r": "1", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jos\u00e9 tena": {"g": "1", "avg": ".333", "obp": ".500", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jorbit vivas": {"g": "1", "avg": ".333", "obp": ".500", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "austin wells": {"g": "1", "avg": ".333", "obp": ".600", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "2", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "james wood": {"g": "1", "avg": ".333", "obp": ".500", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "ronald acu\u00f1a jr.": {"g": "1", "avg": ".250", "obp": ".400", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "drake baldwin": {"g": "1", "avg": ".250", "obp": ".400", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "dylan beavers": {"g": "1", "avg": ".250", "obp": ".250", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "alec bohm": {"g": "1", "avg": ".250", "obp": ".200", "r": "0", "hr": "0", "rbi": "2", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "alex bregman": {"g": "1", "avg": ".250", "obp": ".400", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "juan brito": {"g": "1", "avg": ".250", "obp": ".250", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "lawrence butler": {"g": "1", "avg": ".250", "obp": ".250", "r": "1", "hr": "1", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "corbin carroll": {"g": "1", "avg": ".250", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "carlos correa": {"g": "1", "avg": ".250", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "j.p. crawford": {"g": "1", "avg": ".250", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "adrian del castillo": {"g": "1", "avg": ".250", "obp": ".250", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "david fry": {"g": "1", "avg": ".250", "obp": ".400", "r": "2", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "mitch garver": {"g": "1", "avg": ".250", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "nolan gorman": {"g": "1", "avg": ".250", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "konnor griffin": {"g": "1", "avg": ".250", "obp": ".400", "r": "2", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "josh jung": {"g": "1", "avg": ".250", "obp": ".250", "r": "0", "hr": "0", "rbi": "2", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "luke keaschall": {"g": "1", "avg": ".250", "obp": ".400", "r": "2", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "ryan kreidler": {"g": "1", "avg": ".250", "obp": ".250", "r": "1", "hr": "1", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "brooks lee": {"g": "1", "avg": ".250", "obp": ".250", "r": "0", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jake mangum": {"g": "1", "avg": ".250", "obp": ".400", "r": "2", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jakob marsee": {"g": "1", "avg": ".250", "obp": ".400", "r": "2", "hr": "0", "rbi": "0", "sb": "1", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "austin martin": {"g": "1", "avg": ".250", "obp": ".400", "r": "2", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jeff mcneil": {"g": "1", "avg": ".250", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "zach neto": {"g": "1", "avg": ".250", "obp": ".400", "r": "1", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "nasim nu\u00f1ez": {"g": "1", "avg": ".250", "obp": ".250", "r": "0", "hr": "0", "rbi": "2", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "logan o'hoppe": {"g": "1", "avg": ".250", "obp": ".250", "r": "0", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "andy pages": {"g": "1", "avg": ".250", "obp": ".250", "r": "1", "hr": "1", "rbi": "3", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "ceddanne rafaela": {"g": "1", "avg": ".250", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "corey seager": {"g": "1", "avg": ".250", "obp": ".400", "r": "2", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "cam smith": {"g": "1", "avg": ".250", "obp": ".250", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "josh smith": {"g": "1", "avg": ".250", "obp": ".250", "r": "1", "hr": "0", "rbi": "2", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "bryson stott": {"g": "1", "avg": ".250", "obp": ".400", "r": "1", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "seiya suzuki": {"g": "1", "avg": ".250", "obp": ".400", "r": "0", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "taylor trammell": {"g": "1", "avg": ".250", "obp": ".250", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "trea turner": {"g": "1", "avg": ".250", "obp": ".250", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jacob young": {"g": "1", "avg": ".250", "obp": ".250", "r": "1", "hr": "1", "rbi": "2", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "josh bell": {"g": "1", "avg": ".200", "obp": ".200", "r": "1", "hr": "0", "rbi": "2", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "cody bellinger": {"g": "1", "avg": ".200", "obp": ".200", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "owen caissie": {"g": "1", "avg": ".200", "obp": ".200", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jazz chisholm jr.": {"g": "1", "avg": ".200", "obp": ".200", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "pete crow-armstrong": {"g": "1", "avg": ".200", "obp": ".200", "r": "1", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jarren duran": {"g": "1", "avg": ".200", "obp": ".200", "r": "1", "hr": "1", "rbi": "2", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "gunnar henderson": {"g": "1", "avg": ".200", "obp": ".200", "r": "0", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "iv\u00e1n herrera": {"g": "1", "avg": ".200", "obp": ".200", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "otto lopez": {"g": "1", "avg": ".200", "obp": ".200", "r": "0", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "ryan o'hearn": {"g": "1", "avg": ".200", "obp": ".200", "r": "1", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "graham pauley": {"g": "1", "avg": ".200", "obp": ".200", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "austin riley": {"g": "1", "avg": ".200", "obp": ".200", "r": "1", "hr": "0", "rbi": "2", "sb": "1", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "daniel schneemann": {"g": "1", "avg": ".200", "obp": ".200", "r": "0", "hr": "0", "rbi": "2", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jj wetherholt": {"g": "1", "avg": ".200", "obp": ".200", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "1", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "ozzie albies": {"g": "1", "avg": ".000", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "blaze alexander": {"g": "1", "avg": ".000", "obp": ".333", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "nick allen": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jose altuve": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "yordan alvarez": {"g": "1", "avg": ".000", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "randy arozarena": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "joey bart": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "samuel basallo": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "bo bichette": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "evan carter": {"g": "1", "avg": ".000", "obp": ".200", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "nathan church": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "denzel clarke": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "michael conforto": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "carlos cortes": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "colton cowser": {"g": "1", "avg": ".000", "obp": ".250", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "justin crawford": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "mauricio dub\u00f3n": {"g": "1", "avg": ".000", "obp": ".500", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "2", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "santiago espinal": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "kyle farmer": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jos\u00e9 ferm\u00edn": {"g": "1", "avg": ".000", "obp": ".500", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jose fernandez": {"g": "1", "avg": ".000", "obp": ".000", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "luis garc\u00eda jr.": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "zack gelof": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "nick gonzales": {"g": "1", "avg": ".000", "obp": "1.000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "randal grichuk": {"g": "1", "avg": ".000", "obp": ".500", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "sam haggerty": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "austin hedges": {"g": "1", "avg": ".000", "obp": ".250", "r": "1", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "darell hernaiz": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "nico hoerner": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "rhys hoskins": {"g": "1", "avg": ".000", "obp": ".200", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "otto kemp": {"g": "1", "avg": ".000", "obp": "1.000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "isiah kiner-falefa": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "scott kingery": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "nick kurtz": {"g": "1", "avg": ".000", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "francisco lindor": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "josh lowe": {"g": "1", "avg": ".000", "obp": ".200", "r": "1", "hr": "0", "rbi": "1", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "jorge mateo": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "marcelo mayer": {"g": "1", "avg": ".000", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "ryan mcmahon": {"g": "1", "avg": ".000", "obp": ".333", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "curtis mead": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "dylan moore": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "carlos narv\u00e1ez": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "brandon nimmo": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "shohei ohtani": {"g": "1", "avg": ".000", "obp": ".200", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "james outman": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "oswald peraza": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "geraldo perdomo": {"g": "1", "avg": ".000", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "tommy pham": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "luis robert jr.": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "keibert ruiz": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "thomas saggese": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "nolan schanuel": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "victor scott ii": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "matt shaw": {"g": "1", "avg": ".000", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "tyler soderstrom": {"g": "1", "avg": ".000", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "tyrone taylor": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "bryce teodosio": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "alek thomas": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "kyle tucker": {"g": "1", "avg": ".000", "obp": ".500", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "2", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "mark vientos": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "christian walker": {"g": "1", "avg": ".000", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "1", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "matt wallner": {"g": "1", "avg": ".000", "obp": ".250", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "taylor ward": {"g": "1", "avg": ".000", "obp": ".200", "r": "1", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "shay whitcomb": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "joey wiemer": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "2", "bb": "1", "era": "9.00", "whip": "3.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "jacob wilson": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "austin wynns": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "nick yorke": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "cole young": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": false}, "garrett acton": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "2.0", "h": "0", "bb": "2", "era": "0.00", "whip": "1.00", "k": "3", "qs": "0", "svhd": "0", "is_pitcher": true}, "lake bachar": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "2.0", "h": "1", "bb": "1", "era": "0.00", "whip": "1.00", "k": "4", "qs": "0", "svhd": "0", "is_pitcher": true}, "anthony bender": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "1", "bb": "0", "era": "0.00", "whip": "1.00", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "paul blackburn": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "matt brash": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.1", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "1", "is_pitcher": true}, "fernando cruz": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.1", "h": "0", "bb": "2", "era": "0.00", "whip": "6.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "nathan eovaldi": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "7.0", "h": "3", "bb": "2", "era": "0.00", "whip": "0.71", "k": "7", "qs": "0", "svhd": "0", "is_pitcher": true}, "mitch farris": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.1", "h": "2", "bb": "0", "era": "0.00", "whip": "1.50", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "calvin faucher": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.2", "h": "0", "bb": "3", "era": "0.00", "whip": "4.50", "k": "2", "qs": "0", "svhd": "0", "is_pitcher": true}, "ryan fernandez": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.2", "h": "4", "bb": "0", "era": "0.00", "whip": "2.40", "k": "2", "qs": "0", "svhd": "0", "is_pitcher": true}, "j.p. france": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "2.0", "h": "2", "bb": "0", "era": "0.00", "whip": "1.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "rico garcia": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "1", "is_pitcher": true}, "joey gerber": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "2.0", "h": "2", "bb": "1", "era": "0.00", "whip": "1.50", "k": "5", "qs": "0", "svhd": "0", "is_pitcher": true}, "gordon graceffo": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.1", "h": "0", "bb": "1", "era": "0.00", "whip": "0.75", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "ryan helsley": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "2", "qs": "0", "svhd": "1", "is_pitcher": true}, "tim herrin": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "1", "bb": "1", "era": "0.00", "whip": "2.00", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "orion kerkering": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.1", "h": "1", "bb": "0", "era": "0.00", "whip": "0.75", "k": "3", "qs": "0", "svhd": "0", "is_pitcher": true}, "craig kimbrel": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "1", "bb": "0", "era": "0.00", "whip": "1.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "john king": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.1", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "1", "is_pitcher": true}, "luis medina": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.1", "h": "0", "bb": "1", "era": "0.00", "whip": "0.75", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "jovani mor\u00e1n": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "2.1", "h": "0", "bb": "2", "era": "0.00", "whip": "0.86", "k": "2", "qs": "0", "svhd": "0", "is_pitcher": true}, "andrew nardi": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "drew pomeranz": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "1", "bb": "0", "era": "0.00", "whip": "1.00", "k": "2", "qs": "0", "svhd": "1", "is_pitcher": true}, "orlando ribalta": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "erik sabrowski": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "tyler samaniego": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "2.0", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "tanner scott": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "1", "bb": "0", "era": "0.00", "whip": "1.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "evan sisk": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "2.0", "h": "1", "bb": "1", "era": "0.00", "whip": "1.00", "k": "3", "qs": "0", "svhd": "0", "is_pitcher": true}, "cade smith": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "1", "bb": "0", "era": "0.00", "whip": "1.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "will warren": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "3.2", "h": "3", "bb": "1", "era": "0.00", "whip": "1.09", "k": "6", "qs": "0", "svhd": "0", "is_pitcher": true}, "jacob webb": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.2", "h": "0", "bb": "0", "era": "0.00", "whip": "0.00", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "cole wilcox": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "0", "bb": "1", "era": "0.00", "whip": "1.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "justin wrobleski": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "8.0", "h": "2", "bb": "0", "era": "0.00", "whip": "0.25", "k": "2", "qs": "0", "svhd": "0", "is_pitcher": true}, "paul skenes": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "6.0", "h": "1", "bb": "1", "era": "1.50", "whip": "0.33", "k": "6", "qs": "0", "svhd": "0", "is_pitcher": true}, "ryne nelson": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "5.1", "h": "3", "bb": "2", "era": "1.69", "whip": "0.94", "k": "7", "qs": "0", "svhd": "0", "is_pitcher": true}, "george kirby": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "7.2", "h": "7", "bb": "1", "era": "2.35", "whip": "1.04", "k": "6", "qs": "0", "svhd": "0", "is_pitcher": true}, "cristopher s\u00e1nchez": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "6.0", "h": "6", "bb": "3", "era": "3.00", "whip": "1.50", "k": "8", "qs": "0", "svhd": "0", "is_pitcher": true}, "paxton schultz": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "2.2", "h": "2", "bb": "0", "era": "3.38", "whip": "0.75", "k": "4", "qs": "0", "svhd": "0", "is_pitcher": true}, "dean kremer": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "5.0", "h": "6", "bb": "0", "era": "3.60", "whip": "1.20", "k": "9", "qs": "0", "svhd": "0", "is_pitcher": true}, "gavin williams": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "5.0", "h": "5", "bb": "2", "era": "3.60", "whip": "1.40", "k": "4", "qs": "0", "svhd": "0", "is_pitcher": true}, "luis curvelo": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "2.0", "h": "2", "bb": "0", "era": "4.50", "whip": "1.00", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "jos\u00e9 suarez": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "2.0", "h": "4", "bb": "0", "era": "4.50", "whip": "2.00", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "tim hill": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.2", "h": "3", "bb": "0", "era": "5.40", "whip": "1.80", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "bailey ober": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "6.0", "h": "7", "bb": "1", "era": "6.00", "whip": "1.33", "k": "7", "qs": "0", "svhd": "0", "is_pitcher": true}, "luis severino": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "6.0", "h": "6", "bb": "3", "era": "6.00", "whip": "1.50", "k": "7", "qs": "0", "svhd": "0", "is_pitcher": true}, "andrew hoffmann": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.1", "h": "1", "bb": "0", "era": "6.75", "whip": "0.75", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "grant holmes": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "4.0", "h": "3", "bb": "2", "era": "6.75", "whip": "1.25", "k": "3", "qs": "0", "svhd": "0", "is_pitcher": true}, "eury p\u00e9rez": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "4.0", "h": "7", "bb": "2", "era": "6.75", "whip": "2.25", "k": "2", "qs": "0", "svhd": "0", "is_pitcher": true}, "matthew liberatore": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "5.0", "h": "6", "bb": "3", "era": "7.20", "whip": "1.80", "k": "2", "qs": "0", "svhd": "0", "is_pitcher": true}, "david peterson": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "5.0", "h": "5", "bb": "4", "era": "7.20", "whip": "1.80", "k": "7", "qs": "0", "svhd": "0", "is_pitcher": true}, "charlie barnes": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "3.0", "h": "4", "bb": "3", "era": "9.00", "whip": "2.33", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "mike burrows": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "6.0", "h": "11", "bb": "1", "era": "9.00", "whip": "2.00", "k": "3", "qs": "0", "svhd": "0", "is_pitcher": true}, "hunter gaddis": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "2", "bb": "1", "era": "9.00", "whip": "3.00", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "ryan watson": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "2.0", "h": "2", "bb": "0", "era": "9.00", "whip": "1.00", "k": "2", "qs": "0", "svhd": "0", "is_pitcher": true}, "yusei kikuchi": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "3.1", "h": "4", "bb": "4", "era": "10.80", "whip": "2.40", "k": "3", "qs": "0", "svhd": "0", "is_pitcher": true}, "camilo doval": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.1", "h": "2", "bb": "0", "era": "13.50", "whip": "1.50", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "rolddy mu\u00f1oz": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "2.0", "h": "5", "bb": "1", "era": "13.50", "whip": "3.00", "k": "3", "qs": "0", "svhd": "0", "is_pitcher": true}, "albert su\u00e1rez": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "2.0", "h": "4", "bb": "1", "era": "13.50", "whip": "2.50", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "shaun anderson": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "2.1", "h": "4", "bb": "1", "era": "15.43", "whip": "2.14", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "seth johnson": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.2", "h": "4", "bb": "2", "era": "16.20", "whip": "3.60", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "justin bruihl": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "1", "bb": "1", "era": "18.00", "whip": "2.00", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "eric orze": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "3", "bb": "1", "era": "18.00", "whip": "4.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "javier assad": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "4.1", "h": "11", "bb": "2", "era": "18.69", "whip": "3.00", "k": "3", "qs": "0", "svhd": "0", "is_pitcher": true}, "jack perkins": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.2", "h": "5", "bb": "1", "era": "21.60", "whip": "3.60", "k": "4", "qs": "0", "svhd": "0", "is_pitcher": true}, "jake bird": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "4", "bb": "0", "era": "27.00", "whip": "4.00", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "aaron bummer": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "4", "bb": "0", "era": "27.00", "whip": "4.00", "k": "2", "qs": "0", "svhd": "0", "is_pitcher": true}, "cade cavalli": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.1", "h": "3", "bb": "3", "era": "27.00", "whip": "4.50", "k": "2", "qs": "0", "svhd": "0", "is_pitcher": true}, "jonathan lo\u00e1isiga": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.2", "h": "1", "bb": "1", "era": "27.00", "whip": "3.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "jos\u00e9 urquidy": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.0", "h": "6", "bb": "0", "era": "36.00", "whip": "6.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "brad lord": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.2", "h": "3", "bb": "1", "era": "40.50", "whip": "6.00", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "jackson rutledge": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.1", "h": "6", "bb": "2", "era": "47.25", "whip": "6.00", "k": "2", "qs": "0", "svhd": "0", "is_pitcher": true}, "garrett crochet": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "1.2", "h": "9", "bb": "3", "era": "54.00", "whip": "7.20", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}, "taylor rashi": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.2", "h": "3", "bb": "1", "era": "54.00", "whip": "6.00", "k": "1", "qs": "0", "svhd": "0", "is_pitcher": true}, "jordan romano": {"g": "1", "avg": ".000", "obp": ".000", "r": "0", "hr": "0", "rbi": "0", "sb": "0", "gp": "1", "ip": "0.0", "h": "3", "bb": "2", "era": "0.00", "whip": "0.00", "k": "0", "qs": "0", "svhd": "0", "is_pitcher": true}};
+var _rosterView = 'season';
+
+function rosterToggle(view) {
+  if (view === _rosterView) return;
+  _rosterView = view;
+
+  document.getElementById('btn-season').classList.toggle('active', view === 'season');
+  document.getElementById('btn-week').classList.toggle('active', view === 'week');
+  var note = document.getElementById('roster-view-note');
+  if (note) note.style.display = (view === 'week') ? '' : 'none';
+
+  ['tbl-roster-hitters', 'tbl-roster-pitchers'].forEach(function(tableId) {
+    var table = document.getElementById(tableId);
+    if (!table) return;
+    table.querySelectorAll('tbody tr').forEach(function(row) {
+      var playerName = (row.dataset.player || '').trim();
+      var wk = WEEK_STATS[playerName] || {};
+      row.querySelectorAll('td[data-k]').forEach(function(td) {
+        var key = td.dataset.k;
+        if (view === 'week') {
+          var val = wk[key];
+          td.textContent = (val !== undefined && val !== null) ? val : '—';
+        } else {
+          td.textContent = td.dataset.s || '—';
+        }
+      });
+    });
+  });
+}
 </script>
 
 </body>
