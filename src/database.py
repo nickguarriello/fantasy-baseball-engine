@@ -20,7 +20,7 @@ import os
 # Add parent directory to path so we can import config
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from config import DATA_CONFIG
+from config import DATA_CONFIG, ESPN_TEAM_TO_MLB_NAME
 
 # Database path from config
 DB_PATH = DATA_CONFIG['db_path']
@@ -265,11 +265,32 @@ def init_database() -> str:
         ''')
 
         # ====================================================================
+        # Table 10: TRANSACTIONS (league activity log)
+        # ====================================================================
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS transactions (
+                id                TEXT PRIMARY KEY,
+                txn_type          TEXT,
+                status            TEXT,
+                team_id           INTEGER,
+                team_name         TEXT,
+                scoring_period_id INTEGER,
+                proposed_date     TEXT,
+                items_json        TEXT,
+                fetched_at        DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        cursor.execute(
+            'CREATE INDEX IF NOT EXISTS idx_txn_date ON transactions(proposed_date)'
+        )
+
+        # ====================================================================
         # Schema migrations — safe to run on existing databases
         # ====================================================================
-        _add_column_if_missing(cursor, 'players',          'injury_status',  'TEXT DEFAULT "ACTIVE"')
-        _add_column_if_missing(cursor, 'player_z_scores',  'z_7day',         'REAL')
-        _add_column_if_missing(cursor, 'player_z_scores',  'is_two_start',   'BOOLEAN DEFAULT 0')
+        _add_column_if_missing(cursor, 'players',          'injury_status',    'TEXT DEFAULT "ACTIVE"')
+        _add_column_if_missing(cursor, 'player_z_scores',  'z_7day',           'REAL')
+        _add_column_if_missing(cursor, 'player_z_scores',  'is_two_start',     'BOOLEAN DEFAULT 0')
+        _add_column_if_missing(cursor, 'all_rosters',      'pro_team_abbrev',  'TEXT DEFAULT ""')
 
         conn.commit()
         print(f"✓ Database initialized at: {DB_PATH}")
@@ -548,8 +569,9 @@ def store_all_rosters(all_rosters: Dict) -> int:
                 cursor.execute('''
                     INSERT INTO all_rosters
                     (espn_player_id, player_name, position, is_pitcher,
-                     fantasy_team_id, fantasy_team_name, is_my_player, ownership_pct)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                     fantasy_team_id, fantasy_team_name, is_my_player, ownership_pct,
+                     pro_team_abbrev)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ''', (
                     player.get('espn_id'),
                     player.get('name'),
@@ -559,6 +581,7 @@ def store_all_rosters(all_rosters: Dict) -> int:
                     team_data.get('team_name'),
                     1 if player.get('is_my_player') else 0,
                     player.get('ownership_pct', 0.0),
+                    player.get('pro_team_abbrev', ''),
                 ))
                 records += 1
         conn.commit()
@@ -580,6 +603,7 @@ def get_players_with_stats() -> List[Dict]:
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     try:
+        # Step 1: fetch all players + stats (no roster join yet)
         cursor.execute('''
             SELECT
                 p.player_id, p.name, p.position, p.mlb_team, p.is_pitcher,
@@ -587,17 +611,75 @@ def get_players_with_stats() -> List[Dict]:
                 ps.games_played, ps.at_bats, ps.hits, ps.avg, ps.obp,
                 ps.runs, ps.home_runs, ps.rbis, ps.stolen_bases, ps.walks,
                 ps.innings_pitched, ps.era, ps.whip, ps.strikeouts_pitch,
-                ps.quality_starts, ps.saves, ps.holds, ps.earned_runs,
-                ar.fantasy_team_name, ar.is_my_player
+                ps.quality_starts, ps.saves, ps.holds, ps.earned_runs
             FROM players p
             LEFT JOIN player_stats ps ON p.player_id = ps.player_id
                 AND ps.date_fetched = (
                     SELECT MAX(date_fetched) FROM player_stats WHERE player_id = p.player_id
                 )
-            LEFT JOIN all_rosters ar ON LOWER(TRIM(p.name)) = LOWER(TRIM(ar.player_name))
             ORDER BY p.name
         ''')
-        return [dict(row) for row in cursor.fetchall()]
+        players = [dict(row) for row in cursor.fetchall()]
+
+        # Step 2: build roster lookup, using team-aware matching to handle
+        # same-name players (e.g. two MLB players named "Max Muncy").
+        # Key: name_lower → {fantasy_team_name, is_my_player, pro_team_abbrev}
+        cursor.execute('''
+            SELECT player_name, fantasy_team_name, is_my_player, pro_team_abbrev
+            FROM all_rosters
+        ''')
+        roster_rows = cursor.fetchall()
+
+        # For each name, store all roster entries (may be >1 if two teams have same-named players)
+        from collections import defaultdict
+        roster_by_name: Dict = defaultdict(list)
+        for row in roster_rows:
+            key = (row[0] or '').lower().strip()
+            roster_by_name[key].append({
+                'fantasy_team_name': row[1],
+                'is_my_player':      row[2],
+                'pro_team_abbrev':   row[3] or '',
+            })
+
+        # Build set of ambiguous MLB names (>1 player shares the name)
+        from collections import Counter
+        name_counts = Counter((p.get('name') or '').lower().strip() for p in players)
+        ambiguous_names = {n for n, c in name_counts.items() if c > 1}
+
+        # Step 3: assign roster info to each player using name + team matching
+        for p in players:
+            key = (p.get('name') or '').lower().strip()
+            entries = roster_by_name.get(key, [])
+            if not entries:
+                p['fantasy_team_name'] = None
+                p['is_my_player'] = 0
+                continue
+
+            # Always do team matching when the name is ambiguous in MLB
+            # (multiple MLB players share this name) or when pro_team_abbrev is set
+            mlb_team = p.get('mlb_team', '')
+            if key in ambiguous_names or any(e.get('pro_team_abbrev') for e in entries):
+                matched = None
+                for entry in entries:
+                    espn_abbrev = entry.get('pro_team_abbrev', '')
+                    mlb_keyword = ESPN_TEAM_TO_MLB_NAME.get(espn_abbrev, '')
+                    if mlb_keyword and mlb_keyword.lower() in mlb_team.lower():
+                        matched = entry
+                        break
+                if not matched and key not in ambiguous_names:
+                    matched = entries[0]  # unambiguous name, safe to use first entry
+                elif not matched:
+                    # Ambiguous name with no team match → not our player
+                    p['fantasy_team_name'] = None
+                    p['is_my_player'] = 0
+                    continue
+            else:
+                matched = entries[0]
+
+            p['fantasy_team_name'] = matched['fantasy_team_name']
+            p['is_my_player']      = matched['is_my_player']
+
+        return players
     except sqlite3.Error as e:
         print(f"Error retrieving players with stats: {e}")
         return []
@@ -723,6 +805,82 @@ def get_my_roster() -> List[Dict]:
         
     except sqlite3.Error as e:
         print(f"✗ Error retrieving your roster: {e}")
+        return []
+    finally:
+        conn.close()
+
+
+# ---------------------------------------------------------------------------
+# Transaction storage and retrieval
+# ---------------------------------------------------------------------------
+
+def store_transactions(transactions: List[Dict]) -> int:
+    """
+    Store transactions using INSERT OR IGNORE (transactions are immutable).
+    Returns count of newly inserted rows.
+    """
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    inserted = 0
+    try:
+        for t in transactions:
+            cursor.execute('''
+                INSERT OR IGNORE INTO transactions
+                (id, txn_type, status, team_id, team_name,
+                 scoring_period_id, proposed_date, items_json)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                t.get('id'),
+                t.get('txn_type'),
+                t.get('status', 'EXECUTED'),
+                t.get('team_id'),
+                t.get('team_name'),
+                t.get('scoring_period_id'),
+                t.get('proposed_date'),
+                json.dumps(t.get('items', [])),
+            ))
+            if cursor.rowcount > 0:
+                inserted += 1
+        conn.commit()
+        return inserted
+    except sqlite3.Error as e:
+        print(f"Error storing transactions: {e}")
+        conn.rollback()
+        return 0
+    finally:
+        conn.close()
+
+
+def get_transactions(team_id: Optional[int] = None, days: int = 30) -> List[Dict]:
+    """
+    Return transactions from the last N days, newest first.
+    Optionally filtered to a single fantasy team.
+    """
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    try:
+        if team_id is not None:
+            cursor.execute('''
+                SELECT * FROM transactions
+                WHERE proposed_date >= date('now', ?)
+                  AND team_id = ?
+                ORDER BY proposed_date DESC, fetched_at DESC
+            ''', (f'-{days} days', team_id))
+        else:
+            cursor.execute('''
+                SELECT * FROM transactions
+                WHERE proposed_date >= date('now', ?)
+                ORDER BY proposed_date DESC, fetched_at DESC
+            ''', (f'-{days} days',))
+        rows = []
+        for row in cursor.fetchall():
+            d = dict(row)
+            d['items'] = json.loads(d.get('items_json') or '[]')
+            rows.append(d)
+        return rows
+    except sqlite3.Error as e:
+        print(f"Error retrieving transactions: {e}")
         return []
     finally:
         conn.close()

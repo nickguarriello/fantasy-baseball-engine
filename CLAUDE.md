@@ -150,9 +150,9 @@ Free agents are **derived**: MLB stats pool minus all ESPN-rostered players (nam
 
 ## HTML Report Architecture
 
-- **Template:** `templates/report.html` — Jinja2, edit for layout/styling only
-- **Data builder:** `src/report.py` — loads CSVs, builds context dicts, renders template
-- **Output:** `docs/index.html` — tracked in git, served via GitHub Pages
+- **Templates:** `templates/report.html` + `templates/matchup_calendar.html` — Jinja2, edit for layout/styling only
+- **Data builder:** `src/report.py` — loads CSVs, builds context dicts, renders templates
+- **Outputs:** `docs/index.html` + `docs/matchup-calendar.html` — tracked in git, served via GitHub Pages
 - **Rule:** Never put business logic in the template. Never put HTML in report.py.
 
 ### Report Sections (nav order)
@@ -162,6 +162,8 @@ Free agents are **derived**: MLB stats pool minus all ESPN-rostered players (nam
 4. 🔍 Waiver Wire
 5. 🔄 Trade
 6. 📊 Rankings
+7. 📋 Activity
+8. 📅 Schedule (matchup-calendar.html — separate page)
 
 ### CSS Class Reference
 ```css
@@ -201,9 +203,18 @@ Free agents are **derived**: MLB stats pool minus all ESPN-rostered players (nam
 | Rankings: JS filter buttons by position, expanded to top 100 | ✅ Done |
 | Global CSS: consistent column widths throughout | 📦 Backlog |
 | Tier 3: In-week cumulative stat tracking across matchups | ✅ Done |
+| Transaction history + Activity section in report | ✅ Done |
+| ERA/WHIP inf fix (ESPN returns JS Infinity) | ✅ Done |
+| IL detection via slot IDs 17/18/19 (injuryStatus unreliable) | ✅ Done |
+| Same-name MLB player disambiguation (proTeamId cross-ref) | ✅ Done |
+| Pitcher G column + SV+HLD → SVHD in My Roster table | ✅ Done |
+| Sortable columns + Reset button on My Roster hitter/pitcher tables | ✅ Done |
+| Matchup Calendar page (matchup-calendar.html, MLB schedule + fantasy overlay) | ✅ Done |
 | Trade negotiation helper (multi-player, surplus vs needs) | 📦 Backlog |
+| Past matchup results / history section | 📦 Backlog |
 | Testing strategy + test suite | 📦 Backlog |
 | MLB player ID cross-reference (replace name matching) | 📦 Backlog |
+| ESPN OPP/STATUS for two-start pitcher detection | 📦 Backlog |
 | Phase 5: Historical learning (trend model) | ⏳ Blocked — revisit after 2-3 weeks of data |
 
 ---
@@ -256,9 +267,9 @@ pending open questions — the slate is clean for new feature work.
 
 ## Last Run Stats (auto-updated by pre-commit hook)
 
-- **Updated:** 2026-04-13 07:00:24
-- **Last data run:** 2026-04-13 11:00:18
+- **Updated:** 2026-04-13 21:13:45
+- **Last data run:** 2026-04-13 19:24:24
 - **Players in DB:** 868
-- **Z-score records:** 31565
+- **Z-score records:** 43717
 - **Roster entries:** 250
 - **League teams:** 8

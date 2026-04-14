@@ -265,3 +265,43 @@ ESPN lineupSlotId → slot name:
 ## Status: All Done ✅
 
 All 9 questions answered, all code shipped, all 19 template checks passing.
+
+---
+
+## Session 7 — Current State (2026-04-13)
+
+### Completed this session
+- ERA/WHIP `inf` fix in matchup (ESPN returns JS Infinity → skip via `math.isinf`)
+- IL detection via lineup slot IDs 17/18/19 (injuryStatus='N/A' for all players from ESPN)
+- Max Muncy duplicate fix — proTeamId → pro_team_abbrev stored in all_rosters, Python-level team-aware name matching using Counter to detect ambiguity from players table
+- Transaction history fetch (`fetch_all_transactions` loops periods 1→current, dedup by UUID)
+- Activity section in HTML report — date-grouped, my-team highlighted, "Your Recent Moves" callout
+- Pitcher G column + SV+HLD → SVHD combined column
+- Sortable columns on both roster tables (click th to sort asc/desc, ↺ Reset button)
+- Waiver two-start stale CSV fix (always write even when empty list)
+
+### Needs pipeline re-run to verify
+- Taj Bradley not appearing in waiver two-start section (fix committed, not yet verified)
+- IL players (Mookie/Soto) show correctly on My Roster
+- Max Muncy only appears once
+
+### Open / Backlog
+| Item | Priority | Notes |
+|------|----------|-------|
+| Matchup calendar dashboard (separate HTML) | Medium | Prototype built this session — see docs/matchup-calendar.html |
+| Past matchup results / history section | Medium | User: backlog for now |
+| ESPN OPP/STATUS for two-start detection | Low | User suggested as alt to MLB probables API |
+| Global CSS consistent column widths | Low | CLAUDE.md backlog |
+| Trade negotiation helper (multi-player) | Low | CLAUDE.md backlog |
+| Testing strategy + test suite | Low | CLAUDE.md backlog |
+| MLB player ID cross-reference | Low | CLAUDE.md backlog |
+| Phase 5: Historical learning / trend model | Blocked | Need 2-3 weeks of data |
+
+### Matchup Calendar — SHIPPED Session 7 ✅
+Fully wired to live data. Generated every pipeline run at docs/matchup-calendar.html.
+- `fetch_weekly_schedule()` in fetchers.py — MLB schedule API with team/probable/score/status
+- `_build_matchup_calendar()` in report.py — cross-references both rosters against game teams
+- `templates/matchup_calendar.html` — Jinja2 template (data injected as JSON vars)
+- Nav link added to main dashboard: 📅 Schedule
+- Opponent name pulled live from current matchup context
+- Per-game fantasy overlay: 🔵 My Team / 🟣 Opponent players auto-expanded on load

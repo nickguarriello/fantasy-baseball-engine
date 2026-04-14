@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚾ Schedule — {{ my_team }}</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0f1117; color: #e0e0e0; font-size: 14px; line-height: 1.4;
+}
+
+/* ── Nav ── */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: #13151f; border-bottom: 1px solid #22253a;
+  padding: 0 16px; display: flex; align-items: center; gap: 6px;
+  height: 44px;
+}
+nav .brand { font-weight: 700; font-size: 15px; color: #fff; margin-right: 10px; }
+nav a { color: #888; font-size: 12px; padding: 4px 10px; border-radius: 4px; background: #1e2230; text-decoration: none; }
+nav a:hover { background: #2a2d42; color: #fff; }
+.generated { margin-left: auto; font-size: 11px; color: #555; }
+
+/* ── Week nav bar ── */
+.week-bar {
+  background: #13151f; border-bottom: 1px solid #22253a;
+  padding: 10px 16px; display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 44px; z-index: 190;
+}
+.matchup-select {
+  background: #1e2230; border: 1px solid #2a2d42; color: #e0e0e0;
+  border-radius: 5px; padding: 5px 32px 5px 10px; font-size: 13px; font-weight: 600;
+  cursor: pointer; outline: none; min-width: 240px;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+}
+.matchup-select:hover { border-color: #3a4060; }
+.matchup-select option { background: #1a1d2a; color: #e0e0e0; }
+.matchup-select optgroup { color: #555; font-size: 11px; }
+.week-result-badge { font-size: 10px; padding: 1px 6px; border-radius: 3px; font-weight: 700; margin-left: 6px; }
+.wr-W { background:#1a4a1a; color:#7fff7f; }
+.wr-L { background:#4a1a1a; color:#ff8888; }
+.wr-now { background:#1a3a6a; color:#4da6ff; }
+.matchup-pill {
+  margin-left: auto; background: #111827; border: 1px solid #2a3550;
+  border-radius: 20px; padding: 3px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px;
+}
+.matchup-pill .my   { color: #4da6ff; font-weight: 600; }
+.matchup-pill .sep  { color: #333; }
+.matchup-pill .opp  { color: #b07fff; font-weight: 600; }
+
+/* ── Day tabs ── */
+.day-tabs {
+  display: flex; gap: 0; border-bottom: 1px solid #22253a;
+  background: #0f1117; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  padding: 0 16px;
+}
+.day-tab {
+  padding: 10px 14px; font-size: 12px; font-weight: 600; cursor: pointer;
+  color: #555; white-space: nowrap; border-bottom: 2px solid transparent;
+  transition: color .15s;
+}
+.day-tab:hover { color: #aaa; }
+.day-tab.active { color: #fff; border-bottom-color: #4da6ff; }
+.day-tab .game-dot {
+  display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+  background: #4da6ff; margin-left: 4px; vertical-align: middle; opacity: .5;
+}
+.day-tab.has-fantasy .game-dot { opacity: 1; }
+
+/* ── Game grid ── */
+.schedule-body { max-width: 1200px; margin: 0 auto; padding: 16px; }
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 10px;
+}
+
+/* ── Game card ── */
+.game-card {
+  background: #161925; border: 1px solid #22253a; border-radius: 8px;
+  overflow: hidden; transition: border-color .15s;
+}
+.game-card:hover { border-color: #3a3f5a; }
+.game-card.has-action { border-color: #1a3050; }
+
+/* Card top: teams + score */
+.card-teams { padding: 12px 14px 8px; display: flex; align-items: center; justify-content: space-between; }
+.team-block { display: flex; align-items: center; gap: 8px; flex: 1; }
+.team-block.home { flex-direction: row-reverse; text-align: right; }
+.team-logo {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0; letter-spacing: -.5px;
+}
+.team-name   { font-size: 13px; font-weight: 700; color: #e0e0e0; }
+.team-record { font-size: 10px; color: #555; }
+.score-block { text-align: center; flex-shrink: 0; padding: 0 10px; }
+.score-nums  { display: flex; gap: 8px; align-items: center; font-size: 18px; font-weight: 800; }
+.score-nums .vs      { font-size: 12px; color: #333; font-weight: 400; }
+.score-nums .final   { color: #fff; }
+.score-nums .preview { color: #444; font-size: 14px; font-weight: 400; }
+.game-time { font-size: 11px; color: #555; text-align: center; margin-top: 1px; }
+.game-status-live { font-size: 10px; color: #3fa63f; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+
+/* Probable pitchers line */
+.card-pitchers { padding: 0 14px 8px; font-size: 10px; color: #444; display: flex; justify-content: space-between; }
+.card-pitchers span { max-width: 48%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Divider */
+.card-div { border: none; border-top: 1px solid #1e2130; margin: 0; }
+
+/* ── Fantasy overlay section ── */
+.fantasy-section { padding: 0; }
+.fantasy-toggle {
+  padding: 7px 14px; display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none; background: #111520;
+}
+.fantasy-toggle:hover { background: #141826; }
+.fantasy-toggle-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+  color: #4da6ff; display: flex; align-items: center; gap: 5px;
+}
+.fantasy-toggle-label::before { content: '⚾'; font-size: 10px; }
+.fantasy-toggle-meta  { font-size: 10px; color: #3a4060; }
+.fantasy-toggle .chevron { font-size: 9px; color: #3a4060; transition: transform .2s; }
+.fantasy-toggle.open .chevron { transform: rotate(180deg); }
+
+.fantasy-body { display: none; padding: 0 14px 10px; background: #0d1020; }
+.fantasy-body.open { display: block; }
+
+.fantasy-matchup-label {
+  font-size: 10px; color: #2a3050; text-align: center;
+  padding: 6px 0 4px; letter-spacing: .04em;
+  border-bottom: 1px solid #161925; margin-bottom: 8px;
+}
+
+.fantasy-teams { display: flex; gap: 10px; }
+.fantasy-side  { flex: 1; }
+.fantasy-side-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+  margin-bottom: 5px; padding-bottom: 3px; border-bottom: 1px solid #1a1f35;
+}
+.fantasy-side.my-side  .fantasy-side-label { color: #4da6ff; }
+.fantasy-side.opp-side .fantasy-side-label { color: #b07fff; }
+
+.fp-row  { display: flex; align-items: center; justify-content: space-between; padding: 3px 0; font-size: 11px; }
+.fp-name { color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px; }
+.fp-pos  { font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px; text-transform: uppercase; flex-shrink: 0; margin-left: 4px; }
+.pos-sp  { background: #1a3a6a; color: #7ab8ff; }
+.pos-rp  { background: #1a2a5a; color: #7ab8ff; }
+.pos-c   { background: #3a2a1a; color: #ffc07a; }
+.pos-1b,.pos-2b,.pos-3b,.pos-ss,.pos-if { background: #2a3020; color: #b8d87a; }
+.pos-of  { background: #203020; color: #7adb9a; }
+.pos-dh  { background: #2a2a3a; color: #aaa; }
+.fp-bo   { font-size: 9px; color: #3a4060; flex-shrink: 0; margin-left: 2px; }
+
+.no-players { font-size: 10px; color: #2a3050; font-style: italic; padding: 2px 0; }
+.game-card.no-action .fantasy-toggle { opacity: .45; }
+.empty-day { color: #333; font-style: italic; padding: 24px 0; font-size: 13px; text-align: center; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .game-grid { grid-template-columns: 1fr; }
+  .matchup-pill .opp { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <span class="brand">⚾ {{ my_team }}</span>
+  <a href="index.html">← Dashboard</a>
+  <span class="generated">Updated {{ generated_at }}</span>
+</nav>
+
+<!-- Week navigation bar -->
+<div class="week-bar">
+  <select id="matchup-select" class="matchup-select" onchange="changeWeekTo(parseInt(this.value))">
+    <!-- populated by JS -->
+  </select>
+  <span id="week-result-badge"></span>
+  <div class="matchup-pill" style="margin-left:auto;">
+    <span class="my">{{ my_team }}</span>
+    <span class="sep">vs</span>
+    <span class="opp" id="opp-name">{{ opp_name }}</span>
+  </div>
+</div>
+
+<!-- Day tabs -->
+<div class="day-tabs" id="day-tabs"></div>
+
+<!-- Game grid -->
+<div class="schedule-body">
+  <div class="game-grid" id="game-grid"></div>
+</div>
+
+<script>
+// ── Pipeline-injected data ───────────────────────────────────────────────────
+var MY_TEAM_NAME = {{ my_team | tojson }};
+var MATCHUPS     = {{ matchups_json | safe }};
+var WEEKS        = {{ weeks_json | safe }};
+var MY_PLAYERS   = {{ my_players_json | safe }};
+var OPP_PLAYERS  = {{ opp_players_json | safe }};
+
+// ── Team colors ─────────────────────────────────────────────────────────────
+var TEAM_COLORS = {
+  LAD:'#005A9C', NYM:'#002D72', NYY:'#132448', BOS:'#BD3039',
+  HOU:'#002D62', ATL:'#CE1141', SD:'#2F241D',  STL:'#C41E3A',
+  SF:'#FD5A1E',  CHC:'#0E3386', CLE:'#E31937', SEA:'#0C2C56',
+  TB:'#092C5C',  BAL:'#DF4601', DET:'#0C2340', KC:'#004687',
+  ARI:'#A71930', COL:'#33006F', MIA:'#00A3E0', PHI:'#E81828',
+  PIT:'#27251F', WSH:'#AB0003', MIN:'#002B5C', CWS:'#27251F',
+  LAA:'#BA0021', TOR:'#134A8E', MIL:'#0A2351', CIN:'#C6011F',
+  OAK:'#003831', ATH:'#003831', TEX:'#003278',
+};
+function teamColor(abbr) { return TEAM_COLORS[abbr] || '#2a2d42'; }
+
+// ── Lookup helpers ────────────────────────────────────────────────────────────
+function playersInGame(roster, awayTeam, homeTeam) {
+  return roster.filter(function(p) {
+    return p.team === awayTeam || p.team === homeTeam;
+  });
+}
+
+function posClass(pos) {
+  return 'pos-' + pos.toLowerCase().replace('/','');
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+var currentWeek   = {{ current_week }};
+var currentDayIdx = 0;
+
+function buildDropdown() {
+  var sel = document.getElementById('matchup-select');
+  sel.innerHTML = '';
+  var rsGroup = document.createElement('optgroup');
+  rsGroup.label = 'Regular Season';
+  var poGroup = document.createElement('optgroup');
+  poGroup.label = 'Playoffs';
+  Object.keys(MATCHUPS).forEach(function(wk) {
+    var wn = parseInt(wk);
+    var m  = MATCHUPS[wn];
+    var label = 'Week ' + wn + ' · vs ' + m.opp + '  (' + m.dates + ')';
+    if (m.result) label += '  ' + m.result + ' ' + m.score;
+    var opt = document.createElement('option');
+    opt.value = wn;
+    opt.textContent = label;
+    if (wn === currentWeek) opt.selected = true;
+    (m.playoff ? poGroup : rsGroup).appendChild(opt);
+  });
+  sel.appendChild(rsGroup);
+  sel.appendChild(poGroup);
+}
+
+function updateWeekBar() {
+  var m = MATCHUPS[currentWeek];
+  document.getElementById('opp-name').textContent = m.opp;
+  var badge = document.getElementById('week-result-badge');
+  if (m.result) {
+    badge.className = 'week-result-badge wr-' + m.result;
+    badge.textContent = m.result + ' ' + m.score;
+  } else if (!WEEKS[currentWeek] || Object.keys(WEEKS[currentWeek].days||{}).length === 0) {
+    badge.className = 'week-result-badge'; badge.textContent = '';
+  } else {
+    badge.className = 'week-result-badge wr-now';
+    badge.textContent = 'IN PROGRESS';
+  }
+}
+
+function changeWeekTo(wn) {
+  if (!MATCHUPS[wn]) return;
+  currentWeek   = wn;
+  currentDayIdx = 0;
+  buildDropdown();
+  renderWeek();
+}
+
+function renderWeek() {
+  updateWeekBar();
+  var w = WEEKS[currentWeek] || { days: {} };
+  var days = Object.keys(w.days);
+  var tabs = document.getElementById('day-tabs');
+  tabs.innerHTML = '';
+  days.forEach(function(day, i) {
+    var games = w.days[day];
+    var myCount = 0, oppCount = 0;
+    games.forEach(function(g) {
+      myCount  += playersInGame(MY_PLAYERS,  g.away, g.home).length;
+      oppCount += playersInGame(OPP_PLAYERS, g.away, g.home).length;
+    });
+    var hasAction = myCount > 0 || oppCount > 0;
+    var tab = document.createElement('div');
+    tab.className = 'day-tab' + (hasAction ? ' has-fantasy' : '') + (i === currentDayIdx ? ' active' : '');
+    tab.innerHTML = day + '<span class="game-dot"></span>';
+    tab.onclick = (function(idx){ return function(){ selectDay(idx); }; })(i);
+    tabs.appendChild(tab);
+  });
+  renderDay(days[currentDayIdx], w.days[days[currentDayIdx]]);
+}
+
+function selectDay(idx) {
+  currentDayIdx = idx;
+  document.querySelectorAll('.day-tab').forEach(function(t, i) {
+    t.classList.toggle('active', i === idx);
+  });
+  var w = WEEKS[currentWeek];
+  var days = Object.keys(w.days);
+  renderDay(days[idx], w.days[days[idx]]);
+}
+
+function renderDay(dayLabel, games) {
+  var grid = document.getElementById('game-grid');
+  grid.innerHTML = '';
+  if (!games || games.length === 0) {
+    var m = MATCHUPS[currentWeek];
+    grid.innerHTML = '<p class="empty-day" style="padding:40px 0;">'
+      + 'Schedule data not yet available for this matchup.<br>'
+      + '<span style="color:#333;font-size:12px;margin-top:6px;display:block;">'
+      + 'Week ' + currentWeek + ' · ' + (m ? m.dates : '') + ' · vs ' + (m ? m.opp : '—')
+      + '</span></p>';
+    return;
+  }
+  var currentOpp = (MATCHUPS[currentWeek] || {}).opp || 'Opponent';
+  games.forEach(function(g, gi) {
+    var myPlayers  = playersInGame(MY_PLAYERS,  g.away, g.home);
+    var oppPlayers = playersInGame(OPP_PLAYERS, g.away, g.home);
+    var hasAction  = myPlayers.length > 0 || oppPlayers.length > 0;
+
+    var card = document.createElement('div');
+    card.className = 'game-card' + (hasAction ? ' has-action' : ' no-action');
+
+    var scoreHTML;
+    if (g.status === 'live') {
+      scoreHTML = '<div class="score-nums"><span class="final">'+(g.awayR||0)+'</span><span class="vs">·</span><span class="final">'+(g.homeR||0)+'</span></div>'
+        + '<div class="game-time"><span class="game-status-live">● LIVE</span></div>';
+    } else if (g.status === 'final') {
+      scoreHTML = '<div class="score-nums"><span class="final">'+(g.awayR||0)+'</span><span class="vs">–</span><span class="final">'+(g.homeR||0)+'</span></div>'
+        + '<div class="game-time">Final</div>';
+    } else {
+      scoreHTML = '<div class="score-nums"><span class="preview">'+g.time+'</span></div>'
+        + '<div class="game-time">ET</div>';
+    }
+
+    var awayColor = teamColor(g.away);
+    var homeColor = teamColor(g.home);
+
+    card.innerHTML = [
+      '<div class="card-teams">',
+        '<div class="team-block away">',
+          '<div class="team-logo" style="background:'+awayColor+'">'+g.away+'</div>',
+          '<div><div class="team-name">'+g.away+'</div><div class="team-record">Away</div></div>',
+        '</div>',
+        '<div class="score-block">'+scoreHTML+'</div>',
+        '<div class="team-block home">',
+          '<div class="team-logo" style="background:'+homeColor+'">'+g.home+'</div>',
+          '<div><div class="team-name">'+g.home+'</div><div class="team-record">Home</div></div>',
+        '</div>',
+      '</div>',
+      '<div class="card-pitchers">',
+        '<span style="color:#3a4060;">'+(g.awaySP||'TBD')+'</span>',
+        '<span style="color:#2a2d42;font-size:9px;align-self:center;">vs</span>',
+        '<span style="color:#3a4060;text-align:right;">'+(g.homeSP||'TBD')+'</span>',
+      '</div>',
+      '<hr class="card-div">',
+      buildFantasySection(gi, g, myPlayers, oppPlayers, hasAction, currentOpp),
+    ].join('');
+
+    grid.appendChild(card);
+  });
+}
+
+function buildFantasySection(gi, g, myPlayers, oppPlayers, hasAction, oppName) {
+  var myCount  = myPlayers.filter(function(p){ return !p.il; }).length;
+  var oppCount = oppPlayers.length;
+  var label = hasAction
+    ? (myCount + oppCount) + ' fantasy player' + ((myCount+oppCount)!==1?'s':'') + ' in this game'
+    : 'No fantasy players';
+
+  var myRows = myPlayers.length
+    ? myPlayers.map(function(p) {
+        var ilTag = p.il ? ' <span style="color:#e74c3c;font-size:9px;">(IL)</span>' : '';
+        var boTag = p.bo ? '<span class="fp-bo">#'+p.bo+'</span>' : '';
+        return '<div class="fp-row"><span class="fp-name">'+p.name+ilTag+'</span><span class="fp-pos '+posClass(p.pos)+'">'+p.pos+'</span>'+boTag+'</div>';
+      }).join('')
+    : '<div class="no-players">None</div>';
+
+  var oppRows = oppPlayers.length
+    ? oppPlayers.map(function(p) {
+        var boTag = p.bo ? '<span class="fp-bo">#'+p.bo+'</span>' : '';
+        return '<div class="fp-row"><span class="fp-name">'+p.name+'</span><span class="fp-pos '+posClass(p.pos)+'">'+p.pos+'</span>'+boTag+'</div>';
+      }).join('')
+    : '<div class="no-players">None</div>';
+
+  var oppShort = (oppName || 'Opp').substring(0, 18);
+
+  return [
+    '<div class="fantasy-section">',
+      '<div class="fantasy-toggle" id="ft-'+gi+'" onclick="toggleFantasy('+gi+')">',
+        '<span class="fantasy-toggle-label">Fantasy Matchup</span>',
+        '<div style="display:flex;align-items:center;gap:8px;">',
+          '<span class="fantasy-toggle-meta">'+label+'</span>',
+          '<span class="chevron">▼</span>',
+        '</div>',
+      '</div>',
+      '<div class="fantasy-body" id="fb-'+gi+'">',
+        '<div class="fantasy-matchup-label">'+MY_TEAM_NAME+' vs '+oppName+' · '+g.away+' @ '+g.home+'</div>',
+        '<div class="fantasy-teams">',
+          '<div class="fantasy-side my-side">',
+            '<div class="fantasy-side-label">🔵 '+MY_TEAM_NAME+'</div>',
+            myRows,
+          '</div>',
+          '<div class="fantasy-side opp-side">',
+            '<div class="fantasy-side-label">🟣 '+oppShort+'</div>',
+            oppRows,
+          '</div>',
+        '</div>',
+      '</div>',
+    '</div>',
+  ].join('');
+}
+
+function toggleFantasy(gi) {
+  var body   = document.getElementById('fb-'+gi);
+  var toggle = document.getElementById('ft-'+gi);
+  var open   = body.classList.toggle('open');
+  toggle.classList.toggle('open', open);
+}
+
+function autoExpand() {
+  var w = WEEKS[currentWeek];
+  if (!w) return;
+  var days  = Object.keys(w.days);
+  var games = w.days[days[currentDayIdx]];
+  if (!games) return;
+  games.forEach(function(g, gi) {
+    if (playersInGame(MY_PLAYERS,  g.away, g.home).length ||
+        playersInGame(OPP_PLAYERS, g.away, g.home).length) {
+      var body   = document.getElementById('fb-'+gi);
+      var toggle = document.getElementById('ft-'+gi);
+      if (body)   body.classList.add('open');
+      if (toggle) toggle.classList.add('open');
+    }
+  });
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+buildDropdown();
+renderWeek();
+autoExpand();
+</script>
+</body>
+</html>

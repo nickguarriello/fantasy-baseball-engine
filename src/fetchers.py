@@ -24,7 +24,20 @@ from config import (
     INJURED_STATUSES, QUESTIONABLE_STATUSES,
     ESPN_LINEUP_SLOT_MAP, ESPN_PRIMARY_SLOTS, ESPN_INACTIVE_SLOT_IDS,
     ESPN_S2, ESPN_SWID,
+    ESPN_PRO_TEAM_MAP,
 )
+
+
+# ---------------------------------------------------------------------------
+# Utility helpers
+# ---------------------------------------------------------------------------
+
+def _safe_float(val, default=0.0) -> float:
+    """Convert a value to float, returning default if empty or non-numeric (e.g. '-.--')."""
+    try:
+        return float(val) if val else default
+    except (TypeError, ValueError):
+        return default
 
 
 # ---------------------------------------------------------------------------
@@ -157,8 +170,11 @@ def _parse_espn_player(
         eligible_positions = [position] if position not in ('UNKNOWN', 'UTIL') else []
 
     # Injury status from ESPN
+    # NOTE: ESPN frequently returns 'N/A' for injuryStatus even for IL players.
+    # Fall back to lineup slot detection: slots 17/18/19 are IL slots.
+    IL_SLOT_IDS = {17, 18, 19}
     injury_status = player_pool.get('injuryStatus', 'ACTIVE') or 'ACTIVE'
-    is_injured = injury_status in INJURED_STATUSES
+    is_injured = injury_status in INJURED_STATUSES or lineup_slot_id in IL_SLOT_IDS
     is_questionable = injury_status in QUESTIONABLE_STATUSES
 
     return {
@@ -177,6 +193,7 @@ def _parse_espn_player(
         'is_my_player':      team_id == my_team_id,
         'ownership_pct':     player_pool.get('percentOwned', 0.0),
         'pro_team_id':       player.get('proTeamId'),
+        'pro_team_abbrev':   ESPN_PRO_TEAM_MAP.get(player.get('proTeamId'), ''),
         'injury_status':     injury_status,
         'is_injured':        is_injured,
         'is_questionable':   is_questionable,
@@ -214,13 +231,18 @@ def _parse_matchup_actuals(schedule: List[Dict], my_team_id: int) -> Dict:
 
     def parse_score_by_stat(side_data: Dict) -> Dict:
         score_by_stat = side_data.get('cumulativeScore', {}).get('scoreByStat', {}) or {}
+        import math
         result = {}
         for stat_id, stat_data in score_by_stat.items():
             cat = ESPN_STAT_IDS.get(str(stat_id))
             if cat:
                 val = stat_data.get('score')
                 if val is not None:
-                    result[cat] = round(float(val), 4)
+                    float_val = float(val)
+                    # ESPN returns Infinity for ERA/WHIP when no innings pitched yet — skip
+                    if math.isinf(float_val) or math.isnan(float_val):
+                        continue
+                    result[cat] = round(float_val, 4)
         return result
 
     my_side = current.get('home') if home_id == my_team_id else current.get('away')
@@ -486,10 +508,11 @@ def _parse_pitching_split(split: Dict) -> Tuple[Optional[int], Dict]:
         'is_pitcher': True,
     }
     pitching_stats = {
+        'games_played': stats.get('gamesPlayed', 0) or 0,   # appearances / games pitched
         'innings_pitched': float(stats['inningsPitched']) if stats.get('inningsPitched') else 0.0,
         'earned_runs': stats.get('earnedRuns', 0) or 0,
-        'era': float(stats['era']) if stats.get('era') else 0.0,
-        'whip': float(stats['whip']) if stats.get('whip') else 0.0,
+        'era': _safe_float(stats.get('era')),
+        'whip': _safe_float(stats.get('whip')),
         'strikeouts': ks,
         'strikeouts_pitch': ks,
         'wins': stats.get('wins', 0) or 0,
@@ -498,6 +521,8 @@ def _parse_pitching_split(split: Dict) -> Tuple[Optional[int], Dict]:
         'holds': holds,
         'sv_hd': saves + holds,
         'quality_starts': stats.get('qualityStarts', 0) or 0,
+        'hits': stats.get('hits', 0) or 0,           # hits allowed
+        'walks': stats.get('baseOnBalls', 0) or 0,   # walks issued (BB)
     }
     return player_id, {**base, **pitching_stats}
 
@@ -620,8 +645,269 @@ def fetch_mlb_stats_range(start_date: str, end_date: str, label: str = '') -> Di
 
 
 # ---------------------------------------------------------------------------
+# ESPN Transaction History
+# ---------------------------------------------------------------------------
+
+# Module-level cache so repeated calls in one run don't re-hit the API
+_player_name_cache: Dict[int, str] = {}
+
+
+def _resolve_player_name(player_id: int) -> str:
+    """Look up a player's full name from ESPN by espn_player_id."""
+    if player_id in _player_name_cache:
+        return _player_name_cache[player_id]
+    season = LEAGUE_CONFIG['season']
+    url = (f"https://lm-api-reads.fantasy.espn.com/apis/v3/games/flb"
+           f"/seasons/{season}/players/{player_id}")
+    try:
+        r = requests.get(url, params={'view': 'players_wl'},
+                         headers={'Accept': 'application/json'}, timeout=8)
+        name = r.json().get('fullName', str(player_id)) if r.status_code == 200 else str(player_id)
+    except Exception:
+        name = str(player_id)
+    _player_name_cache[player_id] = name
+    return name
+
+
+def fetch_all_transactions(scoring_period_id: int, all_rosters: Dict) -> List[Dict]:
+    """
+    Fetch all FREEAGENT / WAIVER / TRADE transactions across all scoring periods.
+
+    Loops scoring period 1 → scoring_period_id, deduplicating by ESPN UUID.
+    Returns list of decoded transaction dicts with resolved player names.
+    """
+    from datetime import datetime as _dt
+
+    league_id = LEAGUE_CONFIG['league_id']
+    season    = LEAGUE_CONFIG['season']
+    url       = (f"https://lm-api-reads.fantasy.espn.com/apis/v3/games/flb"
+                 f"/seasons/{season}/segments/0/leagues/{league_id}")
+    headers   = {'Accept': 'application/json'}
+
+    # Build name cache from current roster data (covers most players)
+    for tid, tdata in all_rosters.items():
+        for p in tdata.get('players', []):
+            pid = p.get('espn_id')
+            if pid and p.get('name'):
+                _player_name_cache[pid] = p['name']
+
+    # Build team name lookup
+    team_map: Dict[int, str] = {td: tdata.get('team_name', f'Team {td}')
+                                 for td, tdata in all_rosters.items()}
+    team_map[0] = 'FA Pool'
+
+    seen_ids: set = set()
+    transactions: List[Dict] = []
+
+    for period in range(1, scoring_period_id + 1):
+        try:
+            r = requests.get(url, params={'view': 'mTransactions2', 'scoringPeriodId': period},
+                             headers=headers, timeout=12)
+            if r.status_code != 200:
+                continue
+            raw_txns = r.json().get('transactions', [])
+        except Exception:
+            continue
+
+        for t in raw_txns:
+            txn_id = t.get('id')
+            if not txn_id or txn_id in seen_ids:
+                continue
+            if t.get('isPending', False):
+                continue
+            txn_type = t.get('type', '')
+            if txn_type not in ('FREEAGENT', 'WAIVER', 'TRADE'):
+                continue
+
+            seen_ids.add(txn_id)
+
+            # Resolve items
+            items = []
+            for item in t.get('items', []):
+                action    = item.get('type', '')  # ADD or DROP
+                player_id = item.get('playerId')
+                if action not in ('ADD', 'DROP') or not player_id:
+                    continue
+                items.append({
+                    'action':      action,
+                    'player_id':   player_id,
+                    'player_name': _player_name_cache.get(player_id)
+                                   or _resolve_player_name(player_id),
+                })
+
+            team_id = t.get('teamId', 0)
+            ms      = t.get('proposedDate', 0)
+            date_str = _dt.fromtimestamp(ms / 1000).strftime('%Y-%m-%d') if ms else ''
+
+            transactions.append({
+                'id':                txn_id,
+                'txn_type':          txn_type,
+                'status':            t.get('status', 'EXECUTED'),
+                'team_id':           team_id,
+                'team_name':         team_map.get(team_id, f'Team {team_id}'),
+                'scoring_period_id': t.get('scoringPeriodId', period),
+                'proposed_date':     date_str,
+                'items':             items,
+            })
+
+        time.sleep(0.15)  # polite rate limiting
+
+    return sorted(transactions, key=lambda x: x.get('proposed_date', ''))
+
+
+def apply_transaction_flags(
+    all_rosters: Dict,
+    transactions: List[Dict],
+    lag_days: int = 2,
+) -> None:
+    """
+    Cross-reference ESPN roster data with recent transactions to flag
+    API-lag cases: player shows on roster but has a recent DROP transaction.
+
+    Mutates player dicts in all_rosters in place.
+    """
+    from datetime import datetime as _dt, timedelta
+
+    cutoff = (_dt.now() - timedelta(days=lag_days)).strftime('%Y-%m-%d')
+    recent = [t for t in transactions if t.get('proposed_date', '') >= cutoff]
+
+    # Build: player_id → {action, team_id, date}
+    recent_moves: Dict[int, Dict] = {}
+    for t in sorted(recent, key=lambda x: x.get('proposed_date', '')):
+        for item in t.get('items', []):
+            pid = item.get('player_id')
+            if pid:
+                recent_moves[pid] = {
+                    'action':    item['action'],
+                    'team_id':   t['team_id'],
+                    'team_name': t['team_name'],
+                    'date':      t['proposed_date'],
+                }
+
+    for tid, tdata in all_rosters.items():
+        for player in tdata.get('players', []):
+            pid = player.get('espn_id')
+            if not pid:
+                continue
+            move = recent_moves.get(pid)
+            if move and move['action'] == 'DROP' and move['team_id'] == tid:
+                player['pending_drop'] = True
+            elif move and move['action'] == 'ADD' and move['team_id'] == tid:
+                player['pending_add'] = True
+
+
+def get_recently_dropped_ids(transactions: List[Dict], days: int = 3) -> set:
+    """
+    Return set of ESPN player_ids that have a DROP transaction in the last N days.
+    Used to tag FA players as 'recently available' in waiver analysis.
+    """
+    from datetime import datetime as _dt, timedelta
+    cutoff = (_dt.now() - timedelta(days=days)).strftime('%Y-%m-%d')
+    dropped: set = set()
+    for t in transactions:
+        if t.get('proposed_date', '') >= cutoff:
+            for item in t.get('items', []):
+                if item.get('action') == 'DROP':
+                    dropped.add(item['player_id'])
+    return dropped
+
+
+# ---------------------------------------------------------------------------
 # MLB Schedule API — two-start pitchers
 # ---------------------------------------------------------------------------
+
+def _format_game_time_et(game_date_utc: str) -> str:
+    """Convert UTC ISO game time to Eastern Time display string, e.g. '7:05 PM'."""
+    if not game_date_utc:
+        return 'TBD'
+    try:
+        from datetime import datetime, timedelta
+        dt = datetime.fromisoformat(game_date_utc.replace('Z', '+00:00'))
+        et = dt - timedelta(hours=4)          # Baseball season = EDT = UTC-4
+        hour = et.hour % 12 or 12
+        ampm = 'AM' if et.hour < 12 else 'PM'
+        return f'{hour}:{et.minute:02d} {ampm}'
+    except Exception:
+        return 'TBD'
+
+
+def fetch_weekly_schedule() -> Dict[str, List[Dict]]:
+    """
+    Fetch the MLB game schedule for the current fantasy week (Mon-Sun).
+
+    Returns:
+        {'Mon Apr 21': [game_dicts], 'Tue Apr 22': [...], ...}
+        Each game_dict: away, home, awayR, homeR, time, status, awaySP, homeSP
+    """
+    week_start, week_end = _get_week_dates()
+    print(f"  Fetching weekly MLB schedule ({week_start} to {week_end})...", end=" ", flush=True)
+
+    response = _make_request(
+        'https://statsapi.mlb.com/api/v1/schedule',
+        params={
+            'sportId': 1,
+            'startDate': week_start,
+            'endDate': week_end,
+            'gameType': 'R',
+            'hydrate': 'probablePitcher,linescore,team',
+        }
+    )
+
+    if not response:
+        print("(failed)")
+        return {}
+
+    result: Dict[str, List] = {}
+    total_games = 0
+
+    for date_entry in response.get('dates', []):
+        date_str = date_entry.get('date', '')
+        try:
+            from datetime import datetime as _dt
+            d = _dt.strptime(date_str, '%Y-%m-%d')
+            day_label = f"{d.strftime('%a')} {d.strftime('%b')} {d.day}"
+        except ValueError:
+            continue
+
+        games = []
+        for game in date_entry.get('games', []):
+            teams    = game.get('teams', {})
+            away_d   = teams.get('away', {})
+            home_d   = teams.get('home', {})
+
+            away_abbr = away_d.get('team', {}).get('abbreviation', '???')
+            home_abbr = home_d.get('team', {}).get('abbreviation', '???')
+            # Normalise OAK → ATH (ESPN uses ATH)
+            away_abbr = 'ATH' if away_abbr == 'OAK' else away_abbr
+            home_abbr = 'ATH' if home_abbr == 'OAK' else home_abbr
+
+            state = game.get('status', {}).get('abstractGameState', 'Preview')
+            status = 'live' if state == 'Live' else ('final' if state == 'Final' else 'preview')
+
+            away_score = away_d.get('score')
+            home_score = home_d.get('score')
+
+            away_sp = (away_d.get('probablePitcher') or {}).get('fullName') or 'TBD'
+            home_sp = (home_d.get('probablePitcher') or {}).get('fullName') or 'TBD'
+
+            games.append({
+                'away':   away_abbr,
+                'home':   home_abbr,
+                'awayR':  away_score,
+                'homeR':  home_score,
+                'time':   _format_game_time_et(game.get('gameDate', '')),
+                'status': status,
+                'awaySP': away_sp,
+                'homeSP': home_sp,
+            })
+            total_games += 1
+
+        if games:
+            result[day_label] = games
+
+    print(f"({total_games} games across {len(result)} days)")
+    return result
+
 
 def fetch_two_start_pitchers() -> Dict[str, int]:
     """

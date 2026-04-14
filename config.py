@@ -117,6 +117,39 @@ DEBUG_CONFIG = {
 }
 
 # ============================================================================
+# ============================================================================
+# ESPN PRO TEAM ID MAPPING
+# ============================================================================
+# Maps ESPN's proTeamId (on each player) to the MLB team abbreviation.
+# Used to disambiguate players who share the same name (e.g. two "Max Muncy"s).
+# Source: ESPN /seasons/2026?view=proTeamSchedules_wl
+
+ESPN_PRO_TEAM_MAP = {
+    0:  'FA',
+    1:  'BAL',  2:  'BOS',  3:  'LAA',  4:  'CWS',  5:  'CLE',
+    6:  'DET',  7:  'KC',   8:  'MIL',  9:  'MIN',   10: 'NYY',
+    11: 'ATH',  12: 'SEA',  13: 'TEX',  14: 'TOR',   15: 'ATL',
+    16: 'CHC',  17: 'CIN',  18: 'HOU',  19: 'LAD',   20: 'WSH',
+    21: 'NYM',  22: 'PHI',  23: 'PIT',  24: 'STL',   25: 'SD',
+    26: 'SF',   27: 'COL',  28: 'MIA',  29: 'ARI',   30: 'TB',
+}
+
+# Maps ESPN team abbreviations to MLB Stats API team name substrings.
+# Used when joining ESPN roster data to MLB player stats by team.
+ESPN_TEAM_TO_MLB_NAME = {
+    'BAL': 'Baltimore',   'BOS': 'Boston',      'LAA': 'Angels',
+    'CWS': 'White Sox',   'CLE': 'Guardians',   'DET': 'Detroit',
+    'KC':  'Kansas City', 'MIL': 'Milwaukee',   'MIN': 'Minnesota',
+    'NYY': 'Yankees',     'ATH': 'Athletics',   'SEA': 'Seattle',
+    'TEX': 'Texas',       'TOR': 'Toronto',     'ATL': 'Atlanta',
+    'CHC': 'Cubs',        'CIN': 'Cincinnati',  'HOU': 'Houston',
+    'LAD': 'Dodgers',     'WSH': 'Washington',  'NYM': 'Mets',
+    'PHI': 'Philadelphia','PIT': 'Pittsburgh',  'STL': 'St. Louis',
+    'SD':  'San Diego',   'SF':  'San Francisco','COL': 'Colorado',
+    'MIA': 'Miami',       'ARI': 'Arizona',     'TB':  'Tampa Bay',
+}
+
+# ============================================================================
 # ESPN POSITION ID MAPPING
 # ============================================================================
 # Maps ESPN's numeric defaultPositionId to a readable position abbreviation
@@ -128,11 +161,13 @@ ESPN_POSITION_MAP = {
     4:  '2B',
     5:  '3B',
     6:  'SS',
-    7:  'OF',
-    8:  'DH',
-    9:  'RP',
-    10: 'P',
-    11: 'UTIL',
+    7:  'OF',   # LF → OF
+    8:  'OF',   # CF → OF
+    9:  'OF',   # RF → OF (confirmed: Soto/Carroll/Crews all posId=9)
+    10: 'DH',   # confirmed: Trout/Yelich posId=10
+    11: 'RP',   # confirmed: Miller/Uribe/Romano/Pagan all posId=11
+    12: 'RP',
+    13: 'P',    # generic pitcher
 }
 
 # Maps ESPN lineupSlotId (current roster slot) to readable name.
@@ -154,10 +189,10 @@ ESPN_LINEUP_SLOT_MAP = {
     13: 'SP',
     14: 'P',
     15: 'BE',
-    16: 'IL',
-    17: 'RP',
-    18: 'IF',
-    19: 'NA',
+    16: 'BE',   # this league uses 16 for bench (5 bench spots all slotId=16)
+    17: 'IL',   # IL slot 1 (confirmed: Mookie Betts)
+    18: 'IL',   # IL slot 2 (overflow)
+    19: 'IL',   # IL slot 3 (overflow)
 }
 
 # Slot names shown in the eligible positions column (real positions only,
@@ -165,10 +200,10 @@ ESPN_LINEUP_SLOT_MAP = {
 ESPN_PRIMARY_SLOTS = {'C', '1B', '2B', '3B', 'SS', 'OF', 'DH', 'SP', 'RP'}
 
 # lineupSlotId values that mean a player is NOT active in a lineup spot.
-ESPN_INACTIVE_SLOT_IDS = {15, 16, 19}  # BE, IL, NA
+ESPN_INACTIVE_SLOT_IDS = {15, 16, 17, 18, 19}  # BE (15,16), IL (17,18,19)
 
 # Position IDs that are pitchers
-PITCHER_POSITION_IDS = {1, 9, 10}   # SP, RP, P
+PITCHER_POSITION_IDS = {1, 11, 12, 13}   # SP, RP, RP-alt, P-generic
 
 # ============================================================================
 # OUTFIELD POSITION NORMALIZATION
@@ -211,10 +246,10 @@ QUESTIONABLE_STATUSES = {
 
 ESPN_STAT_IDS = {
     # --- Batting (all confirmed via live API scoreByStat result flags) ---
-    '21': 'runs',           # R    (confirmed — result flag matched 26 runs)
-    '23': 'home_runs',      # HR   (confirmed)
-    '20': 'rbis',           # RBI  (confirmed — result flag matched)
-    '5':  'stolen_bases',   # SB   (confirmed)
+    '20': 'runs',           # R    (confirmed — UAT: values matched R totals)
+    '5':  'home_runs',      # HR   (confirmed — UAT: values matched HR totals)
+    '21': 'rbis',           # RBI  (confirmed — UAT: values matched RBI totals)
+    '23': 'stolen_bases',   # SB   (confirmed — UAT: values matched SB totals)
     '17': 'obp',            # OBP  (confirmed — rate stat, result flag matched)
     # --- Pitching ---
     '48': 'strikeouts',     # K    (confirmed)

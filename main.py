@@ -26,6 +26,7 @@ from config import LEAGUE_CONFIG
 from src.database import (
     init_database, store_player_stats, store_z_scores,
     store_league_teams, store_all_rosters, get_players_with_stats,
+    store_transactions,
     save_matchup_snapshot, get_previous_matchup_snapshot,
 )
 from src.fetchers import (
@@ -36,6 +37,9 @@ from src.fetchers import (
     fetch_mlb_stats_range,
     fetch_two_start_pitchers,
     fetch_espn_projections_and_ownership,
+    fetch_all_transactions,
+    apply_transaction_flags,
+    get_recently_dropped_ids,
     _n_days_ago, _today_str,
 )
 from src.processors import calculate_multi_period_zscores, calculate_trends, calculate_projection_zscores
@@ -142,8 +146,19 @@ def main():
         all_rosters         = espn_data['all_rosters']
         league_teams        = espn_data['league_teams']
         opponent_team_id    = espn_data.get('current_matchup_opponent_id')
+        scoring_period_id   = espn_data.get('scoring_period_id', 1)
         matchup_actuals     = espn_data.get('matchup_actuals', {})
         injury_lookup       = espn_data.get('injury_lookup', {})
+
+        # Fetch transaction history (all scoring periods up to current)
+        print("  Fetching transaction history...")
+        transactions = fetch_all_transactions(
+            scoring_period_id=scoring_period_id,
+            all_rosters=all_rosters,
+        )
+        apply_transaction_flags(all_rosters, transactions)
+        my_roster = all_rosters.get(LEAGUE_CONFIG['team_id'], {}).get('players', my_roster)
+        print(f"    {len(transactions)} transactions loaded\n")
         print()
 
         # ============================================================ #
@@ -223,11 +238,13 @@ def main():
         # ============================================================ #
         print("[8/9] Storing data in database...")
         store_league_teams(league_teams)
-        roster_rows = store_all_rosters(all_rosters)
+        roster_rows  = store_all_rosters(all_rosters)
         stats_stored = store_player_stats(list(season_stats.values()), season_stats)
-        z_stored = store_z_scores(z_scored_players)
+        z_stored     = store_z_scores(z_scored_players)
+        txn_stored   = store_transactions(transactions)
         print(f"  {len(league_teams)} teams | {roster_rows} roster entries | "
-              f"{stats_stored} stat records | {z_stored} z-score records\n")
+              f"{stats_stored} stat records | {z_stored} z-score records | "
+              f"{txn_stored} new transactions\n")
 
         # ISO week label e.g. "2026-W15" — used to scope trend snapshots to the current week
         _iso = datetime.now().isocalendar()
@@ -298,18 +315,25 @@ def main():
                 cat = actual.get('category', '')
                 higher = hib.get(cat, True)
                 my_curr  = actual.get('my_actual')
+                opp_curr = actual.get('opp_actual')
                 prev_row = prev_snap.get(cat, {})
                 my_prev  = prev_row.get('my_actual')
+                opp_prev = prev_row.get('opp_actual')
 
-                if my_curr is not None and my_prev is not None:
+                if all(v is not None for v in (my_curr, opp_curr, my_prev, opp_prev)):
                     try:
-                        delta = round(float(my_curr) - float(my_prev), 3)
+                        mc, oc = float(my_curr), float(opp_curr)
+                        mp, op = float(my_prev),  float(opp_prev)
+                        # Gap = my advantage (positive = I'm winning this cat)
+                        curr_gap = (mc - oc) if higher else (oc - mc)
+                        prev_gap = (mp - op) if higher else (op - mp)
+                        delta = round(curr_gap - prev_gap, 3)
                         if delta == 0:
                             trend = 'FLAT'
-                        elif (delta > 0) == higher:
-                            trend = 'UP'    # improving
+                        elif delta > 0:
+                            trend = 'UP'    # gap widening in my favor
                         else:
-                            trend = 'DOWN'  # declining
+                            trend = 'DOWN'  # gap narrowing or reversing
                     except (TypeError, ValueError):
                         delta, trend = None, 'NEW'
                 else:

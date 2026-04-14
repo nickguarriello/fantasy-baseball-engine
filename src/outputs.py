@@ -85,9 +85,9 @@ def export_waiver_report(waiver_report: Dict) -> List[str]:
 
     files.append(export_csv('waiver_wire_top.csv', waiver_report.get('top_overall', []), WAIVER_COLS))
 
+    # Always write — even if empty — so stale data from a previous run is cleared
     two_start_fas = waiver_report.get('two_start_free_agents', [])
-    if two_start_fas:
-        files.append(export_csv('waiver_two_start.csv', two_start_fas, WAIVER_COLS))
+    files.append(export_csv('waiver_two_start.csv', two_start_fas, WAIVER_COLS))
 
     by_pos = waiver_report.get('by_position', {})
     for pos, players in by_pos.items():
@@ -177,7 +177,7 @@ def print_summary(all_players: List[Dict], your_roster: List[Dict] = None) -> No
     if your_roster:
         h = [p for p in your_roster if not p.get('is_pitcher')]
         p_c = [p for p in your_roster if p.get('is_pitcher')]
-        inj = [p for p in your_roster if p.get('injury_status', 'ACTIVE') in {'INJURY_RESERVE','FIFTEEN_DAY_IL','SIXTY_DAY_IL','OUT'}]
+        inj = [p for p in your_roster if p.get('is_injured')]
         print(f"  Your roster: {len(your_roster)} ({len(h)} hitters, {len(p_c)} pitchers, {len(inj)} injured/IL)")
 
     top5 = sorted(all_players, key=lambda p: p.get('z_season') or 0, reverse=True)[:5]
@@ -376,22 +376,30 @@ def export_research_players(
     espn_projections = espn_projections or {}
     proj_zscores     = proj_zscores     or {}
 
-    # Build lookup: name_lower → DB stats row (real stats + roster ownership)
-    stats_lookup: Dict[str, Dict] = {}
+    # Build lookup keyed by (name_lower, team_lower) for precise matching,
+    # plus a fallback by name_lower for players without name collisions.
+    stats_lookup: Dict = {}          # (name, team) → row
+    stats_lookup_name: Dict = {}     # name → row  (fallback; prefers roster players)
     for row in db_stats:
-        key = (row.get('name') or '').lower().strip()
-        if key:
-            stats_lookup[key] = row
+        name_key = (row.get('name') or '').lower().strip()
+        team_key = (row.get('mlb_team') or '').lower().strip()
+        if name_key:
+            stats_lookup[(name_key, team_key)] = row
+            # Fallback: prefer roster players when multiple share a name
+            if name_key not in stats_lookup_name or row.get('is_my_player'):
+                stats_lookup_name[name_key] = row
 
     rows = []
     for player in z_scored_players:
         name = player.get('name', '')
         key  = name.lower().strip()
-        stat = stats_lookup.get(key, {})
+        team = (player.get('mlb_team') or '').lower().strip()
+        # Use (name, team) lookup first — handles same-name players correctly
+        stat = stats_lookup.get((key, team)) or stats_lookup_name.get(key, {})
         proj = espn_projections.get(key, {})
         pz   = proj_zscores.get(key, {})
 
-        # Determine fantasy team label
+        # Determine fantasy team label from the per-player stat row
         fantasy_team = stat.get('fantasy_team_name') or ''
         if stat.get('is_my_player'):
             fantasy_team = 'Pitch Slap'
@@ -568,11 +576,15 @@ def export_master_players(
     espn_projections = espn_projections or {}
     proj_zscores     = proj_zscores     or {}
 
-    stats_lookup: Dict[str, Dict] = {}
+    stats_lookup_m: Dict = {}
+    stats_lookup_m_name: Dict = {}
     for row in db_stats:
-        key = (row.get('name') or '').lower().strip()
-        if key:
-            stats_lookup[key] = row
+        name_key = (row.get('name') or '').lower().strip()
+        team_key = (row.get('mlb_team') or '').lower().strip()
+        if name_key:
+            stats_lookup_m[(name_key, team_key)] = row
+            if name_key not in stats_lookup_m_name or row.get('is_my_player'):
+                stats_lookup_m_name[name_key] = row
 
     rows = []
     all_keys: set = set()
@@ -580,7 +592,8 @@ def export_master_players(
     for player in z_scored_players:
         name = player.get('name', '')
         key  = name.lower().strip()
-        stat = stats_lookup.get(key, {})
+        team = (player.get('mlb_team') or '').lower().strip()
+        stat = stats_lookup_m.get((key, team)) or stats_lookup_m_name.get(key, {})
         proj = espn_projections.get(key, {})
         pz   = proj_zscores.get(key, {})
 

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚾ Schedule — Pitch Slap</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0f1117; color: #e0e0e0; font-size: 14px; line-height: 1.4;
+}
+
+/* ── Nav ── */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: #13151f; border-bottom: 1px solid #22253a;
+  padding: 0 16px; display: flex; align-items: center; gap: 6px;
+  height: 44px;
+}
+nav .brand { font-weight: 700; font-size: 15px; color: #fff; margin-right: 10px; }
+nav a { color: #888; font-size: 12px; padding: 4px 10px; border-radius: 4px; background: #1e2230; text-decoration: none; }
+nav a:hover { background: #2a2d42; color: #fff; }
+
+/* ── Week nav bar ── */
+.week-bar {
+  background: #13151f; border-bottom: 1px solid #22253a;
+  padding: 10px 16px; display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 44px; z-index: 190;
+}
+.week-label { font-size: 14px; font-weight: 700; color: #fff; }
+.week-sub   { font-size: 11px; color: #555; margin-left: 4px; }
+.matchup-select {
+  background: #1e2230; border: 1px solid #2a2d42; color: #e0e0e0;
+  border-radius: 5px; padding: 5px 32px 5px 10px; font-size: 13px; font-weight: 600;
+  cursor: pointer; outline: none; min-width: 240px;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+}
+.matchup-select:hover { border-color: #3a4060; }
+.matchup-select option { background: #1a1d2a; color: #e0e0e0; }
+.matchup-select optgroup { color: #555; font-size: 11px; }
+.week-result-badge { font-size: 10px; padding: 1px 6px; border-radius: 3px; font-weight: 700; margin-left: 6px; }
+.wr-W { background:#1a4a1a; color:#7fff7f; }
+.wr-L { background:#4a1a1a; color:#ff8888; }
+.wr-now { background:#1a3a6a; color:#4da6ff; }
+.matchup-pill {
+  margin-left: auto; background: #111827; border: 1px solid #2a3550;
+  border-radius: 20px; padding: 3px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px;
+}
+.matchup-pill .my   { color: #4da6ff; font-weight: 600; }
+.matchup-pill .sep  { color: #333; }
+.matchup-pill .opp  { color: #b07fff; font-weight: 600; }
+
+/* ── Day tabs ── */
+.day-tabs {
+  display: flex; gap: 0; border-bottom: 1px solid #22253a;
+  background: #0f1117; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  padding: 0 16px;
+}
+.day-tab {
+  padding: 10px 14px; font-size: 12px; font-weight: 600; cursor: pointer;
+  color: #555; white-space: nowrap; border-bottom: 2px solid transparent;
+  transition: color .15s;
+}
+.day-tab:hover { color: #aaa; }
+.day-tab.active { color: #fff; border-bottom-color: #4da6ff; }
+.day-tab .game-dot {
+  display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+  background: #4da6ff; margin-left: 4px; vertical-align: middle; opacity: .5;
+}
+.day-tab.has-fantasy .game-dot { opacity: 1; }
+
+/* ── Game grid ── */
+.schedule-body { max-width: 1200px; margin: 0 auto; padding: 16px; }
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 10px;
+}
+
+/* ── Game card ── */
+.game-card {
+  background: #161925; border: 1px solid #22253a; border-radius: 8px;
+  overflow: hidden;
+  transition: border-color .15s;
+}
+.game-card:hover { border-color: #3a3f5a; }
+.game-card.has-action { border-color: #1a3050; }
+
+/* Card top: teams + score */
+.card-teams {
+  padding: 12px 14px 8px; display: flex; align-items: center; justify-content: space-between;
+}
+.team-block { display: flex; align-items: center; gap: 8px; flex: 1; }
+.team-block.home { flex-direction: row-reverse; text-align: right; }
+.team-logo {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0;
+  letter-spacing: -.5px;
+}
+.team-name  { font-size: 13px; font-weight: 700; color: #e0e0e0; }
+.team-record{ font-size: 10px; color: #555; }
+.score-block { text-align: center; flex-shrink: 0; padding: 0 10px; }
+.score-nums { display: flex; gap: 8px; align-items: center; font-size: 18px; font-weight: 800; }
+.score-nums .vs { font-size: 12px; color: #333; font-weight: 400; }
+.score-nums .final { color: #fff; }
+.score-nums .preview { color: #444; font-size: 14px; font-weight: 400; }
+.game-time { font-size: 11px; color: #555; text-align: center; margin-top: 1px; }
+.game-status-live { font-size: 10px; color: #3fa63f; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+
+/* Probable pitchers line */
+.card-pitchers {
+  padding: 0 14px 8px; font-size: 10px; color: #444;
+  display: flex; justify-content: space-between;
+}
+.card-pitchers span { max-width: 48%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Divider */
+.card-div { border: none; border-top: 1px solid #1e2130; margin: 0; }
+
+/* ── Fantasy overlay section ── */
+.fantasy-section {
+  padding: 0;
+}
+.fantasy-toggle {
+  padding: 7px 14px; display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none;
+  background: #111520;
+}
+.fantasy-toggle:hover { background: #141826; }
+.fantasy-toggle-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+  color: #4da6ff; display: flex; align-items: center; gap: 5px;
+}
+.fantasy-toggle-label::before { content: '⚾'; font-size: 10px; }
+.fantasy-toggle-meta { font-size: 10px; color: #3a4060; }
+.fantasy-toggle .chevron { font-size: 9px; color: #3a4060; transition: transform .2s; }
+.fantasy-toggle.open .chevron { transform: rotate(180deg); }
+
+.fantasy-body {
+  display: none; padding: 0 14px 10px; background: #0d1020;
+}
+.fantasy-body.open { display: block; }
+
+.fantasy-matchup-label {
+  font-size: 10px; color: #2a3050; text-align: center;
+  padding: 6px 0 4px; letter-spacing: .04em;
+  border-bottom: 1px solid #161925; margin-bottom: 8px;
+}
+
+.fantasy-teams { display: flex; gap: 10px; }
+.fantasy-side { flex: 1; }
+.fantasy-side-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+  margin-bottom: 5px; padding-bottom: 3px; border-bottom: 1px solid #1a1f35;
+}
+.fantasy-side.my-side  .fantasy-side-label { color: #4da6ff; }
+.fantasy-side.opp-side .fantasy-side-label { color: #b07fff; }
+
+.fp-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 3px 0; font-size: 11px;
+}
+.fp-name { color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px; }
+.fp-pos  {
+  font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px;
+  text-transform: uppercase; flex-shrink: 0; margin-left: 4px;
+}
+.pos-sp   { background: #1a3a6a; color: #7ab8ff; }
+.pos-rp   { background: #1a2a5a; color: #7ab8ff; }
+.pos-c    { background: #3a2a1a; color: #ffc07a; }
+.pos-1b,.pos-2b,.pos-3b,.pos-ss,.pos-if {
+  background: #2a3020; color: #b8d87a; }
+.pos-of   { background: #203020; color: #7adb9a; }
+.pos-dh   { background: #2a2a3a; color: #aaa; }
+.fp-bo    { font-size: 9px; color: #3a4060; flex-shrink: 0; margin-left: 2px; }
+
+.no-players { font-size: 10px; color: #2a3050; font-style: italic; padding: 2px 0; }
+
+/* card with no fantasy players */
+.game-card.no-action .fantasy-toggle { opacity: .45; }
+
+/* ── Empty day ── */
+.empty-day { color: #333; font-style: italic; padding: 24px 0; font-size: 13px; text-align: center; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .game-grid { grid-template-columns: 1fr; }
+  .matchup-pill .opp { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <span class="brand">⚾ Pitch Slap</span>
+  <a href="index.html">← Dashboard</a>
+</nav>
+
+<!-- Week navigation bar -->
+<div class="week-bar">
+  <select id="matchup-select" class="matchup-select" onchange="changeWeekTo(parseInt(this.value))">
+    <!-- populated by JS -->
+  </select>
+  <span id="week-result-badge"></span>
+  <div class="matchup-pill" style="margin-left:auto;">
+    <span class="my">Pitch Slap</span>
+    <span class="sep">vs</span>
+    <span class="opp" id="opp-name">2010 State Sectional Champ</span>
+  </div>
+</div>
+
+<!-- Day tabs -->
+<div class="day-tabs" id="day-tabs"></div>
+
+<!-- Game grid -->
+<div class="schedule-body">
+  <div class="game-grid" id="game-grid"></div>
+</div>
+
+<script>
+// ── Team colors ─────────────────────────────────────────────────────────────
+var TEAM_COLORS = {
+  LAD:'#005A9C', NYM:'#002D72', NYY:'#132448', BOS:'#BD3039',
+  HOU:'#002D62', ATL:'#CE1141', SD:'#2F241D',  STL:'#C41E3A',
+  SF:'#FD5A1E',  CHC:'#0E3386', CLE:'#E31937', SEA:'#0C2C56',
+  TB:'#092C5C',  BAL:'#DF4601', DET:'#0C2340', KC:'#004687',
+  ARI:'#A71930', COL:'#33006F', MIA:'#00A3E0', PHI:'#E81828',
+  PIT:'#27251F',  WSH:'#AB0003', MIN:'#002B5C', CWS:'#27251F',
+  LAA:'#BA0021', TOR:'#134A8E', MIL:'#0A2351', CIN:'#C6011F',
+  OAK:'#003831', ATH:'#003831', TEX:'#003278',
+};
+function teamColor(abbr) { return TEAM_COLORS[abbr] || '#2a2d42'; }
+
+// ── Matchup schedule (all weeks) ────────────────────────────────────────────
+var MATCHUPS = {
+  1:  { opp:'Deep Ball Franchise',       dates:'Mar 31 – Apr 6',   result:'W', score:'7-3'  },
+  2:  { opp:'Dynasty Destroyers',        dates:'Apr 7 – 13',       result:'W', score:'6-4'  },
+  3:  { opp:'Slugger City',              dates:'Apr 14 – 20',      result:'L', score:'4-6'  },
+  4:  { opp:'2010 State Sectional Champ',dates:'Apr 21 – 27',      result:null, score:null  },
+  5:  { opp:'Moonshot Monkeys',          dates:'Apr 28 – May 4',   result:null, score:null  },
+  6:  { opp:'ERA Erasers',               dates:'May 5 – 11',       result:null, score:null  },
+  7:  { opp:'Bunt Masters',              dates:'May 12 – 18',      result:null, score:null  },
+  8:  { opp:'Deep Ball Franchise',       dates:'May 19 – 25',      result:null, score:null  },
+  9:  { opp:'Dynasty Destroyers',        dates:'May 26 – Jun 1',   result:null, score:null  },
+  10: { opp:'Slugger City',              dates:'Jun 2 – 8',        result:null, score:null  },
+  11: { opp:'K-Rate Kings',              dates:'Jun 9 – 15',       result:null, score:null  },
+  12: { opp:'2010 State Sectional Champ',dates:'Jun 16 – 22',      result:null, score:null  },
+  13: { opp:'Moonshot Monkeys',          dates:'Jun 23 – 29',      result:null, score:null  },
+  14: { opp:'ERA Erasers',               dates:'Jun 30 – Jul 6',   result:null, score:null  },
+  15: { opp:'Bunt Masters',              dates:'Jul 7 – 13',       result:null, score:null  },
+  16: { opp:'Deep Ball Franchise',       dates:'Jul 14 – 20',      result:null, score:null  },
+  17: { opp:'Dynasty Destroyers',        dates:'Jul 21 – 27',      result:null, score:null  },
+  18: { opp:'K-Rate Kings',              dates:'Jul 28 – Aug 3',   result:null, score:null  },
+  19: { opp:'Slugger City',              dates:'Aug 4 – 10',       result:null, score:null  },
+  20: { opp:'2010 State Sectional Champ',dates:'Aug 11 – 17',      result:null, score:null  },
+  21: { opp:'TBD (Semifinal)',           dates:'Aug 18 – 24',      result:null, score:null, playoff:true },
+  22: { opp:'TBD (Semifinal)',           dates:'Aug 25 – 31',      result:null, score:null, playoff:true },
+  23: { opp:'TBD (Championship)',        dates:'Sep 1 – 7',        result:null, score:null, playoff:true },
+};
+
+// ── Mock data — rosters for current matchup (Week 4) ─────────────────────────
+// NOTE: replace with actual pipeline data when wired live
+var MY_PLAYERS = [
+  { name:'Freddie Freeman',  pos:'1B',  team:'LAD', bo:3 },
+  { name:'Max Muncy',        pos:'3B',  team:'LAD', bo:5 },
+  { name:'Mookie Betts',     pos:'OF',  team:'LAD', bo:2, il:true },
+  { name:'Juan Soto',        pos:'OF',  team:'NYY', bo:3 },
+  { name:'Rafael Devers',    pos:'3B',  team:'BOS', bo:4 },
+  { name:'Taj Bradley',      pos:'SP',  team:'TB'  },
+  { name:'Logan Gilbert',    pos:'SP',  team:'SEA' },
+  { name:'Mason Miller',     pos:'RP',  team:'ATH' },
+  { name:'Blake Treinen',    pos:'RP',  team:'LAD' },
+  { name:'Zack Wheeler',     pos:'SP',  team:'PHI' },
+];
+
+var OPP_PLAYERS = [
+  { name:'Francisco Lindor', pos:'SS',  team:'NYM', bo:1 },
+  { name:'Pete Alonso',      pos:'1B',  team:'NYM', bo:4 },
+  { name:'Yordan Alvarez',   pos:'OF',  team:'HOU', bo:4 },
+  { name:'Corbin Carroll',   pos:'OF',  team:'ARI', bo:1 },
+  { name:'Adley Rutschman',  pos:'C',   team:'BAL', bo:3 },
+  { name:'Gunnar Henderson', pos:'SS',  team:'BAL', bo:2 },
+  { name:'Jazz Chisholm',    pos:'2B',  team:'NYY', bo:1 },
+  { name:'Elly De La Cruz',  pos:'SS',  team:'CIN', bo:2 },
+  { name:'Kyle Tucker',      pos:'OF',  team:'CHC', bo:3 },
+  { name:'Salvador Perez',   pos:'C',   team:'KC',  bo:4 },
+  { name:'Tarik Skubal',     pos:'SP',  team:'DET' },
+  { name:'Spencer Strider',  pos:'SP',  team:'ATL' },
+  { name:'Paul Skenes',      pos:'SP',  team:'PIT' },
+  { name:'Hunter Brown',     pos:'SP',  team:'HOU' },
+  { name:'Emmanuel Clase',   pos:'RP',  team:'CLE' },
+  { name:'Josh Hader',       pos:'RP',  team:'HOU' },
+  { name:'Ryan Helsley',     pos:'RP',  team:'STL' },
+  { name:'Dylan Cease',      pos:'SP',  team:'SD'  },
+];
+
+// ── Schedule data ────────────────────────────────────────────────────────────
+var WEEKS = {
+  4: {
+    label: 'Week 4', sub: 'Apr 21 – 27',
+    days: {
+      'Mon Apr 21': [
+        { away:'KC',  home:'CLE', awayR:null, homeR:null, time:'1:10 PM', status:'preview', awaySP:'Seth Lugo',      homeSP:'Emmanuel Clase'    },
+        { away:'BAL', home:'BOS', awayR:null, homeR:null, time:'7:10 PM', status:'preview', awaySP:'Corbin Burnes',  homeSP:'Brayan Bello'       },
+        { away:'NYY', home:'TB',  awayR:null, homeR:null, time:'7:10 PM', status:'preview', awaySP:'Gerrit Cole',    homeSP:'Taj Bradley'        },
+        { away:'LAD', home:'NYM', awayR:null, homeR:null, time:'7:10 PM', status:'preview', awaySP:'Walker Buehler', homeSP:'Sean Manaea'        },
+        { away:'HOU', home:'ATL', awayR:null, homeR:null, time:'7:20 PM', status:'preview', awaySP:'Hunter Brown',   homeSP:'Spencer Strider'    },
+        { away:'CHC', home:'STL', awayR:null, homeR:null, time:'7:45 PM', status:'preview', awaySP:'Justin Steele',  homeSP:'Miles Mikolas'      },
+        { away:'ATH', home:'SEA', awayR:null, homeR:null, time:'9:40 PM', status:'preview', awaySP:'JP Sears',       homeSP:'Logan Gilbert'      },
+      ],
+      'Tue Apr 22': [
+        { away:'KC',  home:'CLE', awayR:null, homeR:null, time:'6:40 PM', status:'preview', awaySP:'Brady Singer',   homeSP:'Tanner Bibee'       },
+        { away:'BAL', home:'BOS', awayR:null, homeR:null, time:'7:10 PM', status:'preview', awaySP:'Trevor Rogers',  homeSP:'Nick Pivetta'       },
+        { away:'NYY', home:'TB',  awayR:null, homeR:null, time:'7:10 PM', status:'preview', awaySP:'Marcus Stroman', homeSP:'Zach Eflin'         },
+        { away:'PHI', home:'NYM', awayR:null, homeR:null, time:'7:10 PM', status:'preview', awaySP:'Zack Wheeler',   homeSP:'Kodai Senga'        },
+        { away:'HOU', home:'ATL', awayR:null, homeR:null, time:'7:20 PM', status:'preview', awaySP:'Framber Valdez', homeSP:'Chris Sale'         },
+        { away:'ARI', home:'CIN', awayR:null, homeR:null, time:'6:40 PM', status:'preview', awaySP:'Merrill Kelly',  homeSP:'Nick Lodolo'        },
+        { away:'SD',  home:'PIT', awayR:null, homeR:null, time:'6:35 PM', status:'preview', awaySP:'Dylan Cease',    homeSP:'Paul Skenes'        },
+        { away:'ATH', home:'SEA', awayR:null, homeR:null, time:'9:40 PM', status:'preview', awaySP:'Mason Miller',   homeSP:'Bryan Woo'          },
+      ],
+      'Wed Apr 23': [
+        { away:'KC',  home:'CLE', awayR:null, homeR:null, time:'12:10 PM', status:'preview', awaySP:'Cole Ragans',   homeSP:'Shane Bieber'       },
+        { away:'BAL', home:'BOS', awayR:null, homeR:null, time:'12:35 PM', status:'preview', awaySP:'Kyle Bradish',  homeSP:'Rafael Devers'      },
+        { away:'NYY', home:'TB',  awayR:null, homeR:null, time:'1:10 PM',  status:'preview', awaySP:'Carlos Rodon',  homeSP:'Aaron Civale'       },
+        { away:'PHI', home:'NYM', awayR:null, homeR:null, time:'1:10 PM',  status:'preview', awaySP:'Aaron Nola',    homeSP:'David Peterson'     },
+        { away:'HOU', home:'ATL', awayR:null, homeR:null, time:'12:20 PM', status:'preview', awaySP:'José Urquidy',  homeSP:'AJ Smith-Shawver'   },
+        { away:'LAD', home:'SF',  awayR:null, homeR:null, time:'3:45 PM',  status:'preview', awaySP:'Gavin Stone',   homeSP:'Logan Webb'         },
+        { away:'ARI', home:'CIN', awayR:null, homeR:null, time:'12:35 PM', status:'preview', awaySP:'Zac Gallen',    homeSP:'Frankie Montas'     },
+        { away:'SD',  home:'PIT', awayR:null, homeR:null, time:'12:35 PM', status:'preview', awaySP:'Michael King',  homeSP:'Mitch Keller'       },
+      ],
+      'Thu Apr 24': [
+        { away:'BOS', home:'NYY', awayR:null, homeR:null, time:'7:05 PM', status:'preview', awaySP:'Brayan Bello',   homeSP:'Luis Gil'           },
+        { away:'MIL', home:'CHC', awayR:null, homeR:null, time:'8:05 PM', status:'preview', awaySP:'Freddy Peralta', homeSP:'Kyle Hendricks'     },
+        { away:'CIN', home:'STL', awayR:null, homeR:null, time:'7:45 PM', status:'preview', awaySP:'Hunter Greene',  homeSP:'Sonny Gray'         },
+        { away:'LAD', home:'SF',  awayR:null, homeR:null, time:'9:45 PM', status:'preview', awaySP:'Tyler Glasnow',  homeSP:'Kyle Harrison'      },
+      ],
+      'Fri Apr 25': [
+        { away:'NYM', home:'PHI', awayR:null, homeR:null, time:'6:40 PM', status:'preview', awaySP:'José Quintana',  homeSP:'Ranger Suárez'     },
+        { away:'BAL', home:'NYY', awayR:null, homeR:null, time:'7:05 PM', status:'preview', awaySP:'Grayson Rodriguez',homeSP:'Gerrit Cole'      },
+        { away:'BOS', home:'TB',  awayR:null, homeR:null, time:'7:10 PM', status:'preview', awaySP:'Garrett Whitlock',homeSP:'Taj Bradley'       },
+        { away:'HOU', home:'KC',  awayR:null, homeR:null, time:'8:10 PM', status:'preview', awaySP:'Hunter Brown',   homeSP:'Seth Lugo'          },
+        { away:'ATL', home:'CIN', awayR:null, homeR:null, time:'6:40 PM', status:'preview', awaySP:'Spencer Strider', homeSP:'Elly De La Cruz'  },
+        { away:'SD',  home:'LAD', awayR:null, homeR:null, time:'10:10 PM',status:'preview', awaySP:'Dylan Cease',    homeSP:'Walker Buehler'     },
+        { away:'DET', home:'SEA', awayR:null, homeR:null, time:'9:40 PM', status:'preview', awaySP:'Tarik Skubal',   homeSP:'Logan Gilbert'      },
+        { away:'PIT', home:'ATH', awayR:null, homeR:null, time:'9:40 PM', status:'preview', awaySP:'Paul Skenes',    homeSP:'Mason Miller'       },
+      ],
+      'Sat Apr 26': [
+        { away:'NYM', home:'PHI', awayR:null, homeR:null, time:'1:05 PM', status:'preview', awaySP:'Kodai Senga',    homeSP:'Zack Wheeler'      },
+        { away:'BAL', home:'NYY', awayR:null, homeR:null, time:'1:05 PM', status:'preview', awaySP:'Kyle Bradish',   homeSP:'Marcus Stroman'    },
+        { away:'BOS', home:'TB',  awayR:null, homeR:null, time:'1:10 PM', status:'preview', awaySP:'Nick Pivetta',   homeSP:'Zach Eflin'        },
+        { away:'HOU', home:'KC',  awayR:null, homeR:null, time:'2:10 PM', status:'preview', awaySP:'Framber Valdez', homeSP:'Brady Singer'      },
+        { away:'ATL', home:'CIN', awayR:null, homeR:null, time:'4:10 PM', status:'preview', awaySP:'Chris Sale',     homeSP:'Nick Lodolo'       },
+        { away:'SD',  home:'LAD', awayR:null, homeR:null, time:'7:15 PM', status:'preview', awaySP:'Michael King',   homeSP:'Tyler Glasnow'     },
+        { away:'DET', home:'SEA', awayR:null, homeR:null, time:'4:10 PM', status:'preview', awaySP:'Casey Mize',     homeSP:'Bryan Woo'         },
+        { away:'PIT', home:'ATH', awayR:null, homeR:null, time:'4:05 PM', status:'preview', awaySP:'Mitch Keller',   homeSP:'JP Sears'          },
+      ],
+      'Sun Apr 27': [
+        { away:'NYM', home:'PHI', awayR:null, homeR:null, time:'1:35 PM', status:'preview', awaySP:'David Peterson',  homeSP:'Aaron Nola'       },
+        { away:'BAL', home:'NYY', awayR:null, homeR:null, time:'1:35 PM', status:'preview', awaySP:'Trevor Rogers',   homeSP:'Carlos Rodon'     },
+        { away:'BOS', home:'TB',  awayR:null, homeR:null, time:'1:10 PM', status:'preview', awaySP:'Josh Winckowski', homeSP:'Aaron Civale'     },
+        { away:'HOU', home:'KC',  awayR:null, homeR:null, time:'2:10 PM', status:'preview', awaySP:'José Urquidy',    homeSP:'Cole Ragans'      },
+        { away:'ATL', home:'CIN', awayR:null, homeR:null, time:'1:40 PM', status:'preview', awaySP:'Max Fried',       homeSP:'Hunter Greene'    },
+        { away:'SD',  home:'LAD', awayR:null, homeR:null, time:'4:10 PM', status:'preview', awaySP:'Joe Musgrove',    homeSP:'Gavin Stone'      },
+        { away:'DET', home:'SEA', awayR:null, homeR:null, time:'4:10 PM', status:'preview', awaySP:'Tarik Skubal',    homeSP:'Logan Gilbert'    },
+        { away:'PIT', home:'ATH', awayR:null, homeR:null, time:'4:05 PM', status:'preview', awaySP:'Paul Skenes',     homeSP:'Mason Miller'     },
+      ],
+    }
+  }
+};
+
+// ── Lookup helpers ────────────────────────────────────────────────────────────
+function playersInGame(roster, awayTeam, homeTeam) {
+  return roster.filter(function(p) {
+    return p.team === awayTeam || p.team === homeTeam;
+  });
+}
+
+function posClass(pos) {
+  return 'pos-' + pos.toLowerCase().replace('/','');
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+var currentWeek = 4;
+var currentDayIdx = 0;
+
+function buildDropdown() {
+  var sel = document.getElementById('matchup-select');
+  sel.innerHTML = '';
+  var rsGroup = document.createElement('optgroup');
+  rsGroup.label = 'Regular Season';
+  var poGroup = document.createElement('optgroup');
+  poGroup.label = 'Playoffs';
+  Object.keys(MATCHUPS).forEach(function(wk) {
+    var wn = parseInt(wk);
+    var m  = MATCHUPS[wn];
+    var label = 'Week ' + wn + ' · vs ' + m.opp + '  (' + m.dates + ')';
+    if (m.result) label += '  ' + m.result + ' ' + m.score;
+    var opt = document.createElement('option');
+    opt.value = wn;
+    opt.textContent = label;
+    if (wn === currentWeek) opt.selected = true;
+    (m.playoff ? poGroup : rsGroup).appendChild(opt);
+  });
+  sel.appendChild(rsGroup);
+  sel.appendChild(poGroup);
+}
+
+function updateWeekBar() {
+  var m = MATCHUPS[currentWeek];
+  document.getElementById('opp-name').textContent = m.opp;
+  var badge = document.getElementById('week-result-badge');
+  if (m.result) {
+    badge.className = 'week-result-badge wr-' + m.result;
+    badge.textContent = m.result + ' ' + m.score;
+  } else if (!WEEKS[currentWeek] || Object.keys(WEEKS[currentWeek].days||{}).length === 0) {
+    badge.className = 'week-result-badge'; badge.textContent = '';
+  } else {
+    badge.className = 'week-result-badge wr-now';
+    badge.textContent = 'IN PROGRESS';
+  }
+}
+
+function changeWeekTo(wn) {
+  if (!MATCHUPS[wn]) return;
+  currentWeek   = wn;
+  currentDayIdx = 0;
+  buildDropdown();
+  renderWeek();
+}
+
+function renderWeek() {
+  updateWeekBar();
+  var w = WEEKS[currentWeek] || { days: {} };
+  var days = Object.keys(w.days);
+  var tabs = document.getElementById('day-tabs');
+  tabs.innerHTML = '';
+  days.forEach(function(day, i) {
+    var games  = w.days[day];
+    var myCount  = 0, oppCount = 0;
+    games.forEach(function(g) {
+      myCount  += playersInGame(MY_PLAYERS,  g.away, g.home).length;
+      oppCount += playersInGame(OPP_PLAYERS, g.away, g.home).length;
+    });
+    var hasAction = myCount > 0 || oppCount > 0;
+    var tab = document.createElement('div');
+    tab.className = 'day-tab' + (hasAction ? ' has-fantasy' : '') + (i === currentDayIdx ? ' active' : '');
+    tab.innerHTML = day + '<span class="game-dot"></span>';
+    tab.onclick = (function(idx){ return function(){ selectDay(idx); }; })(i);
+    tabs.appendChild(tab);
+  });
+
+  renderDay(days[currentDayIdx], w.days[days[currentDayIdx]]);
+}
+
+function selectDay(idx) {
+  currentDayIdx = idx;
+  var tabs = document.querySelectorAll('.day-tab');
+  tabs.forEach(function(t, i) { t.classList.toggle('active', i === idx); });
+  var w = WEEKS[currentWeek];
+  var days = Object.keys(w.days);
+  renderDay(days[idx], w.days[days[idx]]);
+}
+
+function renderDay(dayLabel, games) {
+  var grid = document.getElementById('game-grid');
+  grid.innerHTML = '';
+  if (!games || games.length === 0) {
+    var m = MATCHUPS[currentWeek];
+    grid.innerHTML = '<p class="empty-day" style="padding:40px 0;">'
+      + 'Schedule data not yet available for this matchup.<br>'
+      + '<span style="color:#333;font-size:12px;margin-top:6px;display:block;">Week ' + currentWeek + ' · ' + (m ? m.dates : '') + ' · vs ' + (m ? m.opp : '—') + '</span>'
+      + '</p>';
+    return;
+  }
+  games.forEach(function(g, gi) {
+    var myPlayers  = playersInGame(MY_PLAYERS,  g.away, g.home);
+    var oppPlayers = playersInGame(OPP_PLAYERS, g.away, g.home);
+    var hasAction  = myPlayers.length > 0 || oppPlayers.length > 0;
+
+    // Card wrapper
+    var card = document.createElement('div');
+    card.className = 'game-card' + (hasAction ? ' has-action' : ' no-action');
+
+    // Score/time block
+    var scoreHTML;
+    if (g.status === 'live') {
+      scoreHTML = '<div class="score-nums"><span class="final">'+(g.awayR||0)+'</span><span class="vs">·</span><span class="final">'+(g.homeR||0)+'</span></div>'
+        + '<div class="game-time"><span class="game-status-live">● LIVE</span></div>';
+    } else if (g.status === 'final') {
+      scoreHTML = '<div class="score-nums"><span class="final">'+(g.awayR||0)+'</span><span class="vs">–</span><span class="final">'+(g.homeR||0)+'</span></div>'
+        + '<div class="game-time">Final</div>';
+    } else {
+      scoreHTML = '<div class="score-nums"><span class="preview">'+g.time+'</span></div>'
+        + '<div class="game-time">ET</div>';
+    }
+
+    var awayColor = teamColor(g.away);
+    var homeColor = teamColor(g.home);
+
+    card.innerHTML = [
+      '<div class="card-teams">',
+        '<div class="team-block away">',
+          '<div class="team-logo" style="background:'+awayColor+'">'+g.away+'</div>',
+          '<div>',
+            '<div class="team-name">'+g.away+'</div>',
+            '<div class="team-record">Away</div>',
+          '</div>',
+        '</div>',
+        '<div class="score-block">'+scoreHTML+'</div>',
+        '<div class="team-block home">',
+          '<div class="team-logo" style="background:'+homeColor+'">'+g.home+'</div>',
+          '<div>',
+            '<div class="team-name">'+g.home+'</div>',
+            '<div class="team-record">Home</div>',
+          '</div>',
+        '</div>',
+      '</div>',
+      '<div class="card-pitchers">',
+        '<span style="color:#3a4060;">'+(g.awaySP||'TBD')+'</span>',
+        '<span style="color:#2a2d42;font-size:9px;align-self:center;">vs</span>',
+        '<span style="color:#3a4060;text-align:right;">'+(g.homeSP||'TBD')+'</span>',
+      '</div>',
+      '<hr class="card-div">',
+      buildFantasySection(gi, g, myPlayers, oppPlayers, hasAction),
+    ].join('');
+
+    grid.appendChild(card);
+  });
+}
+
+function buildFantasySection(gi, g, myPlayers, oppPlayers, hasAction) {
+  var id = 'fb-'+gi;
+  var myCount  = myPlayers.filter(function(p){return !p.il;}).length;
+  var oppCount = oppPlayers.length;
+  var label = hasAction
+    ? (myCount + oppCount) + ' fantasy player' + ((myCount+oppCount)!==1?'s':'') + ' in this game'
+    : 'No fantasy players';
+
+  var myRows = myPlayers.length
+    ? myPlayers.map(function(p) {
+        var ilTag = p.il ? ' <span style="color:#e74c3c;font-size:9px;">(IL)</span>' : '';
+        var boTag = p.bo ? '<span class="fp-bo">#'+p.bo+'</span>' : '';
+        return '<div class="fp-row"><span class="fp-name">'+p.name+ilTag+'</span><span class="fp-pos '+posClass(p.pos)+'">'+p.pos+'</span>'+boTag+'</div>';
+      }).join('')
+    : '<div class="no-players">None</div>';
+
+  var oppRows = oppPlayers.length
+    ? oppPlayers.map(function(p) {
+        var boTag = p.bo ? '<span class="fp-bo">#'+p.bo+'</span>' : '';
+        return '<div class="fp-row"><span class="fp-name">'+p.name+'</span><span class="fp-pos '+posClass(p.pos)+'">'+p.pos+'</span>'+boTag+'</div>';
+      }).join('')
+    : '<div class="no-players">None</div>';
+
+  return [
+    '<div class="fantasy-section">',
+      '<div class="fantasy-toggle" id="ft-'+gi+'" onclick="toggleFantasy('+gi+')">',
+        '<span class="fantasy-toggle-label">Fantasy Matchup</span>',
+        '<div style="display:flex;align-items:center;gap:8px;">',
+          '<span class="fantasy-toggle-meta">'+label+'</span>',
+          '<span class="chevron">▼</span>',
+        '</div>',
+      '</div>',
+      '<div class="fantasy-body" id="'+id+'">',
+        '<div class="fantasy-matchup-label">Pitch Slap vs 2010 State Sectional Champ · '+g.away+' @ '+g.home+'</div>',
+        '<div class="fantasy-teams">',
+          '<div class="fantasy-side my-side">',
+            '<div class="fantasy-side-label">🔵 Pitch Slap</div>',
+            myRows,
+          '</div>',
+          '<div class="fantasy-side opp-side">',
+            '<div class="fantasy-side-label">🟣 2010 State Sect.</div>',
+            oppRows,
+          '</div>',
+        '</div>',
+      '</div>',
+    '</div>',
+  ].join('');
+}
+
+function toggleFantasy(gi) {
+  var body   = document.getElementById('fb-'+gi);
+  var toggle = document.getElementById('ft-'+gi);
+  var open   = body.classList.toggle('open');
+  toggle.classList.toggle('open', open);
+}
+
+
+// ── Auto-open games with fantasy players ────────────────────────────────────
+function autoExpand() {
+  var w = WEEKS[currentWeek];
+  if (!w) return;
+  var days = Object.keys(w.days);
+  var games = w.days[days[currentDayIdx]];
+  if (!games) return;
+  games.forEach(function(g, gi) {
+    var myP  = playersInGame(MY_PLAYERS,  g.away, g.home);
+    var oppP = playersInGame(OPP_PLAYERS, g.away, g.home);
+    if (myP.length > 0 || oppP.length > 0) {
+      var body   = document.getElementById('fb-'+gi);
+      var toggle = document.getElementById('ft-'+gi);
+      if (body)   body.classList.add('open');
+      if (toggle) toggle.classList.add('open');
+    }
+  });
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+buildDropdown();
+renderWeek();
+autoExpand();
+</script>
+</body>
+</html>

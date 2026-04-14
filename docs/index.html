@@ -167,6 +167,15 @@
   .filter-btn:hover { background: #2a2d3a; color: #ccc; }
   .filter-btn.active { background: #1a3a6a; color: #4da6ff; border-color: #2a5a9a; }
 
+  /* ── Sortable roster tables ── */
+  .sortable-th { cursor: pointer; user-select: none; }
+  .sortable-th:hover { color: #ccc; }
+  .sort-asc::after  { content: ' ▲'; font-size: 9px; color: #4da6ff; }
+  .sort-desc::after { content: ' ▼'; font-size: 9px; color: #4da6ff; }
+  .table-controls { display: flex; justify-content: flex-end; margin-bottom: 4px; }
+  .reset-btn { font-size: 11px; padding: 2px 8px; background: #1e2130; border: 1px solid #2a2d3a; color: #666; border-radius: 3px; cursor: pointer; }
+  .reset-btn:hover { color: #aaa; background: #252838; }
+
   /* ── Responsive ── */
   @media (max-width: 750px) {
     .two-col          { grid-template-columns: 1fr; }
@@ -191,7 +200,8 @@
   <a href="#waiver">Waiver</a>
   <a href="#trade">Trade</a>
   <a href="#rankings">Rankings</a>
-  <span class="generated">Updated 2026-04-13 07:00</span>
+  <a href="#activity">Activity</a>
+  <span class="generated">Updated 2026-04-13 15:24</span>
 </nav>
 
 
@@ -200,12 +210,12 @@
   <h2>⚔️ This Week's Matchup</h2>
   
     <div class="record">
-      <span class="wins">5W</span>
+      <span class="wins">0W</span>
       <span class="sep">·</span>
-      <span class="ties">1T</span>
+      <span class="ties">10T</span>
       <span class="sep">·</span>
-      <span class="losses">4L</span>
-      <span class="opp">vs ChicksDigTheLongBall</span>
+      <span class="losses">0L</span>
+      <span class="opp">vs 2010 State Sectional Champ</span>
     </div>
     <p class="section-note">PROJECTED = projection at week start · LIVE = current leader · ↑↓ = gap trend vs last run · ⚡ = diverged</p>
     <div class="tbl-wrap">
@@ -215,54 +225,18 @@
             <th class="left">STAT</th>
             <th>Pitch Slap</th>
             <th>Trend</th>
-            <th>ChicksDigTheLongBall</th>
+            <th>2010 State Sectional Champ</th>
             <th class="left">PROJECTED</th>
             <th class="left">LIVE</th>
           </tr>
         </thead>
         <tbody>
           
-          <tr class="loss">
-            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">R</td>
-            <td>36</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>47</td>
-            <td class="left proj-winner-loss">ChicksDigTheLongBall</td>
-            <td class="left">
-              ChicksDigTheLongBall
-              
-            </td>
-          </tr>
-          
-          <tr class="loss">
-            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">HR</td>
-            <td>4</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>10</td>
-            <td class="left proj-winner-loss">ChicksDigTheLongBall</td>
-            <td class="left">
-              ChicksDigTheLongBall
-              
-            </td>
-          </tr>
-          
-          <tr class="win">
-            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">RBI</td>
-            <td>37</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>29</td>
-            <td class="left proj-winner-loss">ChicksDigTheLongBall</td>
-            <td class="left">
-              Pitch Slap
-              <span class="diverge-badge">⚡</span>
-            </td>
-          </tr>
-          
           <tr class="tie">
-            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">SB</td>
-            <td>5</td>
+            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">R</td>
+            <td>0</td>
             <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>5</td>
+            <td>0</td>
             <td class="left proj-winner-win">Pitch Slap</td>
             <td class="left">
               Tied
@@ -270,74 +244,110 @@
             </td>
           </tr>
           
-          <tr class="loss">
-            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">OBP</td>
-            <td>.384</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>.399</td>
-            <td class="left proj-winner-tie">Toss-Up</td>
-            <td class="left">
-              ChicksDigTheLongBall
-              
-            </td>
-          </tr>
-          
-          <tr class="win cat-group-start">
-            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">K</td>
-            <td>43</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>24</td>
-            <td class="left proj-winner-win">Pitch Slap</td>
-            <td class="left">
-              Pitch Slap
-              
-            </td>
-          </tr>
-          
-          <tr class="win">
-            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">QS</td>
-            <td>4</td>
+          <tr class="tie">
+            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">HR</td>
+            <td>0</td>
             <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
             <td>0</td>
             <td class="left proj-winner-tie">Toss-Up</td>
             <td class="left">
-              Pitch Slap
+              Tied
               
             </td>
           </tr>
           
-          <tr class="win">
+          <tr class="tie">
+            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">RBI</td>
+            <td>0</td>
+            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
+            <td>0</td>
+            <td class="left proj-winner-tie">Toss-Up</td>
+            <td class="left">
+              Tied
+              
+            </td>
+          </tr>
+          
+          <tr class="tie">
+            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">SB</td>
+            <td>0</td>
+            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
+            <td>0</td>
+            <td class="left proj-winner-win">Pitch Slap</td>
+            <td class="left">
+              Tied
+              
+            </td>
+          </tr>
+          
+          <tr class="tie">
+            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">OBP</td>
+            <td>.000</td>
+            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
+            <td>.000</td>
+            <td class="left proj-winner-win">Pitch Slap</td>
+            <td class="left">
+              Tied
+              
+            </td>
+          </tr>
+          
+          <tr class="tie cat-group-start">
+            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">K</td>
+            <td>0</td>
+            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
+            <td>0</td>
+            <td class="left proj-winner-loss">2010 State Sectional Champ</td>
+            <td class="left">
+              Tied
+              
+            </td>
+          </tr>
+          
+          <tr class="tie">
+            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">QS</td>
+            <td>0</td>
+            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
+            <td>0</td>
+            <td class="left proj-winner-tie">Toss-Up</td>
+            <td class="left">
+              Tied
+              
+            </td>
+          </tr>
+          
+          <tr class="tie">
             <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">ERA</td>
-            <td>3.80</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>7.71</td>
+            <td>—</td>
+            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title=""></td>
+            <td>—</td>
             <td class="left proj-winner-tie">Toss-Up</td>
             <td class="left">
-              Pitch Slap
+              Tied
               
             </td>
           </tr>
           
-          <tr class="win">
+          <tr class="tie">
             <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">WHIP</td>
-            <td>1.29</td>
-            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>1.88</td>
-            <td class="left proj-winner-tie">Toss-Up</td>
+            <td>—</td>
+            <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title=""></td>
+            <td>—</td>
+            <td class="left proj-winner-loss">2010 State Sectional Champ</td>
             <td class="left">
-              Pitch Slap
+              Tied
               
             </td>
           </tr>
           
-          <tr class="loss">
+          <tr class="tie">
             <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">SVHD</td>
-            <td>1</td>
+            <td>0</td>
             <td class="trend-FLAT" style="font-size:13px;font-weight:700;" title="">→</td>
-            <td>4</td>
-            <td class="left proj-winner-loss">ChicksDigTheLongBall</td>
+            <td>0</td>
+            <td class="left proj-winner-win">Pitch Slap</td>
             <td class="left">
-              ChicksDigTheLongBall
+              Tied
               
             </td>
           </tr>
@@ -358,8 +368,11 @@
   <!-- Hitters -->
   <h3>Hitters</h3>
   
+  <div class="table-controls">
+    <button class="reset-btn" onclick="resetRosterTable('tbl-roster-hitters')">↺ Reset</button>
+  </div>
   <div class="tbl-wrap">
-    <table>
+    <table id="tbl-roster-hitters">
       <thead>
         <tr>
           <th class="left">Name</th>
@@ -371,7 +384,7 @@
       </thead>
       <tbody>
         
-        <tr class="start">
+        <tr class="consider" data-row-idx="0">
           <td class="left">
             Will Smith
             <span class="badge badge-active">C</span>
@@ -391,33 +404,33 @@
           <td class="z-bad">-0.17</td>
           <td class="z-good">0.57</td>
           <td class="z-good">0.58</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
         </tr>
         
-        <tr class="borderline">
+        <tr class="borderline" data-row-idx="1">
           <td class="left">
-            Samuel Basallo
+            Carter Jensen
             <span class="badge badge-active">C</span>
             
             
           </td>
-          <td class="left" style="color:#666;">BAL</td>
-          <td class="left">C</td>
-          <td>11</td>
-          <td>.150</td>
-          <td>.261</td>
-          <td>5</td>
-          <td>2</td>
-          <td>3</td>
+          <td class="left" style="color:#666;">KC</td>
+          <td class="left">C, DH</td>
+          <td>15</td>
+          <td>.238</td>
+          <td>.283</td>
+          <td>6</td>
+          <td>4</td>
+          <td>8</td>
           <td>0</td>
-          <td class="z-bad">-0.16</td>
-          <td class="z-bad">-0.16</td>
-          <td class="z-bad">-0.12</td>
-          <td class="z-bad">-0.09</td>
+          <td class="z-good">1.07</td>
+          <td class="z-good">0.62</td>
+          <td class="z-good">0.62</td>
+          <td class="z-bad">-0.13</td>
           <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
         </tr>
         
-        <tr class="start">
+        <tr class="consider" data-row-idx="2">
           <td class="left">
             Nick Kurtz
             <span class="badge badge-active">1B</span>
@@ -437,33 +450,33 @@
           <td class="z-bad">-0.34</td>
           <td class="z-ok">0.17</td>
           <td class="z-ok">0.03</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
         </tr>
         
-        <tr class="start">
+        <tr class="consider" data-row-idx="3">
           <td class="left">
-            Matt Chapman
+            Max Muncy
             <span class="badge badge-active">3B</span>
             
             
           </td>
-          <td class="left" style="color:#666;">SF</td>
+          <td class="left" style="color:#666;">LAD</td>
           <td class="left">3B</td>
-          <td>16</td>
-          <td>.290</td>
-          <td>.343</td>
-          <td>8</td>
-          <td>1</td>
-          <td>7</td>
+          <td>14</td>
+          <td>.245</td>
+          <td>.339</td>
+          <td>11</td>
+          <td>4</td>
+          <td>4</td>
           <td>0</td>
-          <td class="z-terrible">-0.58</td>
-          <td class="z-ok">0.17</td>
-          <td class="z-ok">0.01</td>
-          <td class="z-bad">-0.08</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td class="z-good">0.67</td>
+          <td class="z-good">0.84</td>
+          <td class="z-good">0.66</td>
+          <td class="z-good">0.71</td>
+          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
         </tr>
         
-        <tr class="start">
+        <tr class="consider" data-row-idx="4">
           <td class="left">
             Willson Contreras
             <span class="badge badge-active">1B/3B</span>
@@ -483,10 +496,10 @@
           <td class="z-ok">0.34</td>
           <td class="z-ok">0.21</td>
           <td class="z-ok">0.46</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
         </tr>
         
-        <tr class="start">
+        <tr class="consider" data-row-idx="5">
           <td class="left">
             Nico Hoerner
             <span class="badge badge-active">2B</span>
@@ -506,10 +519,10 @@
           <td class="z-good">0.93</td>
           <td class="z-good">1.01</td>
           <td class="z-good">0.97</td>
-          <td class="left rec-start" style="font-size:11px;">START</td>
+          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
         </tr>
         
-        <tr class="start">
+        <tr class="consider" data-row-idx="6">
           <td class="left">
             Xavier Edwards
             <span class="badge badge-active">SS</span>
@@ -529,56 +542,33 @@
           <td class="z-ok">0.16</td>
           <td class="z-ok">0.29</td>
           <td class="z-ok">0.38</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
         </tr>
         
-        <tr class="borderline">
+        <tr class="consider" data-row-idx="7">
           <td class="left">
-            Jeff McNeil
-            <span class="badge badge-active">2B/SS</span>
-            
-            
-          </td>
-          <td class="left" style="color:#666;">OAK</td>
-          <td class="left">2B, OF</td>
-          <td>14</td>
-          <td>.318</td>
-          <td>.375</td>
-          <td>5</td>
-          <td>0</td>
-          <td>3</td>
-          <td>1</td>
-          <td class="z-terrible">-0.94</td>
-          <td class="z-terrible">-0.69</td>
-          <td class="z-terrible">-0.56</td>
-          <td class="z-terrible">-0.57</td>
-          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
-        </tr>
-        
-        <tr class="start">
-          <td class="left">
-            Mike Trout
+            Cam Smith
             <span class="badge badge-active">OF</span>
             
             
           </td>
-          <td class="left" style="color:#666;">LAA</td>
-          <td class="left">OF, DH</td>
-          <td>15</td>
-          <td>.208</td>
-          <td>.400</td>
-          <td>13</td>
-          <td>2</td>
-          <td>7</td>
-          <td>2</td>
-          <td class="z-bad">-0.17</td>
-          <td class="z-bad">-0.24</td>
-          <td class="z-good">0.71</td>
-          <td class="z-good">0.79</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td class="left" style="color:#666;">HOU</td>
+          <td class="left">OF</td>
+          <td>16</td>
+          <td>.286</td>
+          <td>.375</td>
+          <td>10</td>
+          <td>3</td>
+          <td>8</td>
+          <td>3</td>
+          <td class="z-bad">-0.30</td>
+          <td class="z-good">0.83</td>
+          <td class="z-good">0.84</td>
+          <td class="z-good">0.91</td>
+          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
         </tr>
         
-        <tr class="start">
+        <tr class="consider" data-row-idx="8">
           <td class="left">
             Corbin Carroll
             <span class="badge badge-active">OF</span>
@@ -598,10 +588,33 @@
           <td class="z-good">0.83</td>
           <td class="z-good">0.62</td>
           <td class="z-good">0.72</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
         </tr>
         
-        <tr class="start">
+        <tr class="consider" data-row-idx="9">
+          <td class="left">
+            Jakob Marsee
+            <span class="badge badge-active">OF</span>
+            
+            
+          </td>
+          <td class="left" style="color:#666;">MIA</td>
+          <td class="left">OF</td>
+          <td>16</td>
+          <td>.145</td>
+          <td>.250</td>
+          <td>10</td>
+          <td>0</td>
+          <td>3</td>
+          <td>6</td>
+          <td class="z-ok">0.35</td>
+          <td class="z-ok">0.42</td>
+          <td class="z-ok">0.35</td>
+          <td class="z-ok">0.32</td>
+          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+        </tr>
+        
+        <tr class="consider" data-row-idx="10">
           <td class="left">
             Pete Crow-Armstrong
             <span class="badge badge-active">OF</span>
@@ -621,10 +634,10 @@
           <td class="z-bad">-0.34</td>
           <td class="z-ok">0.10</td>
           <td class="z-ok">0.09</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
         </tr>
         
-        <tr class="start">
+        <tr class="consider" data-row-idx="11">
           <td class="left">
             Steven Kwan
             <span class="badge badge-active">OF</span>
@@ -644,33 +657,33 @@
           <td class="z-ok">0.11</td>
           <td class="z-bad">-0.03</td>
           <td class="z-ok">0.01</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
         </tr>
         
-        <tr class="borderline">
+        <tr class="consider" data-row-idx="12">
           <td class="left">
-            Juan Soto
-            <span class="badge badge-active">OF</span>
+            Mike Trout
+            <span class="badge badge-active">UTIL</span>
             
             
           </td>
-          <td class="left" style="color:#666;">NYM</td>
-          <td class="left">OF</td>
-          <td>8</td>
-          <td>.355</td>
-          <td>.412</td>
-          <td>3</td>
-          <td>1</td>
-          <td>5</td>
-          <td>0</td>
-          <td class="z-na">—</td>
-          <td class="z-terrible">-0.61</td>
-          <td class="z-bad">-0.45</td>
-          <td class="z-bad">-0.37</td>
-          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
+          <td class="left" style="color:#666;">LAA</td>
+          <td class="left">OF, DH</td>
+          <td>15</td>
+          <td>.208</td>
+          <td>.400</td>
+          <td>13</td>
+          <td>2</td>
+          <td>7</td>
+          <td>2</td>
+          <td class="z-bad">-0.17</td>
+          <td class="z-bad">-0.24</td>
+          <td class="z-good">0.71</td>
+          <td class="z-good">0.79</td>
+          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
         </tr>
         
-        <tr class="start">
+        <tr class="consider" data-row-idx="13">
           <td class="left">
             Christian Yelich
             <span class="badge badge-active">UTIL</span>
@@ -690,150 +703,79 @@
           <td class="z-bad">-0.13</td>
           <td class="z-good">0.65</td>
           <td class="z-good">0.78</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
         </tr>
         
-        <tr class="borderline">
+        <tr class="borderline" data-row-idx="14">
           <td class="left">
-            Heliot Ramos
-            <span class="badge badge-active">UTIL</span>
-            <span class="action-bench">⬇</span>
+            Matt Chapman
+            <span class="badge badge-bench">BENCH</span>
+            
             
           </td>
           <td class="left" style="color:#666;">SF</td>
-          <td class="left">OF</td>
-          <td>15</td>
-          <td>.241</td>
-          <td>.267</td>
-          <td>5</td>
-          <td>0</td>
-          <td>6</td>
-          <td>0</td>
-          <td class="z-terrible">-0.59</td>
-          <td class="z-terrible">-0.62</td>
-          <td class="z-terrible">-0.70</td>
-          <td class="z-terrible">-0.68</td>
-          <td class="left rec-borderline" style="font-size:11px;">BENCH</td>
-        </tr>
-        
-        <tr class="borderline">
-          <td class="left">
-            Cam Smith
-            <span class="badge badge-bench">BENCH</span>
-            
-            
-          </td>
-          <td class="left" style="color:#666;">HOU</td>
-          <td class="left">OF</td>
-          <td>16</td>
-          <td>.286</td>
-          <td>.375</td>
-          <td>10</td>
-          <td>3</td>
-          <td>8</td>
-          <td>3</td>
-          <td class="z-bad">-0.30</td>
-          <td class="z-good">0.83</td>
-          <td class="z-good">0.84</td>
-          <td class="z-good">0.91</td>
-          <td class="left rec-borderline" style="font-size:11px;"></td>
-        </tr>
-        
-        <tr class="borderline">
-          <td class="left">
-            Max Muncy
-            <span class="badge badge-bench">BENCH</span>
-            
-            
-          </td>
-          <td class="left" style="color:#666;">LAD</td>
           <td class="left">3B</td>
-          <td>14</td>
-          <td>.245</td>
-          <td>.339</td>
-          <td>11</td>
-          <td>4</td>
-          <td>4</td>
+          <td>16</td>
+          <td>.290</td>
+          <td>.343</td>
+          <td>8</td>
+          <td>1</td>
+          <td>7</td>
           <td>0</td>
-          <td class="z-good">0.67</td>
-          <td class="z-good">0.84</td>
-          <td class="z-good">0.66</td>
-          <td class="z-good">0.71</td>
-          <td class="left rec-borderline" style="font-size:11px;"></td>
+          <td class="z-terrible">-0.58</td>
+          <td class="z-ok">0.17</td>
+          <td class="z-ok">0.01</td>
+          <td class="z-bad">-0.08</td>
+          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
         </tr>
         
-        <tr class="borderline">
+        <tr class="borderline" data-row-idx="15">
           <td class="left">
-            Max Muncy
+            Samuel Basallo
+            <span class="badge badge-bench">BENCH</span>
+            
+            
+          </td>
+          <td class="left" style="color:#666;">BAL</td>
+          <td class="left">C</td>
+          <td>11</td>
+          <td>.150</td>
+          <td>.261</td>
+          <td>5</td>
+          <td>2</td>
+          <td>3</td>
+          <td>0</td>
+          <td class="z-bad">-0.16</td>
+          <td class="z-bad">-0.16</td>
+          <td class="z-bad">-0.12</td>
+          <td class="z-bad">-0.09</td>
+          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
+        </tr>
+        
+        <tr class="borderline" data-row-idx="16">
+          <td class="left">
+            Jeff McNeil
             <span class="badge badge-bench">BENCH</span>
             
             
           </td>
           <td class="left" style="color:#666;">OAK</td>
-          <td class="left">3B</td>
+          <td class="left">2B, OF</td>
           <td>14</td>
-          <td>.245</td>
-          <td>.339</td>
-          <td>11</td>
-          <td>4</td>
-          <td>4</td>
-          <td>0</td>
-          <td class="z-good">0.67</td>
-          <td class="z-good">0.84</td>
-          <td class="z-good">0.66</td>
-          <td class="z-ok">0.43</td>
-          <td class="left rec-borderline" style="font-size:11px;"></td>
-        </tr>
-        
-        <tr class="start">
-          <td class="left">
-            Jakob Marsee
-            <span class="badge badge-bench">BENCH</span>
-            <span class="action-promote">⬆</span>
-            
-            
-          </td>
-          <td class="left" style="color:#666;">MIA</td>
-          <td class="left">OF</td>
-          <td>16</td>
-          <td>.145</td>
-          <td>.250</td>
-          <td>10</td>
+          <td>.318</td>
+          <td>.375</td>
+          <td>5</td>
           <td>0</td>
           <td>3</td>
-          <td>6</td>
-          <td class="z-ok">0.35</td>
-          <td class="z-ok">0.42</td>
-          <td class="z-ok">0.35</td>
-          <td class="z-ok">0.32</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td>1</td>
+          <td class="z-terrible">-0.94</td>
+          <td class="z-terrible">-0.69</td>
+          <td class="z-terrible">-0.56</td>
+          <td class="z-terrible">-0.57</td>
+          <td class="left rec-borderline" style="font-size:11px;">BENCH</td>
         </tr>
         
-        <tr class="start">
-          <td class="left">
-            Carter Jensen
-            <span class="badge badge-bench">BENCH</span>
-            <span class="action-promote">⬆</span>
-            
-            
-          </td>
-          <td class="left" style="color:#666;">KC</td>
-          <td class="left">C, DH</td>
-          <td>15</td>
-          <td>.238</td>
-          <td>.283</td>
-          <td>6</td>
-          <td>4</td>
-          <td>8</td>
-          <td>0</td>
-          <td class="z-good">1.07</td>
-          <td class="z-good">0.62</td>
-          <td class="z-good">0.62</td>
-          <td class="z-bad">-0.13</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
-        </tr>
-        
-        <tr class="borderline">
+        <tr class="borderline" data-row-idx="17">
           <td class="left">
             Mookie Betts
             <span class="badge badge-il">IL</span>
@@ -856,6 +798,29 @@
           <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
         </tr>
         
+        <tr class="borderline" data-row-idx="18">
+          <td class="left">
+            Juan Soto
+            <span class="badge badge-il">IL</span>
+            
+            
+          </td>
+          <td class="left" style="color:#666;">NYM</td>
+          <td class="left">OF</td>
+          <td>8</td>
+          <td>.355</td>
+          <td>.412</td>
+          <td>3</td>
+          <td>1</td>
+          <td>5</td>
+          <td>0</td>
+          <td class="z-na">—</td>
+          <td class="z-terrible">-0.61</td>
+          <td class="z-bad">-0.45</td>
+          <td class="z-bad">-0.37</td>
+          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
+        </tr>
+        
       </tbody>
     </table>
   </div>
@@ -864,20 +829,49 @@
   <!-- Pitchers -->
   <h3 style="margin-top:18px;">Pitchers</h3>
   
+  <div class="table-controls">
+    <button class="reset-btn" onclick="resetRosterTable('tbl-roster-pitchers')">↺ Reset</button>
+  </div>
   <div class="tbl-wrap">
-    <table>
+    <table id="tbl-roster-pitchers">
       <thead>
         <tr>
           <th class="left">Name</th>
           <th class="left">Tm</th>
           <th class="left">Pos</th>
-          <th>IP</th><th>H</th><th>BB</th><th>ERA</th><th>WHIP</th><th>K</th><th>QS</th><th>SV</th><th>HLD</th>
+          <th>G</th><th>IP</th><th>H</th><th>BB</th><th>ERA</th><th>WHIP</th><th>K</th><th>QS</th><th>SVHD</th>
           <th>Z-7d</th><th>Z-14d</th><th>Z-30d</th><th>Z-Ssn</th><th>Rec</th>
         </tr>
       </thead>
       <tbody>
         
-        <tr class="consider">
+        <tr class="start" data-row-idx="0">
+          <td class="left">
+            Taj Bradley
+            <span class="badge badge-active">SP</span>
+            
+            
+            
+          </td>
+          <td class="left" style="color:#666;">MIN</td>
+          <td class="left">SP</td>
+          <td>4</td>
+          <td>21.2</td>
+          <td>19</td>
+          <td>8</td>
+          <td>1.25</td>
+          <td>1.25</td>
+          <td>29</td>
+          <td>0</td>
+          <td>0</td>
+          <td class="z-good">0.64</td>
+          <td class="z-ok">0.38</td>
+          <td class="z-ok">0.46</td>
+          <td class="z-ok">0.46</td>
+          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+        </tr>
+        
+        <tr class="start" data-row-idx="1">
           <td class="left">
             Logan Webb
             <span class="badge badge-active">SP</span>
@@ -887,6 +881,7 @@
           </td>
           <td class="left" style="color:#666;">SF</td>
           <td class="left">SP</td>
+          <td>4</td>
           <td>24.0</td>
           <td>24</td>
           <td>9</td>
@@ -895,15 +890,14 @@
           <td>21</td>
           <td>0</td>
           <td>0</td>
-          <td>0</td>
           <td class="z-bad">-0.23</td>
           <td class="z-ok">0.03</td>
           <td class="z-ok">0.07</td>
           <td class="z-ok">0.07</td>
-          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
+          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
         </tr>
         
-        <tr class="borderline">
+        <tr class="start" data-row-idx="2">
           <td class="left">
             Yoshinobu Yamamoto
             <span class="badge badge-active">SP</span>
@@ -913,6 +907,7 @@
           </td>
           <td class="left" style="color:#666;">LAD</td>
           <td class="left">SP</td>
+          <td>3</td>
           <td>18.0</td>
           <td>14</td>
           <td>2</td>
@@ -921,15 +916,14 @@
           <td>14</td>
           <td>0</td>
           <td>0</td>
-          <td>0</td>
           <td class="z-bad">-0.09</td>
           <td class="z-bad">-0.12</td>
           <td class="z-bad">-0.01</td>
           <td class="z-bad">-0.01</td>
-          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
+          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
         </tr>
         
-        <tr class="borderline">
+        <tr class="start" data-row-idx="3">
           <td class="left">
             Michael King
             <span class="badge badge-active">SP</span>
@@ -939,6 +933,7 @@
           </td>
           <td class="left" style="color:#666;">SD</td>
           <td class="left">SP</td>
+          <td>3</td>
           <td>16.2</td>
           <td>12</td>
           <td>8</td>
@@ -947,15 +942,14 @@
           <td>15</td>
           <td>0</td>
           <td>0</td>
-          <td>0</td>
           <td class="z-bad">-0.28</td>
           <td class="z-bad">-0.22</td>
           <td class="z-bad">-0.05</td>
           <td class="z-bad">-0.05</td>
-          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
+          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
         </tr>
         
-        <tr class="borderline">
+        <tr class="start" data-row-idx="4">
           <td class="left">
             Nathan Eovaldi
             <span class="badge badge-active">SP</span>
@@ -965,6 +959,7 @@
           </td>
           <td class="left" style="color:#666;">TEX</td>
           <td class="left">SP</td>
+          <td>3</td>
           <td>14.2</td>
           <td>22</td>
           <td>5</td>
@@ -973,15 +968,14 @@
           <td>19</td>
           <td>0</td>
           <td>0</td>
-          <td>0</td>
           <td class="z-bad">-0.10</td>
           <td class="z-bad">-0.30</td>
           <td class="z-bad">-0.14</td>
           <td class="z-bad">-0.14</td>
-          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
+          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
         </tr>
         
-        <tr class="borderline">
+        <tr class="borderline" data-row-idx="5">
           <td class="left">
             Sonny Gray
             <span class="badge badge-active">SP</span>
@@ -991,13 +985,13 @@
           </td>
           <td class="left" style="color:#666;">BOS</td>
           <td class="left">SP</td>
+          <td>3</td>
           <td>16.1</td>
           <td>13</td>
           <td>3</td>
           <td>2.76</td>
           <td>0.98</td>
           <td>10</td>
-          <td>0</td>
           <td>0</td>
           <td>0</td>
           <td class="z-bad">-0.31</td>
@@ -1007,33 +1001,7 @@
           <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
         </tr>
         
-        <tr class="borderline">
-          <td class="left">
-            Shane Baz
-            <span class="badge badge-active">SP</span>
-            
-            
-            
-          </td>
-          <td class="left" style="color:#666;">BAL</td>
-          <td class="left">SP</td>
-          <td>16.0</td>
-          <td>20</td>
-          <td>5</td>
-          <td>4.50</td>
-          <td>1.56</td>
-          <td>13</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-          <td class="z-bad">-0.49</td>
-          <td class="z-bad">-0.27</td>
-          <td class="z-bad">-0.22</td>
-          <td class="z-bad">-0.22</td>
-          <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
-        </tr>
-        
-        <tr class="borderline">
+        <tr class="borderline" data-row-idx="6">
           <td class="left">
             Framber Valdez
             <span class="badge badge-active">SP</span>
@@ -1043,13 +1011,13 @@
           </td>
           <td class="left" style="color:#666;">DET</td>
           <td class="left">SP</td>
+          <td>3</td>
           <td>17.0</td>
           <td>20</td>
           <td>5</td>
           <td>4.76</td>
           <td>1.47</td>
           <td>12</td>
-          <td>0</td>
           <td>0</td>
           <td>0</td>
           <td class="z-terrible">-0.84</td>
@@ -1059,7 +1027,7 @@
           <td class="left rec-borderline" style="font-size:11px;">BORDERLINE</td>
         </tr>
         
-        <tr class="start">
+        <tr class="start" data-row-idx="7">
           <td class="left">
             Mason Miller
             <span class="badge badge-active">RP</span>
@@ -1069,6 +1037,7 @@
           </td>
           <td class="left" style="color:#666;">SD</td>
           <td class="left">RP</td>
+          <td>7</td>
           <td>7.1</td>
           <td>1</td>
           <td>1</td>
@@ -1076,8 +1045,7 @@
           <td>0.27</td>
           <td>19</td>
           <td>0</td>
-          <td>4</td>
-          <td>0</td>
+          <td>40</td>
           <td class="z-ok">0.24</td>
           <td class="z-good">1.09</td>
           <td class="z-good">0.98</td>
@@ -1085,7 +1053,33 @@
           <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
         </tr>
         
-        <tr class="start">
+        <tr class="start" data-row-idx="8">
+          <td class="left">
+            Jordan Romano
+            <span class="badge badge-active">RP</span>
+            
+            
+            
+          </td>
+          <td class="left" style="color:#666;">LAA</td>
+          <td class="left">RP</td>
+          <td>6</td>
+          <td>5.0</td>
+          <td>0</td>
+          <td>2</td>
+          <td>0.00</td>
+          <td>0.40</td>
+          <td>7</td>
+          <td>0</td>
+          <td>40</td>
+          <td class="z-bad">-0.03</td>
+          <td class="z-good">0.50</td>
+          <td class="z-good">0.54</td>
+          <td class="z-good">0.54</td>
+          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+        </tr>
+        
+        <tr class="consider" data-row-idx="9">
           <td class="left">
             Abner Uribe
             <span class="badge badge-active">RP</span>
@@ -1095,6 +1089,7 @@
           </td>
           <td class="left" style="color:#666;">MIL</td>
           <td class="left">RP</td>
+          <td>6</td>
           <td>5.1</td>
           <td>6</td>
           <td>1</td>
@@ -1102,66 +1097,39 @@
           <td>1.31</td>
           <td>6</td>
           <td>0</td>
-          <td>0</td>
           <td>3</td>
           <td class="z-terrible">-0.67</td>
           <td class="z-ok">0.04</td>
           <td class="z-ok">0.06</td>
           <td class="z-ok">0.06</td>
-          <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
+          <td class="left rec-consider" style="font-size:11px;">CONSIDER</td>
         </tr>
         
-        <tr class="start">
+        <tr class="start" data-row-idx="10">
           <td class="left">
-            Jordan Romano
-            <span class="badge badge-bench">RP</span>
+            Shane Baz
+            <span class="badge badge-bench">SP</span>
             
             <span class="action-promote">⬆</span>
             
             
           </td>
-          <td class="left" style="color:#666;">LAA</td>
-          <td class="left">RP</td>
-          <td>5.0</td>
+          <td class="left" style="color:#666;">BAL</td>
+          <td class="left">SP</td>
+          <td>3</td>
+          <td>16.0</td>
+          <td>20</td>
+          <td>5</td>
+          <td>4.50</td>
+          <td>1.56</td>
+          <td>13</td>
           <td>0</td>
-          <td>2</td>
-          <td>0.00</td>
-          <td>0.40</td>
-          <td>7</td>
           <td>0</td>
-          <td>4</td>
-          <td>0</td>
-          <td class="z-bad">-0.03</td>
-          <td class="z-good">0.50</td>
-          <td class="z-good">0.54</td>
-          <td class="z-good">0.54</td>
+          <td class="z-bad">-0.49</td>
+          <td class="z-bad">-0.27</td>
+          <td class="z-bad">-0.22</td>
+          <td class="z-bad">-0.22</td>
           <td class="left rec-start" style="font-size:11px;">START (matchup need)</td>
-        </tr>
-        
-        <tr class="borderline">
-          <td class="left">
-            Taj Bradley
-            <span class="badge badge-bench">RP</span>
-            
-            
-            
-          </td>
-          <td class="left" style="color:#666;">MIN</td>
-          <td class="left">RP</td>
-          <td>21.2</td>
-          <td>19</td>
-          <td>8</td>
-          <td>1.25</td>
-          <td>1.25</td>
-          <td>29</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-          <td class="z-good">0.64</td>
-          <td class="z-ok">0.38</td>
-          <td class="z-ok">0.46</td>
-          <td class="z-ok">0.46</td>
-          <td class="left rec-borderline" style="font-size:11px;"></td>
         </tr>
         
       </tbody>
@@ -1176,21 +1144,10 @@
     <div>
       <h4>Promote to Active ⬆</h4>
       
-      <div class="change-item change-promote">Jordan Romano <span style="color:#555;">(RP)</span></div>
-      
-      <div class="change-item change-promote">Jakob Marsee <span style="color:#555;">(OF)</span></div>
-      
-      <div class="change-item change-promote">Carter Jensen <span style="color:#555;">(DH)</span></div>
+      <div class="change-item change-promote">Shane Baz <span style="color:#555;">(SP)</span></div>
       
     </div>
     
-    
-    <div>
-      <h4>Move to Bench ⬇</h4>
-      
-      <div class="change-item change-bench">Heliot Ramos <span style="color:#555;">(OF)</span></div>
-      
-    </div>
     
   </div>
   
@@ -1405,8 +1362,8 @@
               </td>
               <td class="left" style="color:#666;">Detroit Tigers</td>
               <td>—</td>
-              <td class="z-good">0.93</td>
-              <td class="z-ok">0.26</td>
+              <td class="z-good">0.91</td>
+              <td class="z-ok">0.24</td>
             </tr>
             
             <tr>
@@ -1417,18 +1374,7 @@
               <td class="left" style="color:#666;">Los Angeles Dodgers</td>
               <td>—</td>
               <td class="z-good">0.71</td>
-              <td class="z-good">1.46</td>
-            </tr>
-            
-            <tr>
-              <td class="left">
-                Ryan Jeffers
-                
-              </td>
-              <td class="left" style="color:#666;">Minnesota Twins</td>
-              <td>—</td>
-              <td class="z-ok">0.38</td>
-              <td class="z-good">0.66</td>
+              <td class="z-good">1.01</td>
             </tr>
             
             <tr>
@@ -1439,7 +1385,7 @@
               <td class="left" style="color:#666;">Houston Astros</td>
               <td>—</td>
               <td class="z-ok">0.11</td>
-              <td class="z-bad">-0.39</td>
+              <td class="z-bad">-0.41</td>
             </tr>
             
             <tr>
@@ -1450,7 +1396,18 @@
               <td class="left" style="color:#666;">San Francisco Giants</td>
               <td>—</td>
               <td class="z-ok">0.05</td>
-              <td class="z-bad">-0.26</td>
+              <td class="z-bad">-0.30</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Miguel Amaya
+                
+              </td>
+              <td class="left" style="color:#666;">Chicago Cubs</td>
+              <td>—</td>
+              <td class="z-bad">-0.04</td>
+              <td class="z-terrible">-1.11</td>
             </tr>
             
           </tbody>
@@ -1461,7 +1418,7 @@
         <span><span class="drop-label">Same-pos drop:</span> <strong>Samuel Basallo</strong> (z: -0.09)</span>
         
         
-        <span><span class="drop-label">Worst overall:</span> <strong>Heliot Ramos</strong> (z: -0.68)</span>
+        <span><span class="drop-label">Worst overall:</span> <strong>Jeff McNeil</strong> (z: -0.57)</span>
         
       </div>
     </div>
@@ -1483,7 +1440,7 @@
               <td class="left" style="color:#666;">Milwaukee Brewers</td>
               <td>—</td>
               <td class="z-good">0.80</td>
-              <td class="z-bad">-0.07</td>
+              <td class="z-bad">-0.12</td>
             </tr>
             
             <tr>
@@ -1494,7 +1451,7 @@
               <td class="left" style="color:#666;">Milwaukee Brewers</td>
               <td>—</td>
               <td class="z-ok">0.22</td>
-              <td class="z-good">0.59</td>
+              <td class="z-bad">-0.08</td>
             </tr>
             
             <tr>
@@ -1505,7 +1462,7 @@
               <td class="left" style="color:#666;">Tampa Bay Rays</td>
               <td>—</td>
               <td class="z-ok">0.14</td>
-              <td class="z-terrible">-0.61</td>
+              <td class="z-bad">-0.45</td>
             </tr>
             
             <tr>
@@ -1516,7 +1473,7 @@
               <td class="left" style="color:#666;">Arizona Diamondbacks</td>
               <td>—</td>
               <td class="z-bad">-0.03</td>
-              <td class="z-bad">-0.31</td>
+              <td class="z-bad">-0.40</td>
             </tr>
             
             <tr>
@@ -1527,7 +1484,7 @@
               <td class="left" style="color:#666;">Washington Nationals</td>
               <td>—</td>
               <td class="z-bad">-0.13</td>
-              <td class="z-good">0.66</td>
+              <td class="z-good">0.77</td>
             </tr>
             
           </tbody>
@@ -1538,7 +1495,7 @@
         <span><span class="drop-label">Same-pos drop:</span> <strong>Nick Kurtz</strong> (z: 0.03)</span>
         
         
-        <span><span class="drop-label">Worst overall:</span> <strong>Heliot Ramos</strong> (z: -0.68)</span>
+        <span><span class="drop-label">Worst overall:</span> <strong>Jeff McNeil</strong> (z: -0.57)</span>
         
       </div>
     </div>
@@ -1559,8 +1516,8 @@
               </td>
               <td class="left" style="color:#666;">Seattle Mariners</td>
               <td>—</td>
-              <td class="z-good">0.61</td>
-              <td class="z-ok">0.26</td>
+              <td class="z-good">0.53</td>
+              <td class="z-terrible">-1.16</td>
             </tr>
             
             <tr>
@@ -1570,8 +1527,8 @@
               </td>
               <td class="left" style="color:#666;">Kansas City Royals</td>
               <td>—</td>
-              <td class="z-ok">0.25</td>
-              <td class="z-bad">-0.18</td>
+              <td class="z-ok">0.20</td>
+              <td class="z-terrible">-0.70</td>
             </tr>
             
             <tr>
@@ -1581,8 +1538,8 @@
               </td>
               <td class="left" style="color:#666;">Washington Nationals</td>
               <td>—</td>
-              <td class="z-ok">0.06</td>
-              <td class="z-bad">-0.42</td>
+              <td class="z-ok">0.07</td>
+              <td class="z-terrible">-0.67</td>
             </tr>
             
             <tr>
@@ -1592,19 +1549,19 @@
               </td>
               <td class="left" style="color:#666;">Colorado Rockies</td>
               <td>—</td>
-              <td class="z-ok">0.03</td>
-              <td class="z-good">0.94</td>
+              <td class="z-bad">-0.07</td>
+              <td class="z-good">1.13</td>
             </tr>
             
             <tr>
               <td class="left">
-                Richie Palacios
+                Luke Williams
                 
               </td>
-              <td class="left" style="color:#666;">Tampa Bay Rays</td>
+              <td class="left" style="color:#666;">Atlanta Braves</td>
               <td>—</td>
-              <td class="z-bad">-0.09</td>
-              <td class="z-bad">-0.13</td>
+              <td class="z-bad">-0.20</td>
+              <td class="z-bad">-0.41</td>
             </tr>
             
           </tbody>
@@ -1614,8 +1571,6 @@
         
         <span><span class="drop-label">Same-pos drop:</span> <strong>Jeff McNeil</strong> (z: -0.57)</span>
         
-        
-        <span><span class="drop-label">Worst overall:</span> <strong>Heliot Ramos</strong> (z: -0.68)</span>
         
       </div>
     </div>
@@ -1631,24 +1586,13 @@
             
             <tr>
               <td class="left">
-                Kevin McGonigle
-                
-              </td>
-              <td class="left" style="color:#666;">Detroit Tigers</td>
-              <td>—</td>
-              <td class="z-ok">0.38</td>
-              <td class="z-ok">0.20</td>
-            </tr>
-            
-            <tr>
-              <td class="left">
                 Mauricio Dubón
                 
               </td>
               <td class="left" style="color:#666;">Atlanta Braves</td>
               <td>—</td>
-              <td class="z-ok">0.30</td>
-              <td class="z-bad">-0.34</td>
+              <td class="z-ok">0.37</td>
+              <td class="z-ok">0.13</td>
             </tr>
             
             <tr>
@@ -1658,8 +1602,8 @@
               </td>
               <td class="left" style="color:#666;">Toronto Blue Jays</td>
               <td>—</td>
-              <td class="z-ok">0.12</td>
-              <td class="z-terrible">-1.04</td>
+              <td class="z-ok">0.11</td>
+              <td class="z-terrible">-1.01</td>
             </tr>
             
             <tr>
@@ -1669,8 +1613,8 @@
               </td>
               <td class="left" style="color:#666;">Atlanta Braves</td>
               <td>—</td>
-              <td class="z-bad">-0.15</td>
-              <td class="z-terrible">-0.75</td>
+              <td class="z-ok">0.08</td>
+              <td class="z-terrible">-0.80</td>
             </tr>
             
             <tr>
@@ -1680,8 +1624,19 @@
               </td>
               <td class="left" style="color:#666;">Seattle Mariners</td>
               <td>—</td>
-              <td class="z-bad">-0.31</td>
-              <td class="z-bad">-0.03</td>
+              <td class="z-bad">-0.35</td>
+              <td class="z-bad">-0.19</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Javier Báez
+                
+              </td>
+              <td class="left" style="color:#666;">Detroit Tigers</td>
+              <td>—</td>
+              <td class="z-bad">-0.45</td>
+              <td class="z-bad">-0.19</td>
             </tr>
             
           </tbody>
@@ -1692,7 +1647,7 @@
         <span><span class="drop-label">Same-pos drop:</span> <strong>Mookie Betts</strong> (z: -0.31)</span>
         
         
-        <span><span class="drop-label">Worst overall:</span> <strong>Heliot Ramos</strong> (z: -0.68)</span>
+        <span><span class="drop-label">Worst overall:</span> <strong>Jeff McNeil</strong> (z: -0.57)</span>
         
       </div>
     </div>
@@ -1708,35 +1663,13 @@
             
             <tr>
               <td class="left">
-                Max Muncy
-                
-              </td>
-              <td class="left" style="color:#666;">Los Angeles Dodgers</td>
-              <td>—</td>
-              <td class="z-good">0.71</td>
-              <td class="z-ok">0.48</td>
-            </tr>
-            
-            <tr>
-              <td class="left">
-                Max Muncy
-                
-              </td>
-              <td class="left" style="color:#666;">Los Angeles Dodgers</td>
-              <td>—</td>
-              <td class="z-good">0.71</td>
-              <td class="z-ok">0.48</td>
-            </tr>
-            
-            <tr>
-              <td class="left">
                 José Ramírez
                 
               </td>
               <td class="left" style="color:#666;">Cleveland Guardians</td>
               <td>—</td>
-              <td class="z-good">0.62</td>
-              <td class="z-bad">-0.04</td>
+              <td class="z-good">0.60</td>
+              <td class="z-good">0.50</td>
             </tr>
             
             <tr>
@@ -1747,7 +1680,7 @@
               <td class="left" style="color:#666;">Minnesota Twins</td>
               <td>—</td>
               <td class="z-good">0.56</td>
-              <td class="z-terrible">-0.60</td>
+              <td class="z-bad">-0.47</td>
             </tr>
             
             <tr>
@@ -1757,8 +1690,30 @@
               </td>
               <td class="left" style="color:#666;">Chicago White Sox</td>
               <td>—</td>
-              <td class="z-ok">0.35</td>
-              <td class="z-terrible">-1.65</td>
+              <td class="z-ok">0.34</td>
+              <td class="z-terrible">-1.67</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Tristan Gray
+                
+              </td>
+              <td class="left" style="color:#666;">Minnesota Twins</td>
+              <td>—</td>
+              <td class="z-ok">0.11</td>
+              <td class="z-terrible">-0.62</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Nolan Gorman
+                
+              </td>
+              <td class="left" style="color:#666;">St. Louis Cardinals</td>
+              <td>—</td>
+              <td class="z-ok">0.10</td>
+              <td class="z-terrible">-1.43</td>
             </tr>
             
           </tbody>
@@ -1769,7 +1724,7 @@
         <span><span class="drop-label">Same-pos drop:</span> <strong>Matt Chapman</strong> (z: -0.08)</span>
         
         
-        <span><span class="drop-label">Worst overall:</span> <strong>Heliot Ramos</strong> (z: -0.68)</span>
+        <span><span class="drop-label">Worst overall:</span> <strong>Jeff McNeil</strong> (z: -0.57)</span>
         
       </div>
     </div>
@@ -1791,18 +1746,7 @@
               <td class="left" style="color:#666;">San Diego Padres</td>
               <td>—</td>
               <td class="z-good">1.15</td>
-              <td class="z-good">0.89</td>
-            </tr>
-            
-            <tr>
-              <td class="left">
-                Cam Smith
-                
-              </td>
-              <td class="left" style="color:#666;">Houston Astros</td>
-              <td>—</td>
-              <td class="z-good">0.91</td>
-              <td class="z-ok">0.11</td>
+              <td class="z-good">1.26</td>
             </tr>
             
             <tr>
@@ -1813,7 +1757,7 @@
               <td class="left" style="color:#666;">Los Angeles Dodgers</td>
               <td>—</td>
               <td class="z-good">0.67</td>
-              <td class="z-good">1.07</td>
+              <td class="z-good">0.87</td>
             </tr>
             
             <tr>
@@ -1824,7 +1768,7 @@
               <td class="left" style="color:#666;">Milwaukee Brewers</td>
               <td>—</td>
               <td class="z-good">0.66</td>
-              <td class="z-terrible">-0.79</td>
+              <td class="z-terrible">-0.83</td>
             </tr>
             
             <tr>
@@ -1835,7 +1779,18 @@
               <td class="left" style="color:#666;">Kansas City Royals</td>
               <td>—</td>
               <td class="z-good">0.53</td>
-              <td class="z-terrible">-0.97</td>
+              <td class="z-terrible">-1.01</td>
+            </tr>
+            
+            <tr>
+              <td class="left">
+                Angel Martínez
+                
+              </td>
+              <td class="left" style="color:#666;">Cleveland Guardians</td>
+              <td>—</td>
+              <td class="z-ok">0.47</td>
+              <td class="z-good">0.95</td>
             </tr>
             
           </tbody>
@@ -1843,8 +1798,10 @@
       </div>
       <div class="drop-rec">
         
-        <span><span class="drop-label">Same-pos drop:</span> <strong>Heliot Ramos</strong> (z: -0.68)</span>
+        <span><span class="drop-label">Same-pos drop:</span> <strong>Juan Soto</strong> (z: -0.37)</span>
         
+        
+        <span><span class="drop-label">Worst overall:</span> <strong>Jeff McNeil</strong> (z: -0.57)</span>
         
       </div>
     </div>
@@ -1878,106 +1835,106 @@
         <tr>
           <td class="left other-team">2010 State Sectional Champ</td>
           <td class="left">
-            Nico Hoerner
-            <span style="color:#555;font-size:11px;"> 2B</span>
-            <span class="z-good" style="font-size:11px;"> z:1.11</span>
+            Mason Miller
+            <span style="color:#555;font-size:11px;"> P</span>
+            <span class="z-good" style="font-size:11px;"> z:0.98</span>
           </td>
           <td class="left">
             Sal Stewart
             <span style="color:#555;font-size:11px;"> 1B</span>
-            <span class="z-good" style="font-size:11px;"> z:1.49</span>
+            <span class="z-good" style="font-size:11px;"> z:1.48</span>
           </td>
-          <td>+0.38</td>
+          <td>+0.50</td>
         </tr>
         
         <tr>
           <td class="left other-team">All Rise Run Club</td>
           <td class="left">
-            Nico Hoerner
-            <span style="color:#555;font-size:11px;"> 2B</span>
-            <span class="z-good" style="font-size:11px;"> z:1.11</span>
+            Mason Miller
+            <span style="color:#555;font-size:11px;"> P</span>
+            <span class="z-good" style="font-size:11px;"> z:0.98</span>
           </td>
           <td class="left">
             Andy Pages
             <span style="color:#555;font-size:11px;"> OF</span>
             <span class="z-great" style="font-size:11px;"> z:1.52</span>
           </td>
-          <td>+0.41</td>
+          <td>+0.54</td>
         </tr>
         
         <tr>
           <td class="left other-team">ChicksDigTheLongBall</td>
           <td class="left">
-            Nico Hoerner
-            <span style="color:#555;font-size:11px;"> 2B</span>
-            <span class="z-good" style="font-size:11px;"> z:1.11</span>
+            Mason Miller
+            <span style="color:#555;font-size:11px;"> P</span>
+            <span class="z-good" style="font-size:11px;"> z:0.98</span>
           </td>
           <td class="left">
             Drake Baldwin
             <span style="color:#555;font-size:11px;"> C</span>
-            <span class="z-great" style="font-size:11px;"> z:2.03</span>
+            <span class="z-great" style="font-size:11px;"> z:2.10</span>
           </td>
-          <td>+0.92</td>
+          <td>+1.12</td>
         </tr>
         
         <tr>
           <td class="left other-team">I Robbed A Nuke</td>
           <td class="left">
-            Nico Hoerner
-            <span style="color:#555;font-size:11px;"> 2B</span>
-            <span class="z-good" style="font-size:11px;"> z:1.11</span>
+            Mason Miller
+            <span style="color:#555;font-size:11px;"> P</span>
+            <span class="z-good" style="font-size:11px;"> z:0.98</span>
           </td>
           <td class="left">
             Brice Turang
             <span style="color:#555;font-size:11px;"> 2B</span>
-            <span class="z-great" style="font-size:11px;"> z:1.79</span>
+            <span class="z-great" style="font-size:11px;"> z:1.63</span>
           </td>
-          <td>+0.68</td>
+          <td>+0.65</td>
         </tr>
         
         <tr>
           <td class="left other-team">ICECOLDBEERHERE!</td>
           <td class="left">
-            Nico Hoerner
-            <span style="color:#555;font-size:11px;"> 2B</span>
-            <span class="z-good" style="font-size:11px;"> z:1.11</span>
+            Mason Miller
+            <span style="color:#555;font-size:11px;"> P</span>
+            <span class="z-good" style="font-size:11px;"> z:0.98</span>
           </td>
           <td class="left">
             Elly De La Cruz
             <span style="color:#555;font-size:11px;"> SS</span>
-            <span class="z-good" style="font-size:11px;"> z:1.46</span>
+            <span class="z-good" style="font-size:11px;"> z:1.43</span>
           </td>
-          <td>+0.35</td>
+          <td>+0.45</td>
         </tr>
         
         <tr>
           <td class="left other-team">Jazz In Her Batters Box</td>
           <td class="left">
-            Nico Hoerner
-            <span style="color:#555;font-size:11px;"> 2B</span>
-            <span class="z-good" style="font-size:11px;"> z:1.11</span>
+            Mason Miller
+            <span style="color:#555;font-size:11px;"> P</span>
+            <span class="z-good" style="font-size:11px;"> z:0.98</span>
           </td>
           <td class="left">
             CJ Abrams
             <span style="color:#555;font-size:11px;"> SS</span>
-            <span class="z-great" style="font-size:11px;"> z:1.50</span>
+            <span class="z-good" style="font-size:11px;"> z:1.47</span>
           </td>
-          <td>+0.39</td>
+          <td>+0.49</td>
         </tr>
         
         <tr>
           <td class="left other-team">Lunch</td>
           <td class="left">
-            Nico Hoerner
-            <span style="color:#555;font-size:11px;"> 2B</span>
-            <span class="z-good" style="font-size:11px;"> z:1.11</span>
+            Mason Miller
+            <span style="color:#555;font-size:11px;"> P</span>
+            <span class="z-good" style="font-size:11px;"> z:0.98</span>
           </td>
           <td class="left">
             Oneil Cruz
             <span style="color:#555;font-size:11px;"> OF</span>
             <span class="z-great" style="font-size:11px;"> z:2.08</span>
           </td>
-          <td>+0.97</td>
+          <td>+1.10</td>
         </tr>
         
       </tbody>
@@ -1996,15 +1953,21 @@
       <tbody>
         
         <tr>
-          <td class="left">Nico Hoerner</td>
-          <td class="left">2B</td>
-          <td class="z-good">1.11</td>
-        </tr>
-        
-        <tr>
           <td class="left">Mason Miller</td>
           <td class="left">P</td>
           <td class="z-good">0.98</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Nico Hoerner</td>
+          <td class="left">2B</td>
+          <td class="z-good">0.97</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Cam Smith</td>
+          <td class="left">OF</td>
+          <td class="z-good">0.91</td>
         </tr>
         
         <tr>
@@ -2022,13 +1985,19 @@
         <tr>
           <td class="left">Corbin Carroll</td>
           <td class="left">OF</td>
+          <td class="z-good">0.72</td>
+        </tr>
+        
+        <tr>
+          <td class="left">Max Muncy</td>
+          <td class="left">3B</td>
           <td class="z-good">0.71</td>
         </tr>
         
         <tr>
           <td class="left">Will Smith</td>
           <td class="left">C</td>
-          <td class="z-good">0.60</td>
+          <td class="z-good">0.58</td>
         </tr>
         
         <tr>
@@ -2038,21 +2007,9 @@
         </tr>
         
         <tr>
-          <td class="left">Xavier Edwards</td>
-          <td class="left">2B</td>
-          <td class="z-good">0.50</td>
-        </tr>
-        
-        <tr>
           <td class="left">Willson Contreras</td>
           <td class="left">1B</td>
           <td class="z-ok">0.46</td>
-        </tr>
-        
-        <tr>
-          <td class="left">Jakob Marsee</td>
-          <td class="left">OF</td>
-          <td class="z-ok">0.32</td>
         </tr>
         
       </tbody>
@@ -2095,7 +2052,7 @@
               <td class="z-great">2.10</td>
               <td class="z-good">0.73</td>
               <td class="z-good">0.80</td>
-              <td>95.8%</td>
+              <td>96.0%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2135,7 +2092,7 @@
               <td class="z-great">1.63</td>
               <td class="z-great">1.57</td>
               <td class="z-good">1.26</td>
-              <td>96.8%</td>
+              <td>96.9%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2155,7 +2112,7 @@
               <td class="z-good">1.49</td>
               <td class="z-bad">-0.06</td>
               <td class="z-good">0.69</td>
-              <td>98.7%</td>
+              <td>98.8%</td>
             </tr>
             
             <tr data-pos="1B">
@@ -2175,7 +2132,7 @@
               <td class="z-good">1.47</td>
               <td class="z-ok">0.16</td>
               <td class="z-ok">0.47</td>
-              <td>87.7%</td>
+              <td>88.1%</td>
             </tr>
             
             <tr data-pos="SS">
@@ -2244,7 +2201,7 @@
               <td class="left other-team">All Rise Run Club</td>
               <td class="z-good">1.14</td>
               <td class="z-ok">0.10</td>
-              <td class="z-great">2.40</td>
+              <td class="z-great">2.43</td>
               <td>99.9%</td>
             </tr>
             
@@ -2334,8 +2291,8 @@
               <td class="left other-team">ICECOLDBEERHERE!</td>
               <td class="z-good">0.80</td>
               <td class="z-ok">0.26</td>
-              <td class="z-good">0.70</td>
-              <td>88.0%</td>
+              <td class="z-good">0.71</td>
+              <td>88.4%</td>
             </tr>
             
             <tr data-pos="1B">
@@ -2395,7 +2352,7 @@
               <td class="z-good">0.76</td>
               <td class="z-bad">-0.06</td>
               <td class="z-good">1.40</td>
-              <td>99.0%</td>
+              <td>98.9%</td>
             </tr>
             
             <tr data-pos="DH">
@@ -2414,7 +2371,7 @@
               <td class="left my-team">Pitch Slap</td>
               <td class="z-good">0.72</td>
               <td class="z-terrible">-0.52</td>
-              <td class="z-good">1.31</td>
+              <td class="z-good">1.33</td>
               <td>99.8%</td>
             </tr>
             
@@ -2424,7 +2381,7 @@
               <td class="left other-team">ICECOLDBEERHERE!</td>
               <td class="z-good">0.72</td>
               <td class="z-good">0.53</td>
-              <td class="z-good">1.32</td>
+              <td class="z-good">1.27</td>
               <td>99.6%</td>
             </tr>
             
@@ -2435,7 +2392,7 @@
               <td class="z-good">0.71</td>
               <td class="z-good">1.01</td>
               <td class="z-bad">-0.17</td>
-              <td>3.7%</td>
+              <td>3.8%</td>
             </tr>
             
             <tr data-pos="3B">
@@ -2444,8 +2401,8 @@
               <td class="left my-team">Pitch Slap</td>
               <td class="z-good">0.71</td>
               <td class="z-good">0.67</td>
-              <td class="z-ok">0.34</td>
-              <td>27.2%</td>
+              <td class="z-ok">0.33</td>
+              <td>28.2%</td>
             </tr>
             
             <tr data-pos="C">
@@ -2455,7 +2412,7 @@
               <td class="z-good">0.68</td>
               <td class="z-bad">-0.19</td>
               <td class="z-ok">0.28</td>
-              <td>36.0%</td>
+              <td>38.9%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2504,7 +2461,7 @@
               <td class="left other-team">Lunch</td>
               <td class="z-good">0.65</td>
               <td class="z-bad">-0.36</td>
-              <td class="z-good">1.37</td>
+              <td class="z-good">1.38</td>
               <td>99.8%</td>
             </tr>
             
@@ -2525,7 +2482,7 @@
               <td class="z-good">0.62</td>
               <td class="z-terrible">-0.89</td>
               <td class="z-ok">0.05</td>
-              <td>74.1%</td>
+              <td>74.6%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2565,7 +2522,7 @@
               <td class="z-good">0.58</td>
               <td class="z-ok">0.03</td>
               <td class="z-good">0.84</td>
-              <td>96.6%</td>
+              <td>96.7%</td>
             </tr>
             
             <tr data-pos="3B">
@@ -2574,8 +2531,8 @@
               <td class="left other-team">2010 State Sectional Champ</td>
               <td class="z-good">0.58</td>
               <td class="z-terrible">-0.68</td>
-              <td class="z-ok">0.08</td>
-              <td>51.3%</td>
+              <td class="z-ok">0.07</td>
+              <td>53.2%</td>
             </tr>
             
             <tr data-pos="DH">
@@ -2585,7 +2542,7 @@
               <td class="z-good">0.56</td>
               <td class="z-good">1.20</td>
               <td class="z-bad">-0.13</td>
-              <td>18.4%</td>
+              <td>19.6%</td>
             </tr>
             
             <tr data-pos="3B">
@@ -2594,8 +2551,8 @@
               <td class="left fa">FA</td>
               <td class="z-good">0.56</td>
               <td class="z-bad">-0.47</td>
-              <td class="z-ok">0.05</td>
-              <td>12.0%</td>
+              <td class="z-ok">0.02</td>
+              <td>11.8%</td>
             </tr>
             
             <tr data-pos="DH">
@@ -2605,7 +2562,7 @@
               <td class="z-good">0.55</td>
               <td class="z-bad">-0.07</td>
               <td class="z-ok">0.08</td>
-              <td>21.3%</td>
+              <td>23.6%</td>
             </tr>
             
             <tr data-pos="X">
@@ -2625,7 +2582,7 @@
               <td class="z-good">0.53</td>
               <td class="z-terrible">-1.01</td>
               <td class="z-terrible">-0.60</td>
-              <td>12.5%</td>
+              <td>11.7%</td>
             </tr>
             
             <tr data-pos="2B">
@@ -2645,7 +2602,7 @@
               <td class="z-good">0.51</td>
               <td class="z-terrible">-0.83</td>
               <td class="z-good">0.51</td>
-              <td>68.9%</td>
+              <td>69.3%</td>
             </tr>
             
             <tr data-pos="2B">
@@ -2655,7 +2612,7 @@
               <td class="z-ok">0.49</td>
               <td class="z-bad">-0.25</td>
               <td class="z-good">0.63</td>
-              <td>92.7%</td>
+              <td>92.8%</td>
             </tr>
             
             <tr data-pos="C">
@@ -2665,7 +2622,7 @@
               <td class="z-ok">0.48</td>
               <td class="z-good">0.51</td>
               <td class="z-good">0.68</td>
-              <td>73.0%</td>
+              <td>72.8%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2685,7 +2642,7 @@
               <td class="z-ok">0.46</td>
               <td class="z-terrible">-0.72</td>
               <td class="z-ok">0.32</td>
-              <td>71.7%</td>
+              <td>71.6%</td>
             </tr>
             
             <tr data-pos="1B">
@@ -2695,17 +2652,17 @@
               <td class="z-ok">0.46</td>
               <td class="z-good">0.96</td>
               <td class="z-good">0.91</td>
-              <td>24.9%</td>
+              <td>27.7%</td>
             </tr>
             
             <tr data-pos="3B">
               <td class="left">Max Muncy</td>
               <td class="left">3B</td>
-              <td class="left my-team">Pitch Slap</td>
+              <td class="left fa">FA</td>
               <td class="z-ok">0.43</td>
               <td class="z-good">0.67</td>
-              <td class="z-ok">0.34</td>
-              <td>27.2%</td>
+              <td class="z-ok">0.33</td>
+              <td>28.2%</td>
             </tr>
             
             <tr data-pos="1B">
@@ -2725,7 +2682,7 @@
               <td class="z-ok">0.41</td>
               <td class="z-ok">0.48</td>
               <td class="z-ok">0.46</td>
-              <td>82.7%</td>
+              <td>82.8%</td>
             </tr>
             
             <tr data-pos="X">
@@ -2745,7 +2702,7 @@
               <td class="z-ok">0.39</td>
               <td class="z-bad">-0.25</td>
               <td class="z-good">0.58</td>
-              <td>92.0%</td>
+              <td>91.9%</td>
             </tr>
             
             <tr data-pos="2B">
@@ -2755,7 +2712,7 @@
               <td class="z-ok">0.38</td>
               <td class="z-terrible">-1.12</td>
               <td class="z-ok">0.46</td>
-              <td>82.4%</td>
+              <td>82.6%</td>
             </tr>
             
             <tr data-pos="SS">
@@ -2781,17 +2738,17 @@
             <tr data-pos="C">
               <td class="left">Ryan Jeffers</td>
               <td class="left">C</td>
-              <td class="left fa">FA</td>
+              <td class="left other-team">All Rise Run Club</td>
               <td class="z-ok">0.36</td>
               <td class="z-good">0.97</td>
               <td class="z-ok">0.23</td>
-              <td>8.8%</td>
+              <td>9.7%</td>
             </tr>
             
             <tr data-pos="SS">
               <td class="left">Kevin McGonigle</td>
               <td class="left">SS</td>
-              <td class="left fa">FA</td>
+              <td class="left other-team">All Rise Run Club</td>
               <td class="z-ok">0.35</td>
               <td class="z-ok">0.17</td>
               <td class="z-na">—</td>
@@ -2814,8 +2771,8 @@
               <td class="left other-team">All Rise Run Club</td>
               <td class="z-ok">0.34</td>
               <td class="z-terrible">-0.82</td>
-              <td class="z-good">0.55</td>
-              <td>98.5%</td>
+              <td class="z-good">0.56</td>
+              <td>98.4%</td>
             </tr>
             
             <tr data-pos="3B">
@@ -2834,8 +2791,8 @@
               <td class="left other-team">Lunch</td>
               <td class="z-ok">0.33</td>
               <td class="z-ok">0.30</td>
-              <td class="z-ok">0.48</td>
-              <td>75.1%</td>
+              <td class="z-ok">0.49</td>
+              <td>75.6%</td>
             </tr>
             
             <tr data-pos="SS">
@@ -2845,7 +2802,7 @@
               <td class="z-ok">0.32</td>
               <td class="z-terrible">-0.64</td>
               <td class="z-bad">-0.01</td>
-              <td>54.0%</td>
+              <td>55.3%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2855,7 +2812,7 @@
               <td class="z-ok">0.32</td>
               <td class="z-ok">0.35</td>
               <td class="z-good">0.98</td>
-              <td>43.6%</td>
+              <td>43.3%</td>
             </tr>
             
             <tr data-pos="1B">
@@ -2875,7 +2832,7 @@
               <td class="z-ok">0.26</td>
               <td class="z-terrible">-0.87</td>
               <td class="z-ok">0.40</td>
-              <td>52.9%</td>
+              <td>52.3%</td>
             </tr>
             
             <tr data-pos="SS">
@@ -2945,7 +2902,7 @@
               <td class="z-ok">0.20</td>
               <td class="z-terrible">-0.70</td>
               <td class="z-ok">0.27</td>
-              <td>19.6%</td>
+              <td>19.2%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2965,7 +2922,7 @@
               <td class="z-ok">0.17</td>
               <td class="z-bad">-0.07</td>
               <td class="z-great">1.77</td>
-              <td>99.7%</td>
+              <td>99.6%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -2985,7 +2942,7 @@
               <td class="z-ok">0.15</td>
               <td class="z-terrible">-0.52</td>
               <td class="z-terrible">-1.11</td>
-              <td>1.7%</td>
+              <td>2.1%</td>
             </tr>
             
             <tr data-pos="1B">
@@ -3005,7 +2962,7 @@
               <td class="z-ok">0.14</td>
               <td class="z-bad">-0.45</td>
               <td class="z-good">0.62</td>
-              <td>26.6%</td>
+              <td>26.1%</td>
             </tr>
             
             <tr data-pos="SS">
@@ -3025,7 +2982,7 @@
               <td class="z-ok">0.12</td>
               <td class="z-terrible">-0.60</td>
               <td class="z-bad">-0.48</td>
-              <td>6.1%</td>
+              <td>6.4%</td>
             </tr>
             
             <tr data-pos="OF">
@@ -3064,7 +3021,7 @@
               <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-ok">0.11</td>
               <td class="z-bad">-0.30</td>
-              <td class="z-good">1.26</td>
+              <td class="z-good">1.28</td>
               <td>99.7%</td>
             </tr>
             
@@ -3084,8 +3041,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.10</td>
               <td class="z-terrible">-1.43</td>
-              <td class="z-bad">-0.33</td>
-              <td>6.9%</td>
+              <td class="z-bad">-0.35</td>
+              <td>6.8%</td>
             </tr>
             
           </tbody>
@@ -3116,8 +3073,8 @@
               <td class="left my-team">Pitch Slap</td>
               <td class="z-good">0.98</td>
               <td class="z-ok">0.24</td>
-              <td class="z-good">1.24</td>
-              <td>99.3%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="P">
@@ -3126,8 +3083,8 @@
               <td class="left other-team">Lunch</td>
               <td class="z-good">0.98</td>
               <td class="z-good">0.51</td>
-              <td class="z-bad">-0.24</td>
-              <td>16.9%</td>
+              <td class="z-bad">-0.20</td>
+              <td>17.6%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3136,8 +3093,8 @@
               <td class="left fa">FA</td>
               <td class="z-good">0.72</td>
               <td class="z-ok">0.48</td>
-              <td class="z-ok">0.21</td>
-              <td>47.3%</td>
+              <td class="z-ok">0.28</td>
+              <td>49.9%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3146,8 +3103,8 @@
               <td class="left fa">FA</td>
               <td class="z-good">0.68</td>
               <td class="z-ok">0.34</td>
-              <td class="z-ok">0.22</td>
-              <td>12.6%</td>
+              <td class="z-ok">0.30</td>
+              <td>12.5%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3196,7 +3153,7 @@
               <td class="left other-team">Jazz In Her Batters Box</td>
               <td class="z-good">0.64</td>
               <td class="z-ok">0.26</td>
-              <td class="z-good">1.00</td>
+              <td class="z-good">1.11</td>
               <td>97.4%</td>
             </tr>
             
@@ -3226,8 +3183,8 @@
               <td class="left fa">FA</td>
               <td class="z-good">0.57</td>
               <td class="z-good">0.75</td>
-              <td class="z-terrible">-0.78</td>
-              <td>2.1%</td>
+              <td class="z-terrible">-0.77</td>
+              <td>2.6%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3276,7 +3233,7 @@
               <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-ok">0.46</td>
               <td class="z-bad">-0.30</td>
-              <td class="z-good">0.96</td>
+              <td class="z-good">1.00</td>
               <td>98.4%</td>
             </tr>
             
@@ -3296,8 +3253,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.42</td>
               <td class="z-good">0.59</td>
-              <td class="z-bad">-0.22</td>
-              <td>1.1%</td>
+              <td class="z-bad">-0.18</td>
+              <td>1.3%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3336,8 +3293,8 @@
               <td class="left other-team">Lunch</td>
               <td class="z-ok">0.38</td>
               <td class="z-bad">-0.27</td>
-              <td class="z-ok">0.27</td>
-              <td>12.6%</td>
+              <td class="z-ok">0.36</td>
+              <td>12.7%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3366,8 +3323,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.36</td>
               <td class="z-ok">0.33</td>
-              <td class="z-terrible">-1.32</td>
-              <td>0.4%</td>
+              <td class="z-terrible">-1.35</td>
+              <td>0.5%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3396,8 +3353,8 @@
               <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-ok">0.34</td>
               <td class="z-ok">0.08</td>
-              <td class="z-ok">0.20</td>
-              <td>75.8%</td>
+              <td class="z-ok">0.27</td>
+              <td>75.6%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3406,7 +3363,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.34</td>
               <td class="z-good">0.51</td>
-              <td class="z-terrible">-0.61</td>
+              <td class="z-terrible">-0.58</td>
               <td>0.9%</td>
             </tr>
             
@@ -3426,7 +3383,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.31</td>
               <td class="z-ok">0.01</td>
-              <td class="z-bad">-0.42</td>
+              <td class="z-bad">-0.40</td>
               <td>0.4%</td>
             </tr>
             
@@ -3436,8 +3393,8 @@
               <td class="left other-team">ICECOLDBEERHERE!</td>
               <td class="z-ok">0.31</td>
               <td class="z-ok">0.39</td>
-              <td class="z-good">0.69</td>
-              <td>64.3%</td>
+              <td class="z-good">0.72</td>
+              <td>65.1%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3466,7 +3423,7 @@
               <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-ok">0.29</td>
               <td class="z-ok">0.39</td>
-              <td class="z-great">2.11</td>
+              <td class="z-great">2.17</td>
               <td>99.8%</td>
             </tr>
             
@@ -3496,7 +3453,7 @@
               <td class="left other-team">All Rise Run Club</td>
               <td class="z-ok">0.29</td>
               <td class="z-ok">0.35</td>
-              <td class="z-good">1.27</td>
+              <td class="z-good">1.31</td>
               <td>98.0%</td>
             </tr>
             
@@ -3516,7 +3473,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.28</td>
               <td class="z-bad">-0.42</td>
-              <td class="z-ok">0.29</td>
+              <td class="z-ok">0.35</td>
               <td>4.0%</td>
             </tr>
             
@@ -3526,7 +3483,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.28</td>
               <td class="z-good">0.53</td>
-              <td class="z-bad">-0.12</td>
+              <td class="z-bad">-0.07</td>
               <td>0.2%</td>
             </tr>
             
@@ -3546,8 +3503,8 @@
               <td class="left other-team">Jazz In Her Batters Box</td>
               <td class="z-ok">0.27</td>
               <td class="z-bad">-0.22</td>
-              <td class="z-good">1.01</td>
-              <td>90.6%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="P">
@@ -3576,7 +3533,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.26</td>
               <td class="z-bad">-0.04</td>
-              <td class="z-ok">0.11</td>
+              <td class="z-ok">0.14</td>
               <td>0.8%</td>
             </tr>
             
@@ -3666,7 +3623,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.24</td>
               <td class="z-bad">-0.35</td>
-              <td class="z-ok">0.31</td>
+              <td class="z-ok">0.37</td>
               <td>1.7%</td>
             </tr>
             
@@ -3676,8 +3633,8 @@
               <td class="left other-team">All Rise Run Club</td>
               <td class="z-ok">0.24</td>
               <td class="z-good">0.58</td>
-              <td class="z-good">1.03</td>
-              <td>97.4%</td>
+              <td class="z-good">1.07</td>
+              <td>97.5%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3716,7 +3673,7 @@
               <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-ok">0.23</td>
               <td class="z-bad">-0.08</td>
-              <td class="z-good">1.18</td>
+              <td class="z-good">1.23</td>
               <td>99.7%</td>
             </tr>
             
@@ -3746,7 +3703,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.23</td>
               <td class="z-ok">0.37</td>
-              <td class="z-ok">0.10</td>
+              <td class="z-ok">0.16</td>
               <td>0.2%</td>
             </tr>
             
@@ -3756,7 +3713,7 @@
               <td class="left other-team">All Rise Run Club</td>
               <td class="z-ok">0.22</td>
               <td class="z-bad">-0.06</td>
-              <td class="z-great">1.56</td>
+              <td class="z-great">1.60</td>
               <td>99.8%</td>
             </tr>
             
@@ -3796,7 +3753,7 @@
               <td class="left other-team">All Rise Run Club</td>
               <td class="z-ok">0.22</td>
               <td class="z-bad">-0.10</td>
-              <td class="z-good">0.59</td>
+              <td class="z-good">0.63</td>
               <td>90.9%</td>
             </tr>
             
@@ -3806,7 +3763,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.22</td>
               <td class="z-bad">-0.48</td>
-              <td class="z-bad">-0.41</td>
+              <td class="z-bad">-0.38</td>
               <td>1.4%</td>
             </tr>
             
@@ -3827,7 +3784,7 @@
               <td class="z-ok">0.20</td>
               <td class="z-good">0.59</td>
               <td class="z-ok">0.00</td>
-              <td>0.5%</td>
+              <td>0.8%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3866,8 +3823,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.19</td>
               <td class="z-bad">-0.02</td>
-              <td class="z-terrible">-0.82</td>
-              <td>5.3%</td>
+              <td class="z-terrible">-0.80</td>
+              <td>5.2%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3886,7 +3843,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.18</td>
               <td class="z-ok">0.28</td>
-              <td class="z-bad">-0.06</td>
+              <td class="z-bad">-0.01</td>
               <td>0.7%</td>
             </tr>
             
@@ -3896,8 +3853,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.18</td>
               <td class="z-ok">0.12</td>
-              <td class="z-ok">0.05</td>
-              <td>24.1%</td>
+              <td class="z-ok">0.08</td>
+              <td>25.4%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3926,8 +3883,8 @@
               <td class="left other-team">I Robbed A Nuke</td>
               <td class="z-ok">0.17</td>
               <td class="z-ok">0.26</td>
-              <td class="z-good">0.63</td>
-              <td>60.7%</td>
+              <td class="z-good">0.66</td>
+              <td>62.4%</td>
             </tr>
             
             <tr data-pos="P">
@@ -3966,8 +3923,8 @@
               <td class="left other-team">ChicksDigTheLongBall</td>
               <td class="z-ok">0.15</td>
               <td class="z-bad">-0.19</td>
-              <td class="z-good">1.37</td>
-              <td>95.2%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="P">
@@ -3976,7 +3933,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.15</td>
               <td class="z-ok">0.07</td>
-              <td class="z-terrible">-0.52</td>
+              <td class="z-bad">-0.50</td>
               <td>0.3%</td>
             </tr>
             
@@ -3996,7 +3953,7 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.14</td>
               <td class="z-bad">-0.37</td>
-              <td class="z-good">0.58</td>
+              <td class="z-good">0.66</td>
               <td>4.3%</td>
             </tr>
             
@@ -4006,7 +3963,7 @@
               <td class="left other-team">Jazz In Her Batters Box</td>
               <td class="z-ok">0.14</td>
               <td class="z-bad">-0.44</td>
-              <td class="z-good">1.22</td>
+              <td class="z-good">1.27</td>
               <td>99.4%</td>
             </tr>
             
@@ -4016,8 +3973,8 @@
               <td class="left other-team">ICECOLDBEERHERE!</td>
               <td class="z-ok">0.13</td>
               <td class="z-bad">-0.18</td>
-              <td class="z-good">1.13</td>
-              <td>93.7%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="P">
@@ -4026,8 +3983,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.13</td>
               <td class="z-ok">-0.00</td>
-              <td class="z-good">0.85</td>
-              <td>85.0%</td>
+              <td class="z-na">—</td>
+              <td>—</td>
             </tr>
             
             <tr data-pos="P">
@@ -4046,8 +4003,8 @@
               <td class="left other-team">2010 State Sectional Champ</td>
               <td class="z-ok">0.12</td>
               <td class="z-ok">0.03</td>
-              <td class="z-good">0.55</td>
-              <td>77.1%</td>
+              <td class="z-good">0.57</td>
+              <td>77.4%</td>
             </tr>
             
             <tr data-pos="P">
@@ -4086,8 +4043,8 @@
               <td class="left other-team">ICECOLDBEERHERE!</td>
               <td class="z-ok">0.11</td>
               <td class="z-bad">-0.29</td>
-              <td class="z-good">0.67</td>
-              <td>14.7%</td>
+              <td class="z-good">0.75</td>
+              <td>14.3%</td>
             </tr>
             
             <tr data-pos="P">
@@ -4096,8 +4053,8 @@
               <td class="left fa">FA</td>
               <td class="z-ok">0.10</td>
               <td class="z-bad">-0.11</td>
-              <td class="z-ok">0.17</td>
-              <td>41.8%</td>
+              <td class="z-ok">0.20</td>
+              <td>44.7%</td>
             </tr>
             
             <tr data-pos="P">
@@ -4106,8 +4063,8 @@
               <td class="left other-team">Lunch</td>
               <td class="z-ok">0.10</td>
               <td class="z-na">—</td>
-              <td class="z-good">1.09</td>
-              <td>97.2%</td>
+              <td class="z-good">1.13</td>
+              <td>97.1%</td>
             </tr>
             
           </tbody>
@@ -4118,11 +4075,514 @@
   </div>
 </section>
 
+<section id="activity">
+  <h2>📋 League Activity</h2>
+  
+
+    
+    <div style="background:#1a1d27;border:1px solid #2a3a4a;border-radius:6px;padding:10px 14px;margin-bottom:14px;">
+      <div style="font-size:11px;text-transform:uppercase;color:#888;margin-bottom:6px;font-weight:600;">Your Recent Moves</div>
+      
+      <div style="font-size:12px;padding:2px 0;">
+        <span style="color:#555;font-size:11px;min-width:44px;display:inline-block;">Apr 13</span>
+        <span style="color:#3fa63f;">
+          + Mauricio Dubon
+        </span>
+      </div>
+      
+      <div style="font-size:12px;padding:2px 0;">
+        <span style="color:#555;font-size:11px;min-width:44px;display:inline-block;">Apr 13</span>
+        <span style="color:#e74c3c;">
+          - Heliot Ramos
+        </span>
+      </div>
+      
+      <div style="font-size:12px;padding:2px 0;">
+        <span style="color:#555;font-size:11px;min-width:44px;display:inline-block;">Apr 12</span>
+        <span style="color:#3fa63f;">
+          + Max Muncy
+        </span>
+      </div>
+      
+      <div style="font-size:12px;padding:2px 0;">
+        <span style="color:#555;font-size:11px;min-width:44px;display:inline-block;">Apr 12</span>
+        <span style="color:#e74c3c;">
+          - Alec Bohm
+        </span>
+      </div>
+      
+      <div style="font-size:12px;padding:2px 0;">
+        <span style="color:#555;font-size:11px;min-width:44px;display:inline-block;">Apr 12</span>
+        <span style="color:#3fa63f;">
+          + Cam Smith
+        </span>
+      </div>
+      
+      <div style="font-size:12px;padding:2px 0;">
+        <span style="color:#555;font-size:11px;min-width:44px;display:inline-block;">Apr 12</span>
+        <span style="color:#e74c3c;">
+          - Dylan Crews
+        </span>
+      </div>
+      
+      <div style="font-size:12px;padding:2px 0;">
+        <span style="color:#555;font-size:11px;min-width:44px;display:inline-block;">Apr 11</span>
+        <span style="color:#3fa63f;">
+          + Taj Bradley
+        </span>
+      </div>
+      
+      <div style="font-size:12px;padding:2px 0;">
+        <span style="color:#555;font-size:11px;min-width:44px;display:inline-block;">Apr 6</span>
+        <span style="color:#3fa63f;">
+          + Jordan Romano
+        </span>
+      </div>
+      
+    </div>
+    
+
+    <p class="section-note">Last 21 days · Newest first · <span style="color:#4da6ff;">Blue = your team</span></p>
+
+    
+    <div style="color:#555;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+                padding:8px 0 3px;border-top:1px solid #1e2130;margin-top:4px;">
+      Apr 13
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <tbody>
+          
+          <tr>
+            <td class="left" style="width:160px;color:#4da6ff;font-weight:600;">
+              Pitch Slap
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Mauricio Dubon</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Heliot Ramos</span>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              All Rise Run Club
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Ryan Jeffers</span>
+              
+              
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              All Rise Run Club
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Kevin McGonigle</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Jacob Wilson</span>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              Lunch
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Jeffrey Springs</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Noelvi Marte</span>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              Lunch
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Will Warren</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Casey Mize</span>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              Lunch
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Grant Holmes</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Connelly Early</span>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div style="color:#555;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+                padding:8px 0 3px;border-top:1px solid #1e2130;margin-top:4px;">
+      Apr 12
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <tbody>
+          
+          <tr>
+            <td class="left" style="width:160px;color:#4da6ff;font-weight:600;">
+              Pitch Slap
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Max Muncy</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Alec Bohm</span>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;color:#4da6ff;font-weight:600;">
+              Pitch Slap
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Cam Smith</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Dylan Crews</span>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div style="color:#555;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+                padding:8px 0 3px;border-top:1px solid #1e2130;margin-top:4px;">
+      Apr 11
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <tbody>
+          
+          <tr>
+            <td class="left" style="width:160px;color:#4da6ff;font-weight:600;">
+              Pitch Slap
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Taj Bradley</span>
+              
+              
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div style="color:#555;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+                padding:8px 0 3px;border-top:1px solid #1e2130;margin-top:4px;">
+      Apr 7
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <tbody>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              I Robbed A Nuke
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Adolis Garcia</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Kyle Manzardo</span>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div style="color:#555;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+                padding:8px 0 3px;border-top:1px solid #1e2130;margin-top:4px;">
+      Apr 6
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <tbody>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              Lunch
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Shane McClanahan</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Emmet Sheehan</span>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              All Rise Run Club
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Edward Cabrera</span>
+              
+              
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              I Robbed A Nuke
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Bryce Elder</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Raisel Iglesias</span>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              Lunch
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Erik Sabrowski</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Griffin Jax</span>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;color:#4da6ff;font-weight:600;">
+              Pitch Slap
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Jordan Romano</span>
+              
+              
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              Lunch
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Casey Mize</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Kyle Teel</span>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              All Rise Run Club
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Joey Wiemer</span>
+              
+              
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              All Rise Run Club
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Andrew Painter</span>
+              
+              
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              I Robbed A Nuke
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Ryan O&#39;Hearn</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Michael Busch</span>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              I Robbed A Nuke
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Adolis Garcia</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Jose Caballero</span>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div style="color:#555;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+                padding:8px 0 3px;border-top:1px solid #1e2130;margin-top:4px;">
+      Apr 5
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <tbody>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              I Robbed A Nuke
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Jack Leiter</span>
+              
+              
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              Lunch
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Jordan Walker</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Adolis Garcia</span>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div style="color:#555;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+                padding:8px 0 3px;border-top:1px solid #1e2130;margin-top:4px;">
+      Apr 3
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <tbody>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              I Robbed A Nuke
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Jose Soriano</span>
+              
+              
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div style="color:#555;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+                padding:8px 0 3px;border-top:1px solid #1e2130;margin-top:4px;">
+      Apr 2
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <tbody>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              Lunch
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Liam Hicks</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Ryan Jeffers</span>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div style="color:#555;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+                padding:8px 0 3px;border-top:1px solid #1e2130;margin-top:4px;">
+      Mar 31
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <tbody>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              I Robbed A Nuke
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Chase DeLauter</span>
+              &nbsp;&nbsp;
+              <span style="color:#e74c3c;">-Lawrence Butler</span>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div style="color:#555;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+                padding:8px 0 3px;border-top:1px solid #1e2130;margin-top:4px;">
+      Mar 25
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <tbody>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              Lunch
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Kodai Senga</span>
+              
+              
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              Lunch
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Connelly Early</span>
+              
+              
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="left" style="width:160px;">
+              Lunch
+            </td>
+            <td class="left">
+              <span style="color:#3fa63f;">+Ryan Jeffers</span>
+              
+              
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+  
+</section>
+
 <footer style="text-align:center;padding:24px;color:#333;font-size:11px;">
-  Pitch Slap Fantasy Baseball Engine · Generated 2026-04-13 07:00
+  Pitch Slap Fantasy Baseball Engine · Generated 2026-04-13 15:24
 </footer>
 
 <script>
+/* ── Rankings filter ── */
 function filterTable(tableId, pos, btn) {
   var table = document.getElementById(tableId);
   if (!table) return;
@@ -4138,6 +4598,68 @@ function filterTable(tableId, pos, btn) {
     b.classList.toggle('active', b === btn);
   });
 }
+
+/* ── Roster table sorting ── */
+function sortRosterTable(tableId, colIdx) {
+  var table = document.getElementById(tableId);
+  if (!table) return;
+  var tbody = table.querySelector('tbody');
+  var rows = Array.from(tbody.querySelectorAll('tr'));
+
+  var prevCol = parseInt(table.dataset.sortCol);
+  var prevDir = parseInt(table.dataset.sortDir) || 1;
+  var dir = (prevCol === colIdx) ? -prevDir : 1;
+
+  table.dataset.sortCol = colIdx;
+  table.dataset.sortDir = dir;
+
+  rows.sort(function(a, b) {
+    var cellA = a.querySelectorAll('td')[colIdx];
+    var cellB = b.querySelectorAll('td')[colIdx];
+    var valA = cellA ? cellA.textContent.trim() : '';
+    var valB = cellB ? cellB.textContent.trim() : '';
+    var numA = parseFloat(valA), numB = parseFloat(valB);
+    if (!isNaN(numA) && !isNaN(numB)) return (numA - numB) * dir;
+    return valA.localeCompare(valB) * dir;
+  });
+
+  rows.forEach(function(row) { tbody.appendChild(row); });
+
+  table.querySelectorAll('thead th').forEach(function(th, i) {
+    th.classList.remove('sort-asc', 'sort-desc');
+    if (i === colIdx) th.classList.add(dir === 1 ? 'sort-asc' : 'sort-desc');
+  });
+}
+
+function resetRosterTable(tableId) {
+  var table = document.getElementById(tableId);
+  if (!table) return;
+  var tbody = table.querySelector('tbody');
+  var rows = Array.from(tbody.querySelectorAll('tr'));
+  rows.sort(function(a, b) {
+    return (parseInt(a.dataset.rowIdx) || 0) - (parseInt(b.dataset.rowIdx) || 0);
+  });
+  rows.forEach(function(row) { tbody.appendChild(row); });
+  delete table.dataset.sortCol;
+  delete table.dataset.sortDir;
+  table.querySelectorAll('thead th').forEach(function(th) {
+    th.classList.remove('sort-asc', 'sort-desc');
+  });
+}
+
+function initSortableTable(tableId) {
+  var table = document.getElementById(tableId);
+  if (!table) return;
+  table.querySelectorAll('thead th').forEach(function(th, i) {
+    th.classList.add('sortable-th');
+    th.addEventListener('click', function() { sortRosterTable(tableId, i); });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  initSortableTable('tbl-roster-hitters');
+  initSortableTable('tbl-roster-pitchers');
+});
 </script>
 
 </body>
