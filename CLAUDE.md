@@ -277,9 +277,9 @@ pending open questions — the slate is clean for new feature work.
 
 ## Last Run Stats (auto-updated by pre-commit hook)
 
-- **Updated:** 2026-04-16 07:00:53
-- **Last data run:** 2026-04-16 11:00:42
-- **Players in DB:** 903
-- **Z-score records:** 48136
+- **Updated:** 2026-04-17 07:00:53
+- **Last data run:** 2026-04-17 11:00:42
+- **Players in DB:** 908
+- **Z-score records:** 49044
 - **Roster entries:** 250
 - **League teams:** 8
