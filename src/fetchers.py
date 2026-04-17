@@ -1085,6 +1085,98 @@ def fetch_espn_projections_and_ownership() -> Dict[str, Dict]:
     return results
 
 
+def fetch_espn_standings() -> List[Dict]:
+    """
+    Extract league standings from ESPN matchup history.
+
+    Uses the mMatchup + mTeam views:
+    - W/T/L from teams[].record.overall
+    - Per-category cumulative totals from completed matchup cumulativeScore.scoreByStat
+      (counting stats summed; rate stats ERA/WHIP/OBP averaged across matchup weeks)
+
+    Returns list sorted by wins desc, each dict:
+        team_id, team_name, is_my_team, wins, ties, losses, weeks_played,
+        cat_totals: {cat_key: value or None}
+    """
+    import math
+
+    league_id  = LEAGUE_CONFIG['league_id']
+    season     = LEAGUE_CONFIG['season']
+    my_team_id = LEAGUE_CONFIG['team_id']
+    url = (
+        f"https://lm-api-reads.fantasy.espn.com/apis/v3/games/flb"
+        f"/seasons/{season}/segments/0/leagues/{league_id}"
+    )
+    response = _make_request(url, params={'view': ['mMatchup', 'mTeam']})
+    if not response:
+        return []
+
+    teams_raw = response.get('teams', [])
+    schedule  = response.get('schedule', [])
+
+    RATE_CATS = {'obp', 'era', 'whip'}
+    all_cats  = list(ESPN_STAT_IDS.values())   # 10 category keys
+
+    team_map: Dict[int, Dict] = {}
+    for t in teams_raw:
+        tid  = t.get('id')
+        name = (
+            t.get('name', '').strip()
+            or f"{t.get('location', '')} {t.get('nickname', '')}".strip()
+            or f"Team {tid}"
+        )
+        rec = t.get('record', {}).get('overall', {})
+        team_map[tid] = {
+            'team_id':    tid,
+            'team_name':  name,
+            'is_my_team': tid == my_team_id,
+            'wins':       int(rec.get('wins',   0)),
+            'ties':       int(rec.get('ties',   0)),
+            'losses':     int(rec.get('losses', 0)),
+            '_cat_lists': {cat: [] for cat in all_cats},
+        }
+
+    # Accumulate per-category values from completed matchups
+    for m in schedule:
+        if m.get('winner', '') in ('UNDECIDED', '', None):
+            continue   # skip current and future periods
+        for side_key in ('home', 'away'):
+            side = m.get(side_key) or {}
+            tid  = side.get('teamId')
+            if tid not in team_map:
+                continue
+            score_by_stat = (side.get('cumulativeScore') or {}).get('scoreByStat') or {}
+            for stat_id, stat_data in score_by_stat.items():
+                cat = ESPN_STAT_IDS.get(str(stat_id))
+                if cat is None:
+                    continue
+                val = stat_data.get('score')
+                if val is None:
+                    continue
+                fval = float(val)
+                if math.isinf(fval) or math.isnan(fval):
+                    continue
+                team_map[tid]['_cat_lists'][cat].append(fval)
+
+    # Convert raw lists → final display values
+    result = []
+    for td in team_map.values():
+        cat_totals: Dict[str, object] = {}
+        for cat, vals in td.pop('_cat_lists').items():
+            if not vals:
+                cat_totals[cat] = None
+            elif cat in RATE_CATS:
+                cat_totals[cat] = round(sum(vals) / len(vals), 3)
+            else:
+                cat_totals[cat] = int(round(sum(vals)))
+        td['cat_totals']  = cat_totals
+        td['weeks_played'] = td['wins'] + td['ties'] + td['losses']
+        result.append(td)
+
+    result.sort(key=lambda t: (-t['wins'], -t['ties'], t['losses']))
+    return result
+
+
 def test_api_connectivity() -> bool:
     """Returns True if both ESPN and MLB Stats APIs respond successfully."""
     print("Testing API connectivity...")

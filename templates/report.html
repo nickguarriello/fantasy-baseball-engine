@@ -79,13 +79,7 @@
   /* M4: col 1 = Pitch Slap score, col 3 = Opponent score */
   .win  td:nth-child(1) { color: #3fa63f; font-weight: 700; }
   .loss td:nth-child(3) { color: #e74c3c; font-weight: 700; }
-  .proj-winner-win  { color: #3fa63f; font-weight: 600; }
-  .proj-winner-loss { color: #e74c3c; }
-  .proj-winner-tie  { color: #888; }
-  .diverge-badge {
-    background: #8b5a00; color: #ffc; font-size: 10px;
-    padding: 1px 5px; border-radius: 3px; margin-left: 4px;
-  }
+  .proj-icon { color: #f39c12; font-size: 11px; margin-right: 2px; }
 
   /* ── Slot / status badges ── */
   .badge {
@@ -177,10 +171,31 @@
   .reset-btn { font-size: 11px; padding: 2px 8px; background: #1e2130; border: 1px solid #2a2d3a; color: #666; border-radius: 3px; cursor: pointer; }
   .reset-btn:hover { color: #aaa; background: #252838; }
 
+  /* ── Matchup layout (scoreboard + games today) ── */
+  .matchup-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+  .matchup-score-col {}
+  .matchup-games-col { max-height: 400px; overflow-y: auto; }
+  .game-card { background: #1a1d27; border: 1px solid #2a2d3a; border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; font-size: 12px; }
+  .game-card-interest { border-color: #2a4a6a; }
+  .game-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+  .game-teams { font-weight: 600; color: #ccc; }
+  .game-time { font-size: 11px; color: #666; }
+  .game-card-sp { color: #555; font-size: 11px; margin-bottom: 4px; }
+  .game-card-players { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* ── Standings table ── */
+  .standings-tbl { font-size: 12px; }
+  .standings-tbl th, .standings-tbl td { padding: 5px 8px; }
+  .standings-tbl td:first-child { color: #555; text-align: center; width: 24px; }
+  .standings-tbl .record-w { color: #4CAF50; font-weight: 600; }
+  .standings-tbl .record-l { color: #e74c3c; }
+  .standings-tbl .record-t { color: #888; }
+
   /* ── Responsive ── */
   @media (max-width: 750px) {
     .two-col          { grid-template-columns: 1fr; }
     .waiver-pos-grid  { grid-template-columns: 1fr; }
+    .matchup-layout   { grid-template-columns: 1fr; }
     nav .generated    { display: none; }
   }
 
@@ -217,34 +232,105 @@
       <span style="color:#444;font-weight:300;font-size:16px;">·</span>
       <span class="losses">{{ matchup.losses }}L</span>
     </h2>
-    <p class="section-note">PROJECTED = pre-week z-score advantage · LIVE = current category leader · ⚡ = projection diverged from live</p>
-    <div class="tbl-wrap">
-      <table class="matchup-tbl">
-        <thead>
-          <tr>
-            <th style="text-align:right;">PITCH SLAP</th>
-            <th class="left">STAT</th>
-            <th>OPPONENT</th>
-            <th class="left">PROJECTED</th>
-            <th class="left">LIVE</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for row in matchup.rows %}
-          <tr class="{{ row._row_cls }}{% if row._separator %} cat-group-start{% endif %}">
-            <td>{{ row.my_score }}</td>
-            <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">{{ row.category }}</td>
-            <td>{{ row.opp_score }}</td>
-            <td class="left proj-winner-{{ row._proj_cls }}">{{ row.proj_display }}</td>
-            <td class="left">
-              {{ row.live_display }}
-              {% if row.diverges %}<span class="diverge-badge">⚡</span>{% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <p class="section-note">⚡ = projected winner · Green/Red row = actual leader</p>
+    <div class="matchup-layout">
+      <!-- Left: scoreboard -->
+      <div class="matchup-score-col">
+        <div class="tbl-wrap">
+          <table class="matchup-tbl">
+            <thead>
+              <tr>
+                <th style="text-align:right;">PITCH SLAP</th>
+                <th class="left">STAT</th>
+                <th>OPPONENT</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in matchup.rows %}
+              <tr class="{{ row._row_cls }}{% if row._separator %} cat-group-start{% endif %}">
+                <td style="text-align:right;">
+                  {% if row.proj_me %}<span class="proj-icon">⚡</span>{% endif %}{{ row.my_score }}
+                </td>
+                <td class="left" style="color:#666;font-size:11px;text-transform:uppercase;">{{ row.category }}</td>
+                <td>
+                  {% if row.proj_opp %}<span class="proj-icon">⚡</span>{% endif %}{{ row.opp_score }}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Right: games today -->
+      <div class="matchup-games-col">
+        <h3 style="margin-top:0;">Today's Games</h3>
+        {% if games_today %}
+        {% for g in games_today %}
+        <div class="game-card{% if g.has_interest %} game-card-interest{% endif %}">
+          <div class="game-card-header">
+            <span class="game-teams">{{ g.away }} @ {{ g.home }}</span>
+            <span class="game-time">
+              {% if g.status == 'final' %}Final{% elif g.status == 'live' %}LIVE{% else %}{{ g.time }}{% endif %}
+              {% if g.score %} · {{ g.score }}{% endif %}
+            </span>
+          </div>
+          <div class="game-card-sp">{{ g.away_sp }} vs {{ g.home_sp }}</div>
+          {% if g.my_players or g.opp_players %}
+          <div class="game-card-players">
+            {% for p in g.my_players %}
+            <span class="my-team">{{ p.name }}<span class="badge {{ p.slot_cls }}" style="font-size:9px;padding:0 4px;margin-left:3px;">{{ p.slot }}</span></span>
+            {% endfor %}
+            {% for p in g.opp_players %}
+            <span class="other-team">{{ p.name }}<span class="badge badge-bench" style="font-size:9px;padding:0 4px;margin-left:3px;">{{ p.slot }}</span></span>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="empty">No games today.</p>
+        {% endif %}
+      </div>
     </div>
+
+    <!-- League Standings -->
+    {% if standings and standings.teams %}
+    <div style="margin-top:20px;">
+      <h3 style="margin-bottom:8px;">📊 League Standings</h3>
+      <p class="section-note">Cumulative category totals from completed matchup weeks · Rate stats (OBP/ERA/WHIP) are per-week averages</p>
+      <div class="tbl-wrap">
+        <table class="standings-tbl">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th class="left">Team</th>
+              <th class="record-w" title="Wins">W</th>
+              <th class="record-t" title="Ties">T</th>
+              <th class="record-l" title="Losses">L</th>
+              {% for h in standings.cat_headers %}
+              <th>{{ h }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in standings.teams %}
+            <tr class="{{ 'my-team' if t.is_my_team else '' }}">
+              <td>{{ loop.index }}</td>
+              <td class="left">{{ t.team_name }}</td>
+              <td class="record-w">{{ t.wins }}</td>
+              <td class="record-t">{{ t.ties }}</td>
+              <td class="record-l">{{ t.losses }}</td>
+              {% for val in t.cats %}
+              <td>{{ val }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
   {% else %}
     <h2>⚔️ This Week's Matchup</h2>
     <p class="empty">No matchup data — run the pipeline or matchup may not have started yet.</p>
@@ -258,13 +344,16 @@
   <h2>🔵 My Roster — {{ my_team }}</h2>
   <p class="section-note">Sorted by ESPN lineup slot · Badge = current slot · R-Ssn/TOT = position-group rank / overall rank (BAD = outside top 30/150) · ⬆⬇ = lineup action needed</p>
 
-  <!-- Stat view toggle (R1) -->
+  <!-- Stat view toggle (Feature 3) -->
   <div class="filter-bar" style="margin-bottom:10px;">
-    <button class="filter-btn active" id="btn-season" onclick="rosterToggle('season')">Season</button>
-    <button class="filter-btn" id="btn-week" onclick="rosterToggle('week')">This Week ({{ week_range_label }})</button>
+    <button class="filter-btn active" id="btn-season"    onclick="rosterToggle('season')">Season</button>
+    <button class="filter-btn" id="btn-curr_week" onclick="rosterToggle('curr_week')">Curr Wk ({{ curr_week_label }})</button>
+    <button class="filter-btn" id="btn-last_week" onclick="rosterToggle('last_week')">Last Wk ({{ last_week_label }})</button>
+    <button class="filter-btn" id="btn-14d"       onclick="rosterToggle('14d')">14D</button>
+    <button class="filter-btn" id="btn-30d"       onclick="rosterToggle('30d')">30D</button>
   </div>
   <div id="roster-view-note" class="section-note" style="display:none;color:#f39c12;">
-    Showing stats from {{ week_range_label }} only · ranks still reflect full season
+    Showing stats from selected window · ranks still reflect full season
   </div>
 
   <!-- Hitters -->
@@ -758,32 +847,34 @@ document.addEventListener('DOMContentLoaded', function() {
   initSortableTable('tbl-roster-pitchers');
 });
 
-/* ── Current-week stats toggle (R1) ── */
-var WEEK_STATS = {{ week_stats_json | safe }};
+/* ── Roster stat window toggle (Feature 3) ── */
+var STAT_WINDOWS = {{ stat_windows_json | safe }};
 var _rosterView = 'season';
 
 function rosterToggle(view) {
   if (view === _rosterView) return;
   _rosterView = view;
-
-  document.getElementById('btn-season').classList.toggle('active', view === 'season');
-  document.getElementById('btn-week').classList.toggle('active', view === 'week');
+  ['season','curr_week','last_week','14d','30d'].forEach(function(v) {
+    var b = document.getElementById('btn-' + v);
+    if (b) b.classList.toggle('active', v === view);
+  });
   var note = document.getElementById('roster-view-note');
-  if (note) note.style.display = (view === 'week') ? '' : 'none';
+  if (note) note.style.display = (view === 'season') ? 'none' : '';
 
-  ['tbl-roster-hitters', 'tbl-roster-pitchers'].forEach(function(tableId) {
+  var wk = (view !== 'season') ? (STAT_WINDOWS[view] || {}) : null;
+  ['tbl-roster-hitters','tbl-roster-pitchers'].forEach(function(tableId) {
     var table = document.getElementById(tableId);
     if (!table) return;
     table.querySelectorAll('tbody tr').forEach(function(row) {
       var playerName = (row.dataset.player || '').trim();
-      var wk = WEEK_STATS[playerName] || {};
+      var playerWk = wk ? (wk[playerName] || {}) : null;
       row.querySelectorAll('td[data-k]').forEach(function(td) {
         var key = td.dataset.k;
-        if (view === 'week') {
-          var val = wk[key];
-          td.textContent = (val !== undefined && val !== null) ? val : '—';
+        if (playerWk) {
+          var val = playerWk[key];
+          td.textContent = (val !== undefined && val !== null) ? val : '\u2014';
         } else {
-          td.textContent = td.dataset.s || '—';
+          td.textContent = td.dataset.s || '\u2014';
         }
       });
     });
