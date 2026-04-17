@@ -836,6 +836,13 @@ function resetRosterTable(tableId) {
 function initSortableTable(tableId) {
   var table = document.getElementById(tableId);
   if (!table) return;
+  // Stamp original row order so resetRosterTable works on any table
+  var tbody = table.querySelector('tbody');
+  if (tbody) {
+    tbody.querySelectorAll('tr').forEach(function(row, i) {
+      if (!row.dataset.rowIdx) row.dataset.rowIdx = i;
+    });
+  }
   table.querySelectorAll('thead th').forEach(function(th, i) {
     th.classList.add('sortable-th');
     th.addEventListener('click', function() { sortRosterTable(tableId, i); });
@@ -843,8 +850,13 @@ function initSortableTable(tableId) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  initSortableTable('tbl-roster-hitters');
-  initSortableTable('tbl-roster-pitchers');
+  // Auto-initialise every table that has a <thead> — gives universal click-to-sort
+  var autoIdx = 0;
+  document.querySelectorAll('table').forEach(function(table) {
+    if (!table.querySelector('thead')) return;
+    if (!table.id) table.id = 'tbl-auto-' + (autoIdx++);
+    initSortableTable(table.id);
+  });
 });
 
 /* ── Roster stat window toggle (Feature 3) ── */
